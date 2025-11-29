@@ -1,13 +1,12 @@
-import { Menu, User } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 interface NavBarProps {
-  showMenu?: boolean;
   showBack?: boolean;
 }
 
-const NavBar = ({ showMenu = false, showBack = false }: NavBarProps) => {
+const NavBar = ({ showBack = true }: NavBarProps) => {
   const navigate = useNavigate();
 
   return (
@@ -15,9 +14,9 @@ const NavBar = ({ showMenu = false, showBack = false }: NavBarProps) => {
       <div className="flex items-center justify-between px-6 py-4">
         {/* Left side */}
         <div className="w-10">
-          {showMenu && (
-            <Button variant="ghost" size="icon">
-              <Menu className="h-5 w-5" />
+          {showBack && (
+            <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+              <ArrowLeft className="h-5 w-5" />
             </Button>
           )}
         </div>
