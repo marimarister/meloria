@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 
 interface NavBarProps {
   showBack?: boolean;
+  showProfile?: boolean;
 }
 
-const NavBar = ({ showBack = true }: NavBarProps) => {
+const NavBar = ({ showBack = true, showProfile = true }: NavBarProps) => {
   const navigate = useNavigate();
 
   return (
@@ -24,20 +25,23 @@ const NavBar = ({ showBack = true }: NavBarProps) => {
         {/* Center - Meloria logo */}
         <button
           onClick={() => navigate("/")}
-          className="text-2xl font-bold text-primary hover:opacity-80 transition-opacity"
+          className="text-2xl font-bold hover:opacity-80 transition-opacity"
+          style={{ color: '#282828' }}
         >
           Meloria
         </button>
 
         {/* Right side - Profile icon */}
         <div className="w-10">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/login")}
-          >
-            <User className="h-5 w-5" />
-          </Button>
+          {showProfile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/login")}
+            >
+              <User className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </div>
     </nav>
