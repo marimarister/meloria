@@ -5,17 +5,17 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { Heart, ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import { Heart, CheckCircle } from "lucide-react";
 import NavBar from "@/components/NavBar";
 
 const SCALE_OPTIONS = [
-  { value: "0", label: "Never" },
-  { value: "1", label: "A few times a year or less" },
-  { value: "2", label: "Once a month or less" },
-  { value: "3", label: "A few times a month" },
-  { value: "4", label: "Once a week" },
-  { value: "5", label: "A few times a week" },
-  { value: "6", label: "Every day" },
+  { value: 0, label: "Never" },
+  { value: 1, label: "A few times a year or less" },
+  { value: 2, label: "Once a month or less" },
+  { value: 3, label: "A few times a month" },
+  { value: 4, label: "Once a week" },
+  { value: 5, label: "A few times a week" },
+  { value: 6, label: "Every day" },
 ];
 
 const QUESTIONS = [
@@ -59,7 +59,6 @@ const BURNOUT_LEVELS = [
 
 const BurnoutTest = () => {
   const navigate = useNavigate();
-  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showResults, setShowResults] = useState(false);
   const [savedResults, setSavedResults] = useState<any>(null);
@@ -74,43 +73,27 @@ const BurnoutTest = () => {
     }
   }, []);
 
-  const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
-  const isAnswered = answers[QUESTIONS[currentQuestion].id] !== undefined;
-  const isLastQuestion = currentQuestion === QUESTIONS.length - 1;
+  const progress = (Object.keys(answers).length / QUESTIONS.length) * 100;
 
-  const handleAnswer = (value: string) => {
-    setAnswers({ ...answers, [QUESTIONS[currentQuestion].id]: parseInt(value) });
-  };
-
-  const handleNext = () => {
-    if (isLastQuestion && isAnswered) {
-      const { ee, dp, pa, total } = calculateScores();
-      const results = {
-        scores: { ee, dp, pa, total },
-        completedAt: new Date().toISOString(),
-        completed: true
-      };
-      localStorage.setItem('burnoutTest', JSON.stringify(results));
-      setSavedResults(results);
-      setShowResults(true);
-    } else if (isAnswered) {
-      setCurrentQuestion(currentQuestion + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
+  const handleSubmit = () => {
+    const scores = calculateScores();
+    const results = {
+      scores,
+      completedAt: new Date().toISOString(),
+      completed: true
+    };
+    localStorage.setItem('burnoutTest', JSON.stringify(results));
+    setSavedResults(results);
+    setShowResults(true);
   };
 
   const calculateScores = () => {
-    const ee = QUESTIONS.filter(q => q.section === "EE").reduce((sum, q) => sum + (answers[q.id] || 0), 0);
-    const dp = QUESTIONS.filter(q => q.section === "DP").reduce((sum, q) => sum + (answers[q.id] || 0), 0);
-    const pa = QUESTIONS.filter(q => q.section === "PA").reduce((sum, q) => sum + (answers[q.id] || 0), 0);
-    const total = ee + dp + pa;
+    const emotionalExhaustion = QUESTIONS.filter(q => q.section === "EE").reduce((sum, q) => sum + (answers[q.id] || 0), 0);
+    const depersonalization = QUESTIONS.filter(q => q.section === "DP").reduce((sum, q) => sum + (answers[q.id] || 0), 0);
+    const personalAccomplishment = QUESTIONS.filter(q => q.section === "PA").reduce((sum, q) => sum + (answers[q.id] || 0), 0);
+    const total = emotionalExhaustion + depersonalization + personalAccomplishment;
     
-    return { ee, dp, pa, total };
+    return { emotionalExhaustion, depersonalization, personalAccomplishment, total };
   };
 
   const getBurnoutLevel = (score: number) => {
@@ -118,21 +101,14 @@ const BurnoutTest = () => {
   };
 
   if (showResults) {
-    const { ee, dp, pa, total } = savedResults ? savedResults.scores : calculateScores();
-    const level = getBurnoutLevel(total);
+    const scores = savedResults ? savedResults.scores : calculateScores();
+    const level = getBurnoutLevel(scores.total);
     
-    // Calculate percentages
-    const totalPercentage = (total / 132) * 100;
-    const eePercentage = (ee / 54) * 100;
-    const dpPercentage = (dp / 30) * 100;
-    const paPercentage = (pa / 48) * 100;
-
     return (
       <div className="min-h-screen gradient-employee">
         <NavBar />
         
         <div className="px-6 py-8 mx-auto max-w-4xl">
-
           <Card className="p-8 animate-fade-in">
             <div className="flex items-center justify-center mb-6">
               <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -143,211 +119,210 @@ const BurnoutTest = () => {
             <h1 className="text-3xl font-bold text-center mb-2">Test Complete!</h1>
             <p className="text-center text-muted-foreground mb-8">Here are your results</p>
 
-            <div className="space-y-6">
-              {/* Overall Score with Level and Gradient Bar */}
-              <div className="p-6 rounded-lg bg-muted/50">
-                <p className="text-sm text-muted-foreground mb-2 text-center">Overall Burnout Score</p>
-                <p className="text-5xl font-bold text-primary mb-2 text-center">{total}</p>
-                <p className="text-sm text-muted-foreground mb-6 text-center">out of 132</p>
-                
-                {/* Burnout Level */}
-                <div className={`p-4 rounded-lg border-2 ${level.color} bg-background mb-4`}>
-                  <h2 className={`text-xl font-bold mb-2 ${level.color}`}>{level.title}</h2>
-                  <p className="text-sm text-foreground">{level.description}</p>
-                </div>
+            {/* Overall Score with Level and Gradient Bar */}
+            <Card className="p-6 mb-8">
+              <div className="text-center mb-4">
+                <p className="text-sm text-muted-foreground mb-2">Overall Burnout Score</p>
+                <p className="text-5xl font-bold text-primary mb-1">{scores.total}</p>
+                <p className="text-sm text-muted-foreground">out of 132</p>
+              </div>
+              
+              {/* Burnout Level */}
+              <div className={`p-4 rounded-lg border-2 ${level.color} bg-background mb-6`}>
+                <h2 className={`text-xl font-bold mb-2 ${level.color}`}>{level.title}</h2>
+                <p className="text-sm text-foreground">{level.description}</p>
+              </div>
 
-                {/* Gradient Bar */}
-                <div className="relative">
-                  <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                    <span>0%</span>
-                    <span>100%</span>
+              {/* Gradient Bar */}
+              <div className="relative pt-8 pb-2">
+                <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>0%</span>
+                  <span>100%</span>
+                </div>
+                {/* Vertical line indicator */}
+                <div 
+                  className="absolute top-0 h-3 w-0.5 bg-foreground"
+                  style={{ left: `${(scores.total / 132) * 100}%` }}
+                >
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                    {Math.round((scores.total / 132) * 100)}%
                   </div>
-                  <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                </div>
+              </div>
+            </Card>
+
+            {/* Detailed Scores */}
+            <div className="space-y-4 mb-8">
+              {/* Emotional Exhaustion */}
+              <Card className="p-6">
+                <div className="flex gap-6 items-center">
+                  {/* Left 30%: Name and Score */}
+                  <div className="w-[30%] space-y-2">
+                    <h3 className="text-lg font-semibold">Emotional Exhaustion</h3>
+                    <div className="text-3xl font-bold text-primary">{scores.emotionalExhaustion}</div>
+                    <div className="text-sm text-muted-foreground">out of 54</div>
+                  </div>
+                  
+                  {/* Right 70%: Gradient Bar */}
+                  <div className="flex-1 relative pt-8 pb-2">
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>0%</span>
+                      <span>100%</span>
+                    </div>
+                    {/* Vertical line indicator */}
                     <div 
-                      className="absolute top-0 bottom-0 w-0.5 bg-foreground"
-                      style={{ left: `${totalPercentage}%`, transform: 'translateX(-50%)' }}
+                      className="absolute top-0 h-3 w-0.5 bg-foreground"
+                      style={{ left: `${(scores.emotionalExhaustion / 54) * 100}%` }}
                     >
                       <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
-                        {totalPercentage.toFixed(0)}%
+                        {Math.round((scores.emotionalExhaustion / 54) * 100)}%
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
 
-              {/* Detailed Scores with Gradient Bars */}
-              <div className="space-y-4">
-                {/* Emotional Exhaustion */}
-                <div className="p-4 rounded-lg bg-muted/50 w-full">
-                  <div className="flex justify-between items-center mb-3">
-                    <p className="text-sm text-muted-foreground">Emotional Exhaustion</p>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold">{ee}</p>
-                      <p className="text-xs text-muted-foreground">out of 54</p>
-                    </div>
+              {/* Depersonalization */}
+              <Card className="p-6">
+                <div className="flex gap-6 items-center">
+                  {/* Left 30%: Name and Score */}
+                  <div className="w-[30%] space-y-2">
+                    <h3 className="text-lg font-semibold">Depersonalization</h3>
+                    <div className="text-3xl font-bold text-primary">{scores.depersonalization}</div>
+                    <div className="text-sm text-muted-foreground">out of 30</div>
                   </div>
-                  <div className="relative">
-                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                  
+                  {/* Right 70%: Gradient Bar */}
+                  <div className="flex-1 relative pt-8 pb-2">
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
                       <span>0%</span>
                       <span>100%</span>
                     </div>
-                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
-                      <div 
-                        className="absolute top-0 bottom-0 w-0.5 bg-foreground"
-                        style={{ left: `${eePercentage}%`, transform: 'translateX(-50%)' }}
-                      >
-                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
-                          {eePercentage.toFixed(0)}%
-                        </div>
+                    {/* Vertical line indicator */}
+                    <div 
+                      className="absolute top-0 h-3 w-0.5 bg-foreground"
+                      style={{ left: `${(scores.depersonalization / 30) * 100}%` }}
+                    >
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                        {Math.round((scores.depersonalization / 30) * 100)}%
                       </div>
                     </div>
                   </div>
                 </div>
+              </Card>
 
-                {/* Depersonalization */}
-                <div className="p-4 rounded-lg bg-muted/50 w-full">
-                  <div className="flex justify-between items-center mb-3">
-                    <p className="text-sm text-muted-foreground">Depersonalization</p>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold">{dp}</p>
-                      <p className="text-xs text-muted-foreground">out of 30</p>
-                    </div>
+              {/* Personal Accomplishment */}
+              <Card className="p-6">
+                <div className="flex gap-6 items-center">
+                  {/* Left 30%: Name and Score */}
+                  <div className="w-[30%] space-y-2">
+                    <h3 className="text-lg font-semibold">Personal Accomplishment</h3>
+                    <div className="text-3xl font-bold text-primary">{scores.personalAccomplishment}</div>
+                    <div className="text-sm text-muted-foreground">out of 48</div>
                   </div>
-                  <div className="relative">
-                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                  
+                  {/* Right 70%: Gradient Bar */}
+                  <div className="flex-1 relative pt-8 pb-2">
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
                       <span>0%</span>
                       <span>100%</span>
                     </div>
-                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
-                      <div 
-                        className="absolute top-0 bottom-0 w-0.5 bg-foreground"
-                        style={{ left: `${dpPercentage}%`, transform: 'translateX(-50%)' }}
-                      >
-                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
-                          {dpPercentage.toFixed(0)}%
-                        </div>
+                    {/* Vertical line indicator */}
+                    <div 
+                      className="absolute top-0 h-3 w-0.5 bg-foreground"
+                      style={{ left: `${(scores.personalAccomplishment / 48) * 100}%` }}
+                    >
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                        {Math.round((scores.personalAccomplishment / 48) * 100)}%
                       </div>
                     </div>
                   </div>
                 </div>
-
-                {/* Personal Accomplishment */}
-                <div className="p-4 rounded-lg bg-muted/50 w-full">
-                  <div className="flex justify-between items-center mb-3">
-                    <p className="text-sm text-muted-foreground">Personal Accomplishment</p>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold">{pa}</p>
-                      <p className="text-xs text-muted-foreground">out of 48</p>
-                    </div>
-                  </div>
-                  <div className="relative">
-                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                      <span>0%</span>
-                      <span>100%</span>
-                    </div>
-                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
-                      <div 
-                        className="absolute top-0 bottom-0 w-0.5 bg-foreground"
-                        style={{ left: `${paPercentage}%`, transform: 'translateX(-50%)' }}
-                      >
-                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
-                          {paPercentage.toFixed(0)}%
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {savedResults && (
-                <div className="text-center mb-4">
-                  <p className="text-sm text-muted-foreground">
-                    Completed: {new Date(savedResults.completedAt).toLocaleDateString()} at {new Date(savedResults.completedAt).toLocaleTimeString()}
-                  </p>
-                </div>
-              )}
-
-              <Button onClick={() => navigate("/employee")} className="w-full" size="lg">
-                View Your Dashboard
-              </Button>
+              </Card>
             </div>
+
+            {savedResults && (
+              <div className="text-center mb-6">
+                <p className="text-sm text-muted-foreground">
+                  Completed: {new Date(savedResults.completedAt).toLocaleDateString()} at {new Date(savedResults.completedAt).toLocaleTimeString()}
+                </p>
+              </div>
+            )}
+
+            <Button onClick={() => navigate("/employee")} className="w-full" size="lg">
+              View Your Dashboard
+            </Button>
           </Card>
         </div>
       </div>
     );
   }
 
-  const question = QUESTIONS[currentQuestion];
-
   return (
     <div className="min-h-screen gradient-employee">
       <NavBar />
       
       <div className="px-6 py-8 mx-auto max-w-4xl">
-        {/* Header */}
-        <div className="flex items-center justify-center mb-6">
-          <Heart className="h-5 w-5 text-primary" />
-          <span className="font-semibold">Burnout Test</span>
-        </div>
-
-        {/* Progress */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">
-              Question {currentQuestion + 1} of {QUESTIONS.length}
+              Progress: {Object.keys(answers).length} of {QUESTIONS.length}
             </span>
-            <span className="text-sm font-medium">{Math.round(progress)}%</span>
+            <span className="text-sm font-medium">{Math.round(progress)}% Complete</span>
           </div>
           <Progress value={progress} className="h-2" />
         </div>
 
-        {/* Question Card */}
-        <Card className="p-8 mb-6 animate-fade-in">
-          <h2 className="text-2xl font-semibold mb-8">{question.text}</h2>
+        <Card className="p-8 animate-fade-in">
+          <h2 className="text-2xl font-semibold mb-6">Please rate each statement</h2>
 
-          <RadioGroup
-            value={answers[question.id]?.toString()}
-            onValueChange={handleAnswer}
-            className="space-y-3"
-          >
-            {SCALE_OPTIONS.map((option) => (
-              <div
-                key={option.value}
-                className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
-                onClick={() => handleAnswer(option.value)}
-              >
-                <RadioGroupItem value={option.value} id={`q${question.id}-${option.value}`} />
-                <Label
-                  htmlFor={`q${question.id}-${option.value}`}
-                  className="flex-1 cursor-pointer font-normal"
+          <div className="space-y-4">
+            {QUESTIONS.map((question, index) => (
+              <div key={question.id} className="p-6 rounded-lg bg-green-50">
+                <p className="font-medium mb-4">
+                  {index + 1}. {question.text}
+                </p>
+                <RadioGroup
+                  value={answers[question.id]?.toString()}
+                  onValueChange={(value) => setAnswers(prev => ({ ...prev, [question.id]: parseInt(value) }))}
                 >
-                  <span className="font-medium mr-2">{option.value}</span> - {option.label}
-                </Label>
+                  <div className="space-y-2">
+                    {SCALE_OPTIONS.map((option) => (
+                      <div
+                        key={option.value}
+                        className="flex items-center space-x-2 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                      >
+                        <RadioGroupItem
+                          value={option.value.toString()}
+                          id={`q${question.id}-${option.value}`}
+                        />
+                        <Label
+                          htmlFor={`q${question.id}-${option.value}`}
+                          className="flex-1 cursor-pointer text-sm"
+                        >
+                          {option.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </RadioGroup>
               </div>
             ))}
-          </RadioGroup>
-        </Card>
+          </div>
 
-        {/* Navigation */}
-        <div className="flex justify-between gap-4">
           <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={currentQuestion === 0}
-            className="flex-1"
+            onClick={handleSubmit}
+            disabled={Object.keys(answers).length !== QUESTIONS.length}
+            className="w-full mt-8"
+            size="lg"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Previous
+            View Results
           </Button>
-          <Button
-            onClick={handleNext}
-            disabled={!isAnswered}
-            className="flex-1"
-          >
-            {isLastQuestion ? "View Results" : "Next"}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+        </Card>
       </div>
     </div>
   );
