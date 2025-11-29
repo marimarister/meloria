@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,6 +61,17 @@ const BurnoutTest = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showResults, setShowResults] = useState(false);
+  const [savedResults, setSavedResults] = useState<any>(null);
+
+  useEffect(() => {
+    // Check if test already completed
+    const stored = localStorage.getItem('burnoutTest');
+    if (stored) {
+      const data = JSON.parse(stored);
+      setSavedResults(data);
+      setShowResults(true);
+    }
+  }, []);
 
   const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
   const isAnswered = answers[QUESTIONS[currentQuestion].id] !== undefined;
@@ -72,6 +83,14 @@ const BurnoutTest = () => {
 
   const handleNext = () => {
     if (isLastQuestion && isAnswered) {
+      const { ee, dp, pa, total } = calculateScores();
+      const results = {
+        scores: { ee, dp, pa, total },
+        completedAt: new Date().toISOString(),
+        completed: true
+      };
+      localStorage.setItem('burnoutTest', JSON.stringify(results));
+      setSavedResults(results);
       setShowResults(true);
     } else if (isAnswered) {
       setCurrentQuestion(currentQuestion + 1);
@@ -98,7 +117,7 @@ const BurnoutTest = () => {
   };
 
   if (showResults) {
-    const { ee, dp, pa, total } = calculateScores();
+    const { ee, dp, pa, total } = savedResults ? savedResults.scores : calculateScores();
     const level = getBurnoutLevel(total);
 
     return (
@@ -155,6 +174,14 @@ const BurnoutTest = () => {
                   <p className="text-xs text-muted-foreground">out of 48</p>
                 </div>
               </div>
+
+              {savedResults && (
+                <div className="text-center mb-4">
+                  <p className="text-sm text-muted-foreground">
+                    Completed: {new Date(savedResults.completedAt).toLocaleDateString()} at {new Date(savedResults.completedAt).toLocaleTimeString()}
+                  </p>
+                </div>
+              )}
 
               <Button onClick={() => navigate("/employee")} className="w-full" size="lg">
                 View Your Dashboard
