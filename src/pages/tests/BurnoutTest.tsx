@@ -157,7 +157,7 @@ const BurnoutTest = () => {
             <div className="space-y-4 mb-8">
               {/* Emotional Exhaustion */}
               <Card className="p-6">
-                <div className="flex flex-col md:flex-row gap-6 md:items-center">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-6 md:items-center">
                   {/* Title and Score */}
                   <div className="w-full md:w-[30%] space-y-2">
                     <h3 className="text-base md:text-lg font-semibold">Emotional Exhaustion</h3>
@@ -187,7 +187,7 @@ const BurnoutTest = () => {
 
               {/* Depersonalization */}
               <Card className="p-6">
-                <div className="flex flex-col md:flex-row gap-6 md:items-center">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-6 md:items-center">
                   {/* Title and Score */}
                   <div className="w-full md:w-[30%] space-y-2">
                     <h3 className="text-base md:text-lg font-semibold">Depersonalization</h3>
@@ -217,7 +217,7 @@ const BurnoutTest = () => {
 
               {/* Personal Accomplishment */}
               <Card className="p-6">
-                <div className="flex flex-col md:flex-row gap-6 md:items-center">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-6 md:items-center">
                   {/* Title and Score */}
                   <div className="w-full md:w-[30%] space-y-2">
                     <h3 className="text-base md:text-lg font-semibold">Personal Accomplishment</h3>
