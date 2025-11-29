@@ -18,6 +18,17 @@ const SCALE_OPTIONS = [
   { value: 6, label: "Every day" },
 ];
 
+// Reversed scale for Personal Accomplishment questions
+const SCALE_OPTIONS_PA = [
+  { value: 6, label: "Never" },
+  { value: 5, label: "A few times a year or less" },
+  { value: 4, label: "Once a month or less" },
+  { value: 3, label: "A few times a month" },
+  { value: 2, label: "Once a week" },
+  { value: 1, label: "A few times a week" },
+  { value: 0, label: "Every day" },
+];
+
 const QUESTIONS = [
   // Emotional Exhaustion (1-9)
   { id: 1, text: "I feel emotionally drained from my work.", section: "EE" },
@@ -292,7 +303,7 @@ const BurnoutTest = () => {
                   onValueChange={(value) => setAnswers(prev => ({ ...prev, [question.id]: parseInt(value) }))}
                 >
                   <div className="space-y-2">
-                    {SCALE_OPTIONS.map((option) => (
+                    {(question.section === "PA" ? SCALE_OPTIONS_PA : SCALE_OPTIONS).map((option) => (
                       <div
                         key={option.value}
                         className="flex items-center space-x-2 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
