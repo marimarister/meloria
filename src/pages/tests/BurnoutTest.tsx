@@ -160,7 +160,7 @@ const BurnoutTest = () => {
                 <div className="flex flex-col md:flex-row gap-6 md:items-center">
                   {/* Title and Score */}
                   <div className="w-full md:w-[30%] space-y-2">
-                    <h3 className="text-2xl md:text-lg font-semibold">Emotional Exhaustion</h3>
+                    <h3 className="text-base md:text-lg font-semibold">Emotional Exhaustion</h3>
                     <div className="text-sm text-muted-foreground">{scores.emotionalExhaustion} out of 54</div>
                   </div>
                   
@@ -172,7 +172,7 @@ const BurnoutTest = () => {
                         className="absolute top-0 h-full w-0.5 bg-foreground"
                         style={{ left: `${(scores.emotionalExhaustion / 54) * 100}%` }}
                       >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-lg font-bold whitespace-nowrap">
+                        <div className="absolute -top-8 left-0 text-lg font-bold whitespace-nowrap">
                           {Math.round((scores.emotionalExhaustion / 54) * 100)}%
                         </div>
                       </div>
@@ -190,7 +190,7 @@ const BurnoutTest = () => {
                 <div className="flex flex-col md:flex-row gap-6 md:items-center">
                   {/* Title and Score */}
                   <div className="w-full md:w-[30%] space-y-2">
-                    <h3 className="text-2xl md:text-lg font-semibold">Depersonalization</h3>
+                    <h3 className="text-base md:text-lg font-semibold">Depersonalization</h3>
                     <div className="text-sm text-muted-foreground">{scores.depersonalization} out of 30</div>
                   </div>
                   
@@ -202,7 +202,7 @@ const BurnoutTest = () => {
                         className="absolute top-0 h-full w-0.5 bg-foreground"
                         style={{ left: `${(scores.depersonalization / 30) * 100}%` }}
                       >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-lg font-bold whitespace-nowrap">
+                        <div className="absolute -top-8 left-0 text-lg font-bold whitespace-nowrap">
                           {Math.round((scores.depersonalization / 30) * 100)}%
                         </div>
                       </div>
@@ -220,7 +220,7 @@ const BurnoutTest = () => {
                 <div className="flex flex-col md:flex-row gap-6 md:items-center">
                   {/* Title and Score */}
                   <div className="w-full md:w-[30%] space-y-2">
-                    <h3 className="text-2xl md:text-lg font-semibold">Personal Accomplishment</h3>
+                    <h3 className="text-base md:text-lg font-semibold">Personal Accomplishment</h3>
                     <div className="text-sm text-muted-foreground">{scores.personalAccomplishment} out of 48</div>
                   </div>
                   
@@ -232,7 +232,7 @@ const BurnoutTest = () => {
                         className="absolute top-0 h-full w-0.5 bg-foreground"
                         style={{ left: `${(scores.personalAccomplishment / 48) * 100}%` }}
                       >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-lg font-bold whitespace-nowrap">
+                        <div className="absolute -top-8 left-0 text-lg font-bold whitespace-nowrap">
                           {Math.round((scores.personalAccomplishment / 48) * 100)}%
                         </div>
                       </div>
