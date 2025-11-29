@@ -9,6 +9,7 @@ import HRDashboard from "./pages/HRDashboard";
 import BurnoutTest from "./pages/tests/BurnoutTest";
 import ChannelPerceptionTest from "./pages/tests/ChannelPerceptionTest";
 import PreferenceTest from "./pages/tests/PreferenceTest";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/test/burnout" element={<BurnoutTest />} />
           <Route path="/test/perception" element={<ChannelPerceptionTest />} />
           <Route path="/test/preference" element={<PreferenceTest />} />
+          <Route path="/login" element={<Login />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

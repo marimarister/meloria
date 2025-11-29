@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Eye, Ear, Hand, Binary, ArrowLeft, ArrowRight, Home, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import NavBar from "@/components/NavBar";
 
 type ChannelType = 'V' | 'A' | 'K' | 'D';
 
@@ -282,15 +283,9 @@ const ChannelPerceptionTest = () => {
   if (stage === 'intro') {
     return (
       <div className="min-h-screen gradient-employee">
+        <NavBar />
+        
         <div className="px-6 py-8 mx-auto max-w-4xl">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/employee')}
-            className="mb-6"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
 
           <Card className="p-8 animate-fade-in">
             <h1 className="text-3xl font-bold mb-6">Channel Perception Test</h1>
@@ -363,6 +358,8 @@ const ChannelPerceptionTest = () => {
 
     return (
       <div className="min-h-screen gradient-employee">
+        <NavBar />
+        
         <div className="px-6 py-8 mx-auto max-w-4xl">
           <Card className="p-8 animate-fade-in">
             <div className="text-center mb-8">
@@ -424,6 +421,8 @@ const ChannelPerceptionTest = () => {
 
   return (
     <div className="min-h-screen gradient-employee">
+      <NavBar />
+      
       <div className="px-6 py-8 mx-auto max-w-4xl">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">

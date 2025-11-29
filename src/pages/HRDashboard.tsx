@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   AlertCircle
 } from "lucide-react";
+import NavBar from "@/components/NavBar";
 
 const HRDashboard = () => {
   // Mock data - will be replaced with real data from backend
@@ -25,6 +26,8 @@ const HRDashboard = () => {
 
   return (
     <div className="min-h-screen gradient-hr">
+      <NavBar />
+      
       <div className="px-6 py-8 mx-auto max-w-7xl lg:px-8">
         {/* Header */}
         <div className="mb-10 animate-fade-in">
@@ -86,8 +89,12 @@ const HRDashboard = () => {
                   <div className="flex items-center gap-2">
                     <TrendingDown className="h-5 w-5 text-success" />
                     <span className="font-medium">Low Risk (0-30)</span>
+                    <span className="text-xs text-muted-foreground ml-2">Level</span>
                   </div>
-                  <span className="text-lg font-semibold">{stats.riskCategories.low}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">Amount of Employees</span>
+                    <span className="text-lg font-semibold">{stats.riskCategories.low}</span>
+                  </div>
                 </div>
                 <Progress value={(stats.riskCategories.low / stats.completedTests) * 100} className="h-2" />
               </div>
@@ -97,8 +104,12 @@ const HRDashboard = () => {
                   <div className="flex items-center gap-2">
                     <Activity className="h-5 w-5 text-warning" />
                     <span className="font-medium">Moderate Risk (31-60)</span>
+                    <span className="text-xs text-muted-foreground ml-2">Level</span>
                   </div>
-                  <span className="text-lg font-semibold">{stats.riskCategories.moderate}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">Amount of Employees</span>
+                    <span className="text-lg font-semibold">{stats.riskCategories.moderate}</span>
+                  </div>
                 </div>
                 <Progress value={(stats.riskCategories.moderate / stats.completedTests) * 100} className="h-2" />
               </div>
@@ -108,8 +119,12 @@ const HRDashboard = () => {
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-5 w-5 text-destructive" />
                     <span className="font-medium">High Risk (61-100)</span>
+                    <span className="text-xs text-muted-foreground ml-2">Level</span>
                   </div>
-                  <span className="text-lg font-semibold">{stats.riskCategories.high}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">Amount of Employees</span>
+                    <span className="text-lg font-semibold">{stats.riskCategories.high}</span>
+                  </div>
                 </div>
                 <Progress value={(stats.riskCategories.high / stats.completedTests) * 100} className="h-2" />
               </div>

@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Heart, ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import NavBar from "@/components/NavBar";
 
 const SCALE_OPTIONS = [
   { value: "0", label: "Never" },
@@ -122,15 +123,9 @@ const BurnoutTest = () => {
 
     return (
       <div className="min-h-screen gradient-employee">
+        <NavBar />
+        
         <div className="px-6 py-8 mx-auto max-w-4xl">
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/employee")}
-            className="mb-6"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
 
           <Card className="p-8 animate-fade-in">
             <div className="flex items-center justify-center mb-6">
@@ -197,20 +192,13 @@ const BurnoutTest = () => {
 
   return (
     <div className="min-h-screen gradient-employee">
+      <NavBar />
+      
       <div className="px-6 py-8 mx-auto max-w-4xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/employee")}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
-          </Button>
-          <div className="flex items-center gap-2">
-            <Heart className="h-5 w-5 text-primary" />
-            <span className="font-semibold">Burnout Test</span>
-          </div>
+        <div className="flex items-center justify-center mb-6">
+          <Heart className="h-5 w-5 text-primary" />
+          <span className="font-semibold">Burnout Test</span>
         </div>
 
         {/* Progress */}
