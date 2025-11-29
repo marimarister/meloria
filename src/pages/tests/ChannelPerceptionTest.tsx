@@ -420,9 +420,6 @@ const ChannelPerceptionTest = () => {
           <RadioGroup value={currentAnswer} onValueChange={handleAnswer}>
             <div className="space-y-3">
               {question.options.map((option) => {
-                const info = channelInfo[option.channel];
-                const Icon = info.icon;
-                
                 return (
                   <div
                     key={option.label}
@@ -440,15 +437,9 @@ const ChannelPerceptionTest = () => {
                     />
                     <Label
                       htmlFor={`q${question.id}-${option.label}`}
-                      className="ml-3 cursor-pointer flex items-start gap-3 flex-1"
+                      className="ml-3 cursor-pointer flex-1"
                     >
-                      <div className={`w-8 h-8 rounded-full ${info.bgColor} flex items-center justify-center flex-shrink-0`}>
-                        <Icon className={`h-4 w-4 ${info.color}`} />
-                      </div>
-                      <div>
-                        <span className="font-medium">{option.label}.</span> {option.text}
-                        <span className="text-xs text-muted-foreground ml-2">({option.channel})</span>
-                      </div>
+                      {option.text}
                     </Label>
                   </div>
                 );
