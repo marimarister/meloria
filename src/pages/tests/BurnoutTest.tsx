@@ -157,14 +157,14 @@ const BurnoutTest = () => {
             <div className="space-y-4 mb-8">
               {/* Emotional Exhaustion */}
               <Card className="p-6">
-                <div className="flex gap-6 items-center">
-                  {/* Left 30%: Name and Score */}
-                  <div className="w-[30%] space-y-2">
+                <div className="flex flex-col md:flex-row gap-6 md:items-center">
+                  {/* Title and Score */}
+                  <div className="w-full md:w-[30%] space-y-2">
                     <h3 className="text-lg md:text-lg text-sm font-semibold">Emotional Exhaustion</h3>
                     <div className="text-sm text-muted-foreground">{scores.emotionalExhaustion} out of 54</div>
                   </div>
                   
-                  {/* Right 70%: Gradient Bar */}
+                  {/* Gradient Bar */}
                   <div className="flex-1 relative pt-8 pb-2">
                     <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
                       {/* Vertical line indicator on the bar */}
@@ -187,14 +187,14 @@ const BurnoutTest = () => {
 
               {/* Depersonalization */}
               <Card className="p-6">
-                <div className="flex gap-6 items-center">
-                  {/* Left 30%: Name and Score */}
-                  <div className="w-[30%] space-y-2">
+                <div className="flex flex-col md:flex-row gap-6 md:items-center">
+                  {/* Title and Score */}
+                  <div className="w-full md:w-[30%] space-y-2">
                     <h3 className="text-lg md:text-lg text-sm font-semibold">Depersonalization</h3>
                     <div className="text-sm text-muted-foreground">{scores.depersonalization} out of 30</div>
                   </div>
                   
-                  {/* Right 70%: Gradient Bar */}
+                  {/* Gradient Bar */}
                   <div className="flex-1 relative pt-8 pb-2">
                     <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
                       {/* Vertical line indicator on the bar */}
@@ -217,14 +217,14 @@ const BurnoutTest = () => {
 
               {/* Personal Accomplishment */}
               <Card className="p-6">
-                <div className="flex gap-6 items-center">
-                  {/* Left 30%: Name and Score */}
-                  <div className="w-[30%] space-y-2">
+                <div className="flex flex-col md:flex-row gap-6 md:items-center">
+                  {/* Title and Score */}
+                  <div className="w-full md:w-[30%] space-y-2">
                     <h3 className="text-lg md:text-lg text-sm font-semibold">Personal Accomplishment</h3>
                     <div className="text-sm text-muted-foreground">{scores.personalAccomplishment} out of 48</div>
                   </div>
                   
-                  {/* Right 70%: Gradient Bar */}
+                  {/* Gradient Bar */}
                   <div className="flex-1 relative pt-8 pb-2">
                     <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
                       {/* Vertical line indicator on the bar */}
