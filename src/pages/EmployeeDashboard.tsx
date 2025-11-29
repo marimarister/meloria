@@ -400,64 +400,132 @@ const EmployeeDashboard = () => {
 
         {/* Weekly Activities Section - Shown only when tests are completed */}
         {overallProgress >= 100 && (
-          <Card className="p-8 mb-8">
-            <div className="flex items-center justify-between mb-6">
+          <Card className="p-4 md:p-8 mb-8">
+            {/* Mobile Layout */}
+            <div className="md:hidden space-y-4">
+              {/* Title with Icon - Single Line */}
               <div className="flex items-center gap-2">
-                <Calendar className="h-6 w-6 text-primary" />
-                <h2 className="text-2xl font-semibold">Suggested Weekly Activities</h2>
+                <Calendar className="h-7 w-7 text-primary flex-shrink-0" />
+                <h2 className="text-base font-semibold">Suggested Weekly Activities</h2>
               </div>
-              <div className="flex items-center gap-4">
+              
+              {/* Navigation with Month/Year */}
+              <div className="flex items-center justify-between">
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => navigateWeek('prev')}
+                  className="h-8 w-8"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <span className="text-sm font-medium min-w-[150px] text-center">
+                <span className="text-sm font-medium">
                   {formatMonthYear()}
                 </span>
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => navigateWeek('next')}
+                  className="h-8 w-8"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
+
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-1">
+                {getWeekDays().map((date, index) => {
+                  const activity = getActivityForDate(date);
+                  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                  
+                  return (
+                    <div
+                      key={index}
+                      className={`p-2 rounded-lg border ${
+                        activity 
+                          ? 'bg-green-50 border-green-200' 
+                          : 'bg-white border-border'
+                      } min-h-[100px] flex flex-col items-center justify-start`}
+                    >
+                      <div className="text-center">
+                        <div className="text-[10px] text-muted-foreground font-medium">
+                          {dayNames[date.getDay()]}
+                        </div>
+                        <div className="text-base font-semibold mb-1">
+                          {date.getDate()}
+                        </div>
+                      </div>
+                      {activity && (
+                        <div className="text-[9px] text-foreground text-center leading-tight mt-1">
+                          {activity}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-2">
-              {getWeekDays().map((date, index) => {
-                const activity = getActivityForDate(date);
-                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                
-                return (
-                  <div
-                    key={index}
-                    className={`p-4 rounded-lg border ${
-                      activity 
-                        ? 'bg-primary/5 border-primary/30' 
-                        : 'bg-muted/20 border-border'
-                    } min-h-[120px]`}
+            {/* Desktop Layout */}
+            <div className="hidden md:block">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-6 w-6 text-primary" />
+                  <h2 className="text-2xl font-semibold">Suggested Weekly Activities</h2>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => navigateWeek('prev')}
                   >
-                    <div className="text-center mb-2">
-                      <div className="text-xs text-muted-foreground font-medium">
-                        {dayNames[date.getDay()]}
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm font-medium min-w-[150px] text-center">
+                    {formatMonthYear()}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => navigateWeek('next')}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-2">
+                {getWeekDays().map((date, index) => {
+                  const activity = getActivityForDate(date);
+                  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                  
+                  return (
+                    <div
+                      key={index}
+                      className={`p-4 rounded-lg border ${
+                        activity 
+                          ? 'bg-primary/5 border-primary/30' 
+                          : 'bg-muted/20 border-border'
+                      } min-h-[120px]`}
+                    >
+                      <div className="text-center mb-2">
+                        <div className="text-xs text-muted-foreground font-medium">
+                          {dayNames[date.getDay()]}
+                        </div>
+                        <div className="text-lg font-semibold">
+                          {date.getDate()}
+                        </div>
                       </div>
-                      <div className="text-lg font-semibold">
-                        {date.getDate()}
-                      </div>
+                      {activity && (
+                        <div className="text-xs text-foreground mt-2 text-center">
+                          {activity}
+                        </div>
+                      )}
                     </div>
-                    {activity && (
-                      <div className="text-xs text-foreground mt-2 text-center">
-                        {activity}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </Card>
         )}
