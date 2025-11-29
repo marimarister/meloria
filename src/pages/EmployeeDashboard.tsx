@@ -9,7 +9,11 @@ import {
   ArrowRight,
   Clock,
   Check,
-  Trash2
+  Trash2,
+  Eye,
+  Volume2,
+  Hand,
+  Monitor
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -81,6 +85,15 @@ const EmployeeDashboard = () => {
     return "Extreme Burnout Risk";
   };
 
+  const getBurnoutLevelColor = (score: number) => {
+    if (score <= 22) return { bg: 'bg-green-100', border: 'border-green-200', text: 'text-green-800', icon: 'bg-green-200 text-green-700' };
+    if (score <= 44) return { bg: 'bg-blue-100', border: 'border-blue-200', text: 'text-blue-800', icon: 'bg-blue-200 text-blue-700' };
+    if (score <= 66) return { bg: 'bg-yellow-100', border: 'border-yellow-200', text: 'text-yellow-800', icon: 'bg-yellow-200 text-yellow-700' };
+    if (score <= 88) return { bg: 'bg-orange-100', border: 'border-orange-200', text: 'text-orange-800', icon: 'bg-orange-200 text-orange-700' };
+    if (score <= 110) return { bg: 'bg-red-100', border: 'border-red-200', text: 'text-red-800', icon: 'bg-red-200 text-red-700' };
+    return { bg: 'bg-red-200', border: 'border-red-300', text: 'text-red-900', icon: 'bg-red-300 text-red-800' };
+  };
+
   const getDominantChannel = () => {
     const perceptionData = localStorage.getItem('channelPerceptionTest');
     if (!perceptionData) return null;
@@ -96,6 +109,16 @@ const EmployeeDashboard = () => {
       channel.score > max.score ? channel : max
     );
     return dominant.name;
+  };
+
+  const getChannelIcon = (channel: string | null) => {
+    const iconMap: Record<string, any> = {
+      'Visual': require('lucide-react').Eye,
+      'Auditory': require('lucide-react').Volume2,
+      'Kinesthetic': require('lucide-react').Hand,
+      'Digital': require('lucide-react').Monitor
+    };
+    return channel ? iconMap[channel] : Brain;
   };
 
   const getPreferenceArchetypes = () => {
@@ -151,81 +174,91 @@ const EmployeeDashboard = () => {
 
         {/* Overall Progress */}
         <Card className="p-8 mb-8 animate-slide-up">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-semibold mb-1">
-                {overallProgress >= 100 ? "You're all set" : "Your Progress"}
-              </h2>
-              {overallProgress < 100 && (
-                <p className="text-muted-foreground">
-                  {otherTestsOptional 
-                    ? "Great news! Based on your burnout score, the other tests are optional."
-                    : testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score > 44
-                    ? "Complete all assessments to unlock personalized insights"
-                    : "Complete the Burnout Test to get started"}
-                </p>
-              )}
-            </div>
-            {overallProgress >= 100 ? (
+          {overallProgress >= 100 ? (
+            <div className="flex flex-col items-center justify-center text-center">
+              <h2 className="text-2xl font-semibold mb-4">You're All Set</h2>
               <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
                 <Check className="h-10 w-10 text-green-500" strokeWidth={3} />
               </div>
-            ) : (
-              <div className="text-4xl font-bold text-primary">{overallProgress}%</div>
-            )}
-          </div>
-          {overallProgress < 100 && <Progress value={overallProgress} className="h-3" />}
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-semibold mb-1">Your Progress</h2>
+                  <p className="text-muted-foreground">
+                    {otherTestsOptional 
+                      ? "Great news! Based on your burnout score, the other tests are optional."
+                      : testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score > 44
+                      ? "Complete all assessments to unlock personalized insights"
+                      : "Complete the Burnout Test to get started"}
+                  </p>
+                </div>
+                <div className="text-4xl font-bold text-primary">{overallProgress}%</div>
+              </div>
+              <Progress value={overallProgress} className="h-3" />
+            </>
+          )}
         </Card>
 
         {/* Summary Cards - Shown when 100% complete */}
         {overallProgress >= 100 && (
-          <div className="grid gap-6 md:grid-cols-3 mb-8 animate-slide-up">
-            {/* Burnout Test Summary */}
-            {testStatus.burnout.completed && testStatus.burnout.score !== null && (
-              <Card className="p-6 bg-blue-50 border-blue-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center">
-                    <Heart className="h-5 w-5 text-blue-700" />
-                  </div>
-                  <h3 className="font-semibold text-blue-900">Burnout Level</h3>
-                </div>
-                <p className="font-medium text-blue-800">{getBurnoutLevel(testStatus.burnout.score)}</p>
-                <p className="text-xs text-blue-600 mt-2">Score: {testStatus.burnout.score}/132</p>
-              </Card>
-            )}
+          <Card className="p-6 mb-8 animate-slide-up">
+            <h2 className="text-xl font-semibold mb-6 text-center">Results</h2>
+            <div className="grid gap-6 md:grid-cols-3">
+              {/* Burnout Test Summary */}
+              {testStatus.burnout.completed && testStatus.burnout.score !== null && (() => {
+                const colors = getBurnoutLevelColor(testStatus.burnout.score);
+                return (
+                  <Card className={`p-6 ${colors.bg} ${colors.border}`}>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className={`w-10 h-10 rounded-full ${colors.icon} flex items-center justify-center`}>
+                        <Heart className="h-5 w-5" />
+                      </div>
+                      <h3 className={`font-semibold ${colors.text}`}>Burnout Level</h3>
+                    </div>
+                    <p className={`font-medium ${colors.text}`}>{getBurnoutLevel(testStatus.burnout.score)}</p>
+                  </Card>
+                );
+              })()}
 
-            {/* Channel Perception Summary */}
-            {testStatus.perception.completed && (
-              <Card className="p-6 bg-purple-50 border-purple-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-purple-200 flex items-center justify-center">
-                    <Brain className="h-5 w-5 text-purple-700" />
-                  </div>
-                  <h3 className="font-semibold text-purple-900">Dominant Style</h3>
-                </div>
-                <p className="font-medium text-purple-800">{getDominantChannel()} Learner</p>
-              </Card>
-            )}
+              {/* Channel Perception Summary */}
+              {testStatus.perception.completed && (() => {
+                const channel = getDominantChannel();
+                const ChannelIcon = getChannelIcon(channel);
+                return (
+                  <Card className="p-6 bg-purple-50 border-purple-200">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-full bg-purple-200 flex items-center justify-center">
+                        <ChannelIcon className="h-5 w-5 text-purple-700" />
+                      </div>
+                      <h3 className="font-semibold text-purple-900">Dominant Style</h3>
+                    </div>
+                    <p className="font-medium text-purple-800">{channel} Learner</p>
+                  </Card>
+                );
+              })()}
 
-            {/* Preference Test Summary */}
-            {testStatus.preference.completed && (
-              <Card className="p-6 bg-amber-50 border-amber-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-amber-200 flex items-center justify-center">
-                    <ClipboardCheck className="h-5 w-5 text-amber-700" />
+              {/* Preference Test Summary */}
+              {testStatus.preference.completed && (
+                <Card className="p-6 bg-blue-100 border-blue-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center">
+                      <Brain className="h-5 w-5 text-blue-700" />
+                    </div>
+                    <h3 className="font-semibold text-blue-900">Your Archetypes</h3>
                   </div>
-                  <h3 className="font-semibold text-amber-900">Your Archetypes</h3>
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {getPreferenceArchetypes().map((archetype, idx) => (
-                    <span key={idx} className="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded">
-                      {archetype}
-                    </span>
-                  ))}
-                </div>
-              </Card>
-            )}
-          </div>
+                  <div className="flex flex-wrap gap-1">
+                    {getPreferenceArchetypes().map((archetype, idx) => (
+                      <span key={idx} className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded">
+                        {archetype}
+                      </span>
+                    ))}
+                  </div>
+                </Card>
+              )}
+            </div>
+          </Card>
         )}
 
         {/* Test Cards */}

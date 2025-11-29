@@ -135,19 +135,20 @@ const BurnoutTest = () => {
 
               {/* Gradient Bar */}
               <div className="relative pt-8 pb-2">
-                <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
+                <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                  {/* Vertical line indicator on the bar */}
+                  <div 
+                    className="absolute top-0 h-full w-0.5 bg-foreground"
+                    style={{ left: `${(scores.total / 132) * 100}%` }}
+                  >
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                      {Math.round((scores.total / 132) * 100)}%
+                    </div>
+                  </div>
+                </div>
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>0%</span>
                   <span>100%</span>
-                </div>
-                {/* Vertical line indicator */}
-                <div 
-                  className="absolute top-0 h-3 w-0.5 bg-foreground"
-                  style={{ left: `${(scores.total / 132) * 100}%` }}
-                >
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
-                    {Math.round((scores.total / 132) * 100)}%
-                  </div>
                 </div>
               </div>
             </Card>
@@ -160,25 +161,25 @@ const BurnoutTest = () => {
                   {/* Left 30%: Name and Score */}
                   <div className="w-[30%] space-y-2">
                     <h3 className="text-lg font-semibold">Emotional Exhaustion</h3>
-                    <div className="text-3xl font-bold text-primary">{scores.emotionalExhaustion}</div>
-                    <div className="text-sm text-muted-foreground">out of 54</div>
+                    <div className="text-sm text-muted-foreground">{scores.emotionalExhaustion} out of 54</div>
                   </div>
                   
                   {/* Right 70%: Gradient Bar */}
                   <div className="flex-1 relative pt-8 pb-2">
-                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                      {/* Vertical line indicator on the bar */}
+                      <div 
+                        className="absolute top-0 h-full w-0.5 bg-foreground"
+                        style={{ left: `${(scores.emotionalExhaustion / 54) * 100}%` }}
+                      >
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                          {Math.round((scores.emotionalExhaustion / 54) * 100)}%
+                        </div>
+                      </div>
+                    </div>
                     <div className="flex justify-between text-xs text-muted-foreground mt-1">
                       <span>0%</span>
                       <span>100%</span>
-                    </div>
-                    {/* Vertical line indicator */}
-                    <div 
-                      className="absolute top-0 h-3 w-0.5 bg-foreground"
-                      style={{ left: `${(scores.emotionalExhaustion / 54) * 100}%` }}
-                    >
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
-                        {Math.round((scores.emotionalExhaustion / 54) * 100)}%
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -190,25 +191,25 @@ const BurnoutTest = () => {
                   {/* Left 30%: Name and Score */}
                   <div className="w-[30%] space-y-2">
                     <h3 className="text-lg font-semibold">Depersonalization</h3>
-                    <div className="text-3xl font-bold text-primary">{scores.depersonalization}</div>
-                    <div className="text-sm text-muted-foreground">out of 30</div>
+                    <div className="text-sm text-muted-foreground">{scores.depersonalization} out of 30</div>
                   </div>
                   
                   {/* Right 70%: Gradient Bar */}
                   <div className="flex-1 relative pt-8 pb-2">
-                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                      {/* Vertical line indicator on the bar */}
+                      <div 
+                        className="absolute top-0 h-full w-0.5 bg-foreground"
+                        style={{ left: `${(scores.depersonalization / 30) * 100}%` }}
+                      >
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                          {Math.round((scores.depersonalization / 30) * 100)}%
+                        </div>
+                      </div>
+                    </div>
                     <div className="flex justify-between text-xs text-muted-foreground mt-1">
                       <span>0%</span>
                       <span>100%</span>
-                    </div>
-                    {/* Vertical line indicator */}
-                    <div 
-                      className="absolute top-0 h-3 w-0.5 bg-foreground"
-                      style={{ left: `${(scores.depersonalization / 30) * 100}%` }}
-                    >
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
-                        {Math.round((scores.depersonalization / 30) * 100)}%
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -220,25 +221,25 @@ const BurnoutTest = () => {
                   {/* Left 30%: Name and Score */}
                   <div className="w-[30%] space-y-2">
                     <h3 className="text-lg font-semibold">Personal Accomplishment</h3>
-                    <div className="text-3xl font-bold text-primary">{scores.personalAccomplishment}</div>
-                    <div className="text-sm text-muted-foreground">out of 48</div>
+                    <div className="text-sm text-muted-foreground">{scores.personalAccomplishment} out of 48</div>
                   </div>
                   
                   {/* Right 70%: Gradient Bar */}
                   <div className="flex-1 relative pt-8 pb-2">
-                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                      {/* Vertical line indicator on the bar */}
+                      <div 
+                        className="absolute top-0 h-full w-0.5 bg-foreground"
+                        style={{ left: `${(scores.personalAccomplishment / 48) * 100}%` }}
+                      >
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                          {Math.round((scores.personalAccomplishment / 48) * 100)}%
+                        </div>
+                      </div>
+                    </div>
                     <div className="flex justify-between text-xs text-muted-foreground mt-1">
                       <span>0%</span>
                       <span>100%</span>
-                    </div>
-                    {/* Vertical line indicator */}
-                    <div 
-                      className="absolute top-0 h-3 w-0.5 bg-foreground"
-                      style={{ left: `${(scores.personalAccomplishment / 48) * 100}%` }}
-                    >
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
-                        {Math.round((scores.personalAccomplishment / 48) * 100)}%
-                      </div>
                     </div>
                   </div>
                 </div>
