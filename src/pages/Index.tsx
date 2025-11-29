@@ -3,12 +3,15 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight, Users, Heart, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-wellness.jpg";
+import NavBar from "@/components/NavBar";
 
 const Index = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background">
+      <NavBar />
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div 

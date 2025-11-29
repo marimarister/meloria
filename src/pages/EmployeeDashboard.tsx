@@ -9,14 +9,12 @@ import {
   ArrowRight,
   Clock,
   Check,
-  Menu,
-  User,
-  ChevronLeft,
   Trash2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import NavBar from "@/components/NavBar";
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
@@ -138,45 +136,7 @@ const EmployeeDashboard = () => {
 
   return (
     <div className="min-h-screen gradient-employee">
-      {/* Navigation Bar */}
-      <nav className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-50">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate(-1)}
-                className="hover:bg-accent"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-accent"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </div>
-            
-            <button 
-              onClick={() => navigate('/')}
-              className="text-2xl font-bold text-foreground hover:text-primary transition-colors"
-            >
-              Meloria
-            </button>
-            
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-accent"
-            >
-              <User className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-      </nav>
+      <NavBar />
 
       <div className="px-6 py-8 mx-auto max-w-7xl lg:px-8">
         {/* Header */}

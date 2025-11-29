@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Home, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import NavBar from "@/components/NavBar";
 
 interface Question {
   id: number;
@@ -184,15 +185,9 @@ const PreferenceTest = () => {
   if (stage === 'intro') {
     return (
       <div className="min-h-screen gradient-employee">
+        <NavBar />
+        
         <div className="px-6 py-8 mx-auto max-w-4xl">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/employee')}
-            className="mb-6"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
 
           <Card className="p-8 animate-fade-in">
             <h1 className="text-3xl font-bold mb-6">Work Preferences & Motivation Test</h1>
@@ -224,6 +219,8 @@ const PreferenceTest = () => {
 
     return (
       <div className="min-h-screen gradient-employee">
+        <NavBar />
+        
         <div className="px-6 py-8 mx-auto max-w-4xl">
           <Card className="p-8 animate-fade-in">
             <div className="text-center mb-8">
@@ -269,15 +266,9 @@ const PreferenceTest = () => {
 
   return (
     <div className="min-h-screen gradient-employee">
+      <NavBar />
+      
       <div className="px-6 py-8 mx-auto max-w-4xl">
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/employee')}
-          className="mb-6"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Dashboard
-        </Button>
 
         <Card className="p-8 animate-fade-in">
           <h2 className="text-2xl font-semibold mb-6">Please rate each statement</h2>
