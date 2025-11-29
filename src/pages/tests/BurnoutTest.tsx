@@ -120,6 +120,12 @@ const BurnoutTest = () => {
   if (showResults) {
     const { ee, dp, pa, total } = savedResults ? savedResults.scores : calculateScores();
     const level = getBurnoutLevel(total);
+    
+    // Calculate percentages
+    const totalPercentage = (total / 132) * 100;
+    const eePercentage = (ee / 54) * 100;
+    const dpPercentage = (dp / 30) * 100;
+    const paPercentage = (pa / 48) * 100;
 
     return (
       <div className="min-h-screen gradient-employee">
@@ -138,35 +144,118 @@ const BurnoutTest = () => {
             <p className="text-center text-muted-foreground mb-8">Here are your results</p>
 
             <div className="space-y-6">
-              {/* Overall Score */}
-              <div className="text-center p-6 rounded-lg bg-muted/50">
-                <p className="text-sm text-muted-foreground mb-2">Overall Burnout Score</p>
-                <p className="text-5xl font-bold text-primary mb-2">{total}</p>
-                <p className="text-sm text-muted-foreground">out of 132</p>
+              {/* Overall Score with Level and Gradient Bar */}
+              <div className="p-6 rounded-lg bg-muted/50">
+                <p className="text-sm text-muted-foreground mb-2 text-center">Overall Burnout Score</p>
+                <p className="text-5xl font-bold text-primary mb-2 text-center">{total}</p>
+                <p className="text-sm text-muted-foreground mb-6 text-center">out of 132</p>
+                
+                {/* Burnout Level */}
+                <div className={`p-4 rounded-lg border-2 ${level.color} bg-background mb-4`}>
+                  <h2 className={`text-xl font-bold mb-2 ${level.color}`}>{level.title}</h2>
+                  <p className="text-sm text-foreground">{level.description}</p>
+                </div>
+
+                {/* Gradient Bar */}
+                <div className="relative">
+                  <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                    <span>0%</span>
+                    <span>100%</span>
+                  </div>
+                  <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                    <div 
+                      className="absolute top-0 bottom-0 w-0.5 bg-foreground"
+                      style={{ left: `${totalPercentage}%`, transform: 'translateX(-50%)' }}
+                    >
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                        {totalPercentage.toFixed(0)}%
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Burnout Level */}
-              <div className={`p-6 rounded-lg border-2 ${level.color} bg-background`}>
-                <h2 className={`text-2xl font-bold mb-3 ${level.color}`}>{level.title}</h2>
-                <p className="text-foreground">{level.description}</p>
-              </div>
+              {/* Detailed Scores with Gradient Bars */}
+              <div className="space-y-4">
+                {/* Emotional Exhaustion */}
+                <div className="p-4 rounded-lg bg-muted/50 w-full">
+                  <div className="flex justify-between items-center mb-3">
+                    <p className="text-sm text-muted-foreground">Emotional Exhaustion</p>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold">{ee}</p>
+                      <p className="text-xs text-muted-foreground">out of 54</p>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                      <span>0%</span>
+                      <span>100%</span>
+                    </div>
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                      <div 
+                        className="absolute top-0 bottom-0 w-0.5 bg-foreground"
+                        style={{ left: `${eePercentage}%`, transform: 'translateX(-50%)' }}
+                      >
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                          {eePercentage.toFixed(0)}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Detailed Scores */}
-              <div className="grid gap-4 md:grid-cols-3">
-                <div className="p-4 rounded-lg bg-muted/50">
-                  <p className="text-sm text-muted-foreground mb-1">Emotional Exhaustion</p>
-                  <p className="text-2xl font-bold">{ee}</p>
-                  <p className="text-xs text-muted-foreground">out of 54</p>
+                {/* Depersonalization */}
+                <div className="p-4 rounded-lg bg-muted/50 w-full">
+                  <div className="flex justify-between items-center mb-3">
+                    <p className="text-sm text-muted-foreground">Depersonalization</p>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold">{dp}</p>
+                      <p className="text-xs text-muted-foreground">out of 30</p>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                      <span>0%</span>
+                      <span>100%</span>
+                    </div>
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                      <div 
+                        className="absolute top-0 bottom-0 w-0.5 bg-foreground"
+                        style={{ left: `${dpPercentage}%`, transform: 'translateX(-50%)' }}
+                      >
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                          {dpPercentage.toFixed(0)}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-4 rounded-lg bg-muted/50">
-                  <p className="text-sm text-muted-foreground mb-1">Depersonalization</p>
-                  <p className="text-2xl font-bold">{dp}</p>
-                  <p className="text-xs text-muted-foreground">out of 30</p>
-                </div>
-                <div className="p-4 rounded-lg bg-muted/50">
-                  <p className="text-sm text-muted-foreground mb-1">Personal Accomplishment</p>
-                  <p className="text-2xl font-bold">{pa}</p>
-                  <p className="text-xs text-muted-foreground">out of 48</p>
+
+                {/* Personal Accomplishment */}
+                <div className="p-4 rounded-lg bg-muted/50 w-full">
+                  <div className="flex justify-between items-center mb-3">
+                    <p className="text-sm text-muted-foreground">Personal Accomplishment</p>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold">{pa}</p>
+                      <p className="text-xs text-muted-foreground">out of 48</p>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                      <span>0%</span>
+                      <span>100%</span>
+                    </div>
+                    <div className="h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 relative">
+                      <div 
+                        className="absolute top-0 bottom-0 w-0.5 bg-foreground"
+                        style={{ left: `${paPercentage}%`, transform: 'translateX(-50%)' }}
+                      >
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap">
+                          {paPercentage.toFixed(0)}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

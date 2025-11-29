@@ -80,21 +80,21 @@ const HRDashboard = () => {
 
         {/* Detailed Analytics */}
         <div className="grid gap-6 md:grid-cols-2 mb-8">
-          {/* Risk Distribution */}
-          <Card className="p-8">
-            <h2 className="text-2xl font-semibold mb-6">Burnout Risk Distribution</h2>
+          {/* Burnout Risk Distribution */}
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-2">Burnout Risk Distribution</h2>
+            <div className="flex justify-between text-[10px] text-muted-foreground mb-4">
+              <span>Level</span>
+              <span>Amount of Employees</span>
+            </div>
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <TrendingDown className="h-5 w-5 text-success" />
                     <span className="font-medium">Low Risk (0-30)</span>
-                    <span className="text-xs text-muted-foreground ml-2">Level</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Amount of Employees</span>
-                    <span className="text-lg font-semibold">{stats.riskCategories.low}</span>
-                  </div>
+                  <span className="text-lg font-semibold">{stats.riskCategories.low}</span>
                 </div>
                 <Progress value={(stats.riskCategories.low / stats.completedTests) * 100} className="h-2" />
               </div>
@@ -104,12 +104,8 @@ const HRDashboard = () => {
                   <div className="flex items-center gap-2">
                     <Activity className="h-5 w-5 text-warning" />
                     <span className="font-medium">Moderate Risk (31-60)</span>
-                    <span className="text-xs text-muted-foreground ml-2">Level</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Amount of Employees</span>
-                    <span className="text-lg font-semibold">{stats.riskCategories.moderate}</span>
-                  </div>
+                  <span className="text-lg font-semibold">{stats.riskCategories.moderate}</span>
                 </div>
                 <Progress value={(stats.riskCategories.moderate / stats.completedTests) * 100} className="h-2" />
               </div>
@@ -119,12 +115,8 @@ const HRDashboard = () => {
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-5 w-5 text-destructive" />
                     <span className="font-medium">High Risk (61-100)</span>
-                    <span className="text-xs text-muted-foreground ml-2">Level</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Amount of Employees</span>
-                    <span className="text-lg font-semibold">{stats.riskCategories.high}</span>
-                  </div>
+                  <span className="text-lg font-semibold">{stats.riskCategories.high}</span>
                 </div>
                 <Progress value={(stats.riskCategories.high / stats.completedTests) * 100} className="h-2" />
               </div>

@@ -171,20 +171,6 @@ const EmployeeDashboard = () => {
             )}
           </div>
           {overallProgress < 100 && <Progress value={overallProgress} className="h-3" />}
-          
-          {overallProgress >= 100 && (
-            <div className="mt-4 flex justify-end">
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleResetAll}
-                className="gap-2"
-              >
-                <Trash2 className="h-4 w-4" />
-                Reset All Results
-              </Button>
-            </div>
-          )}
         </Card>
 
         {/* Summary Cards - Shown when 100% complete */}
@@ -365,6 +351,16 @@ const EmployeeDashboard = () => {
             </Card>
           </div>
         )}
+        {/* Reset Button at Bottom */}
+        <div className="mt-8 flex justify-center pb-8">
+          <Button
+            variant="outline"
+            onClick={handleResetAll}
+            className="w-full max-w-md"
+          >
+            Reset
+          </Button>
+        </div>
       </div>
     </div>
   );
