@@ -113,10 +113,10 @@ const EmployeeDashboard = () => {
 
   const getChannelIcon = (channel: string | null) => {
     const iconMap: Record<string, any> = {
-      'Visual': require('lucide-react').Eye,
-      'Auditory': require('lucide-react').Volume2,
-      'Kinesthetic': require('lucide-react').Hand,
-      'Digital': require('lucide-react').Monitor
+      'Visual': Eye,
+      'Auditory': Volume2,
+      'Kinesthetic': Hand,
+      'Digital': Monitor
     };
     return channel ? iconMap[channel] : Brain;
   };
