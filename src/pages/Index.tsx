@@ -10,7 +10,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <NavBar showBack={false} />
+      <NavBar showBack={false} showProfile={false} />
       
       {/* Hero Section */}
       <section className="relative overflow-hidden">
