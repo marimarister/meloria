@@ -8,10 +8,15 @@ import {
   Calendar,
   ArrowRight,
   Clock,
-  Check
+  Check,
+  Menu,
+  User,
+  ChevronLeft,
+  Trash2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
@@ -69,8 +74,110 @@ const EmployeeDashboard = () => {
   const overallProgress = calculateProgress();
   const otherTestsOptional = testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score <= 44;
 
+  const getBurnoutLevel = (score: number) => {
+    if (score <= 22) return "Perfect Wellbeing";
+    if (score <= 44) return "Balanced & Resilient";
+    if (score <= 66) return "Mild Fatigue";
+    if (score <= 88) return "Noticeable Burnout Symptoms";
+    if (score <= 110) return "Severe Burnout";
+    return "Extreme Burnout Risk";
+  };
+
+  const getDominantChannel = () => {
+    const perceptionData = localStorage.getItem('channelPerceptionTest');
+    if (!perceptionData) return null;
+    const data = JSON.parse(perceptionData);
+    const scores = data.scores;
+    const channels = [
+      { name: 'Visual', score: scores.V },
+      { name: 'Auditory', score: scores.A },
+      { name: 'Kinesthetic', score: scores.K },
+      { name: 'Digital', score: scores.D }
+    ];
+    const dominant = channels.reduce((max, channel) => 
+      channel.score > max.score ? channel : max
+    );
+    return dominant.name;
+  };
+
+  const getPreferenceArchetypes = () => {
+    const preferenceData = localStorage.getItem('preferenceTest');
+    if (!preferenceData) return [];
+    const data = JSON.parse(preferenceData);
+    const scores = data.scores;
+    const archetypes = [];
+    
+    if (scores.soloGroup >= 5) archetypes.push("Independent Worker");
+    else archetypes.push("Team Player");
+    
+    if (scores.onlineOffline >= 5) archetypes.push("Digital Navigator");
+    else archetypes.push("In-Person Engager");
+    
+    if (scores.stabilityFlexibility >= 5) archetypes.push("Structure & Stability Seeker");
+    else archetypes.push("Lifelong Learner");
+    
+    if (scores.dynamicHarmony >= 5) archetypes.push("Adaptive Go-Getter");
+    else archetypes.push("Steady Collaborator");
+    
+    return archetypes;
+  };
+
+  const handleResetAll = () => {
+    if (window.confirm("Are you sure you want to reset all test results? This action cannot be undone.")) {
+      localStorage.removeItem('burnoutTest');
+      localStorage.removeItem('channelPerceptionTest');
+      localStorage.removeItem('preferenceTest');
+      setTestStatus({
+        burnout: { completed: false, lastTaken: null, score: null },
+        perception: { completed: false, lastTaken: null },
+        preference: { completed: false, lastTaken: null }
+      });
+      toast.success("All test results have been reset");
+    }
+  };
+
   return (
     <div className="min-h-screen gradient-employee">
+      {/* Navigation Bar */}
+      <nav className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-50">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate(-1)}
+                className="hover:bg-accent"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-accent"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </div>
+            
+            <button 
+              onClick={() => navigate('/')}
+              className="text-2xl font-bold text-foreground hover:text-primary transition-colors"
+            >
+              Meloria
+            </button>
+            
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-accent"
+            >
+              <User className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </nav>
+
       <div className="px-6 py-8 mx-auto max-w-7xl lg:px-8">
         {/* Header */}
         <div className="mb-10 animate-fade-in">
@@ -104,7 +211,75 @@ const EmployeeDashboard = () => {
             )}
           </div>
           {overallProgress < 100 && <Progress value={overallProgress} className="h-3" />}
+          
+          {overallProgress >= 100 && (
+            <div className="mt-4 flex justify-end">
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleResetAll}
+                className="gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                Reset All Results
+              </Button>
+            </div>
+          )}
         </Card>
+
+        {/* Summary Cards - Shown when 100% complete */}
+        {overallProgress >= 100 && (
+          <div className="grid gap-6 md:grid-cols-3 mb-8 animate-slide-up">
+            {/* Burnout Test Summary */}
+            {testStatus.burnout.completed && testStatus.burnout.score !== null && (
+              <Card className="p-6 bg-primary/5 border-primary/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Heart className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="font-semibold">Burnout Test</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-2">Your Status:</p>
+                <p className="font-medium text-primary">{getBurnoutLevel(testStatus.burnout.score)}</p>
+                <p className="text-xs text-muted-foreground mt-2">Score: {testStatus.burnout.score}/132</p>
+              </Card>
+            )}
+
+            {/* Channel Perception Summary */}
+            {testStatus.perception.completed && (
+              <Card className="p-6 bg-primary/5 border-primary/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Brain className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="font-semibold">Channel Perception</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-2">Dominant Style:</p>
+                <p className="font-medium text-primary">{getDominantChannel()} Learner</p>
+              </Card>
+            )}
+
+            {/* Preference Test Summary */}
+            {testStatus.preference.completed && (
+              <Card className="p-6 bg-primary/5 border-primary/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <ClipboardCheck className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="font-semibold">Work Preferences</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-2">Your Archetypes:</p>
+                <div className="flex flex-wrap gap-1">
+                  {getPreferenceArchetypes().map((archetype, idx) => (
+                    <span key={idx} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                      {archetype}
+                    </span>
+                  ))}
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
 
         {/* Test Cards */}
         <div className="grid gap-6 md:grid-cols-3 mb-8">
