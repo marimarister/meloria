@@ -141,7 +141,7 @@ const BurnoutTest = () => {
                     className="absolute top-0 h-full w-0.5 bg-foreground"
                     style={{ left: `${(scores.total / 132) * 100}%` }}
                   >
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-lg font-bold whitespace-nowrap">
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-sm md:text-lg font-bold whitespace-nowrap">
                       {Math.round((scores.total / 132) * 100)}%
                     </div>
                   </div>
@@ -172,7 +172,7 @@ const BurnoutTest = () => {
                         className="absolute top-0 h-full w-0.5 bg-foreground"
                         style={{ left: `${(scores.emotionalExhaustion / 54) * 100}%` }}
                       >
-                        <div className="absolute -top-8 left-0 text-lg font-bold whitespace-nowrap">
+                        <div className="absolute -top-8 left-0 text-sm md:text-lg font-bold whitespace-nowrap">
                           {Math.round((scores.emotionalExhaustion / 54) * 100)}%
                         </div>
                       </div>
@@ -202,7 +202,7 @@ const BurnoutTest = () => {
                         className="absolute top-0 h-full w-0.5 bg-foreground"
                         style={{ left: `${(scores.depersonalization / 30) * 100}%` }}
                       >
-                        <div className="absolute -top-8 left-0 text-lg font-bold whitespace-nowrap">
+                        <div className="absolute -top-8 left-0 text-sm md:text-lg font-bold whitespace-nowrap">
                           {Math.round((scores.depersonalization / 30) * 100)}%
                         </div>
                       </div>
@@ -232,7 +232,7 @@ const BurnoutTest = () => {
                         className="absolute top-0 h-full w-0.5 bg-foreground"
                         style={{ left: `${(scores.personalAccomplishment / 48) * 100}%` }}
                       >
-                        <div className="absolute -top-8 left-0 text-lg font-bold whitespace-nowrap">
+                        <div className="absolute -top-8 left-0 text-sm md:text-lg font-bold whitespace-nowrap">
                           {Math.round((scores.personalAccomplishment / 48) * 100)}%
                         </div>
                       </div>
