@@ -145,7 +145,7 @@ const HRDashboard = () => {
         {/* Burnout Risk Distribution - Moved to bottom, full width */}
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-6">Burnout Risk Distribution</h2>
-          <div className="flex justify-between text-xl text-muted-foreground mb-4">
+          <div className="flex justify-between text-[10px] md:text-xl text-muted-foreground mb-4">
             <span>Level</span>
             <span>Amount of Employees</span>
           </div>
