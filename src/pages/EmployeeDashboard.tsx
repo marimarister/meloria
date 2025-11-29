@@ -153,14 +153,18 @@ const EmployeeDashboard = () => {
         <Card className="p-8 mb-8 animate-slide-up">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-2xl font-semibold mb-1">Your Progress</h2>
-              <p className="text-muted-foreground">
-                {otherTestsOptional 
-                  ? "Great news! Based on your burnout score, the other tests are optional."
-                  : testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score > 44
-                  ? "Complete all assessments to unlock personalized insights"
-                  : "Complete the Burnout Test to get started"}
-              </p>
+              <h2 className="text-2xl font-semibold mb-1">
+                {overallProgress >= 100 ? "You're all set" : "Your Progress"}
+              </h2>
+              {overallProgress < 100 && (
+                <p className="text-muted-foreground">
+                  {otherTestsOptional 
+                    ? "Great news! Based on your burnout score, the other tests are optional."
+                    : testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score > 44
+                    ? "Complete all assessments to unlock personalized insights"
+                    : "Complete the Burnout Test to get started"}
+                </p>
+              )}
             </div>
             {overallProgress >= 100 ? (
               <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
@@ -178,46 +182,43 @@ const EmployeeDashboard = () => {
           <div className="grid gap-6 md:grid-cols-3 mb-8 animate-slide-up">
             {/* Burnout Test Summary */}
             {testStatus.burnout.completed && testStatus.burnout.score !== null && (
-              <Card className="p-6 bg-primary/5 border-primary/20">
+              <Card className="p-6 bg-blue-50 border-blue-200">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Heart className="h-5 w-5 text-primary" />
+                  <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center">
+                    <Heart className="h-5 w-5 text-blue-700" />
                   </div>
-                  <h3 className="font-semibold">Burnout Test</h3>
+                  <h3 className="font-semibold text-blue-900">Burnout Level</h3>
                 </div>
-                <p className="text-sm text-muted-foreground mb-2">Your Status:</p>
-                <p className="font-medium text-primary">{getBurnoutLevel(testStatus.burnout.score)}</p>
-                <p className="text-xs text-muted-foreground mt-2">Score: {testStatus.burnout.score}/132</p>
+                <p className="font-medium text-blue-800">{getBurnoutLevel(testStatus.burnout.score)}</p>
+                <p className="text-xs text-blue-600 mt-2">Score: {testStatus.burnout.score}/132</p>
               </Card>
             )}
 
             {/* Channel Perception Summary */}
             {testStatus.perception.completed && (
-              <Card className="p-6 bg-primary/5 border-primary/20">
+              <Card className="p-6 bg-purple-50 border-purple-200">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Brain className="h-5 w-5 text-primary" />
+                  <div className="w-10 h-10 rounded-full bg-purple-200 flex items-center justify-center">
+                    <Brain className="h-5 w-5 text-purple-700" />
                   </div>
-                  <h3 className="font-semibold">Channel Perception</h3>
+                  <h3 className="font-semibold text-purple-900">Dominant Style</h3>
                 </div>
-                <p className="text-sm text-muted-foreground mb-2">Dominant Style:</p>
-                <p className="font-medium text-primary">{getDominantChannel()} Learner</p>
+                <p className="font-medium text-purple-800">{getDominantChannel()} Learner</p>
               </Card>
             )}
 
             {/* Preference Test Summary */}
             {testStatus.preference.completed && (
-              <Card className="p-6 bg-primary/5 border-primary/20">
+              <Card className="p-6 bg-amber-50 border-amber-200">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <ClipboardCheck className="h-5 w-5 text-primary" />
+                  <div className="w-10 h-10 rounded-full bg-amber-200 flex items-center justify-center">
+                    <ClipboardCheck className="h-5 w-5 text-amber-700" />
                   </div>
-                  <h3 className="font-semibold">Work Preferences</h3>
+                  <h3 className="font-semibold text-amber-900">Your Archetypes</h3>
                 </div>
-                <p className="text-sm text-muted-foreground mb-2">Your Archetypes:</p>
                 <div className="flex flex-wrap gap-1">
                   {getPreferenceArchetypes().map((archetype, idx) => (
-                    <span key={idx} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                    <span key={idx} className="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded">
                       {archetype}
                     </span>
                   ))}

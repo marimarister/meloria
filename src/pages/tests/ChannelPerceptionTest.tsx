@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Eye, Ear, Hand, Binary, ArrowLeft, ArrowRight, Home, Brain } from "lucide-react";
+import { Eye, Ear, Hand, Binary, Home, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 
@@ -223,7 +223,6 @@ const getInterpretation = (scores: Record<ChannelType, number>) => {
 const ChannelPerceptionTest = () => {
   const navigate = useNavigate();
   const [stage, setStage] = useState<'intro' | 'test' | 'results'>('intro');
-  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, ChannelType>>({});
   const [savedResults, setSavedResults] = useState<any>(null);
 
@@ -246,30 +245,16 @@ const ChannelPerceptionTest = () => {
 
   const progress = (Object.keys(answers).length / questions.length) * 100;
 
-  const handleAnswer = (channel: ChannelType) => {
-    setAnswers(prev => ({ ...prev, [questions[currentQuestion].id]: channel }));
-  };
-
   const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
-    } else {
-      const scores = calculateScores();
-      const results = {
-        scores,
-        completedAt: new Date().toISOString(),
-        completed: true
-      };
-      localStorage.setItem('channelPerceptionTest', JSON.stringify(results));
-      setSavedResults(results);
-      setStage('results');
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1);
-    }
+    const scores = calculateScores();
+    const results = {
+      scores,
+      completedAt: new Date().toISOString(),
+      completed: true
+    };
+    localStorage.setItem('channelPerceptionTest', JSON.stringify(results));
+    setSavedResults(results);
+    setStage('results');
   };
 
   const calculateScores = () => {
@@ -286,7 +271,6 @@ const ChannelPerceptionTest = () => {
         <NavBar />
         
         <div className="px-6 py-8 mx-auto max-w-4xl">
-
           <Card className="p-8 animate-fade-in">
             <h1 className="text-3xl font-bold mb-6">Channel Perception Test</h1>
             <p className="text-lg text-muted-foreground mb-8">
@@ -344,7 +328,6 @@ const ChannelPerceptionTest = () => {
 
             <Button onClick={() => setStage('test')} className="w-full" size="lg">
               Start Test
-              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Card>
         </div>
@@ -416,9 +399,6 @@ const ChannelPerceptionTest = () => {
     );
   }
 
-  const question = questions[currentQuestion];
-  const currentAnswer = answers[question.id];
-
   return (
     <div className="min-h-screen gradient-employee">
       <NavBar />
@@ -427,7 +407,7 @@ const ChannelPerceptionTest = () => {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">
-              Question {currentQuestion + 1} of {questions.length}
+              Progress: {Object.keys(answers).length} of {questions.length}
             </span>
             <span className="text-sm font-medium">{Math.round(progress)}% Complete</span>
           </div>
@@ -435,57 +415,50 @@ const ChannelPerceptionTest = () => {
         </div>
 
         <Card className="p-8 animate-fade-in">
-          <h2 className="text-2xl font-semibold mb-6">{question.text}</h2>
+          <h2 className="text-2xl font-semibold mb-6">Please select the option that best describes you</h2>
 
-          <RadioGroup value={currentAnswer} onValueChange={handleAnswer}>
-            <div className="space-y-3">
-              {question.options.map((option) => {
-                return (
-                  <div
-                    key={option.label}
-                    className={`flex items-start p-4 rounded-lg border-2 transition-all cursor-pointer hover:border-primary/50 ${
-                      currentAnswer === option.channel
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border'
-                    }`}
-                    onClick={() => handleAnswer(option.channel)}
-                  >
-                    <RadioGroupItem
-                      value={option.channel}
-                      id={`q${question.id}-${option.label}`}
-                      className="mt-1"
-                    />
-                    <Label
-                      htmlFor={`q${question.id}-${option.label}`}
-                      className="ml-3 cursor-pointer flex-1"
-                    >
-                      {option.text}
-                    </Label>
+          <div className="space-y-4">
+            {questions.map((q, index) => (
+              <div key={q.id} className="p-6 rounded-lg bg-green-50">
+                <p className="font-medium mb-4">
+                  {index + 1}. {q.text}
+                </p>
+                <RadioGroup
+                  value={answers[q.id]}
+                  onValueChange={(value) => setAnswers(prev => ({ ...prev, [q.id]: value as ChannelType }))}
+                >
+                  <div className="space-y-2">
+                    {q.options.map((option) => (
+                      <div
+                        key={option.label}
+                        className="flex items-center space-x-2 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                      >
+                        <RadioGroupItem
+                          value={option.channel}
+                          id={`q${q.id}-${option.label}`}
+                        />
+                        <Label
+                          htmlFor={`q${q.id}-${option.label}`}
+                          className="flex-1 cursor-pointer text-sm"
+                        >
+                          <span className="font-medium">{option.label})</span> {option.text}
+                        </Label>
+                      </div>
+                    ))}
                   </div>
-                );
-              })}
-            </div>
-          </RadioGroup>
-
-          <div className="flex gap-4 mt-8">
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={currentQuestion === 0}
-              className="flex-1"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Previous
-            </Button>
-            <Button
-              onClick={handleNext}
-              disabled={!currentAnswer}
-              className="flex-1"
-            >
-              {currentQuestion === questions.length - 1 ? 'View Results' : 'Next'}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+                </RadioGroup>
+              </div>
+            ))}
           </div>
+
+          <Button
+            onClick={handleNext}
+            disabled={Object.keys(answers).length !== questions.length}
+            className="w-full mt-8"
+            size="lg"
+          >
+            View Results
+          </Button>
         </Card>
       </div>
     </div>
