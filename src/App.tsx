@@ -8,6 +8,7 @@ import EmployeeDashboard from "./pages/EmployeeDashboard";
 import HRDashboard from "./pages/HRDashboard";
 import BurnoutTest from "./pages/tests/BurnoutTest";
 import ChannelPerceptionTest from "./pages/tests/ChannelPerceptionTest";
+import PreferenceTest from "./pages/tests/PreferenceTest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/hr" element={<HRDashboard />} />
           <Route path="/test/burnout" element={<BurnoutTest />} />
           <Route path="/test/perception" element={<ChannelPerceptionTest />} />
+          <Route path="/test/preference" element={<PreferenceTest />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
