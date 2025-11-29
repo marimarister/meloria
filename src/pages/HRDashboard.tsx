@@ -80,45 +80,29 @@ const HRDashboard = () => {
 
         {/* Detailed Analytics */}
         <div className="grid gap-6 md:grid-cols-2 mb-8">
-          {/* Burnout Risk Distribution */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-2">Burnout Risk Distribution</h2>
-            <div className="flex justify-between text-[10px] text-muted-foreground mb-4">
-              <span>Level</span>
-              <span>Amount of Employees</span>
-            </div>
+          {/* Assessment Completion Details - Moved here */}
+          <Card className="p-8">
+            <h2 className="text-2xl font-semibold mb-6">Assessment Completion Details</h2>
             <div className="space-y-4">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <TrendingDown className="h-5 w-5 text-success" />
-                    <span className="font-medium">Low Risk (0-30)</span>
-                  </div>
-                  <span className="text-lg font-semibold">{stats.riskCategories.low}</span>
-                </div>
-                <Progress value={(stats.riskCategories.low / stats.completedTests) * 100} className="h-2" />
+              <div className="p-6 rounded-lg bg-muted/30">
+                <p className="text-sm font-medium text-muted-foreground mb-2">Burnout Test</p>
+                <p className="text-2xl font-bold mb-1">{stats.completedTests}</p>
+                <Progress value={stats.completionRate} className="h-2" />
+                <p className="text-xs text-muted-foreground mt-2">{stats.completionRate}% completed</p>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-warning" />
-                    <span className="font-medium">Moderate Risk (31-60)</span>
-                  </div>
-                  <span className="text-lg font-semibold">{stats.riskCategories.moderate}</span>
-                </div>
-                <Progress value={(stats.riskCategories.moderate / stats.completedTests) * 100} className="h-2" />
+              <div className="p-6 rounded-lg bg-muted/30">
+                <p className="text-sm font-medium text-muted-foreground mb-2">Channel Perception Test</p>
+                <p className="text-2xl font-bold mb-1">{stats.completedTests}</p>
+                <Progress value={stats.completionRate} className="h-2" />
+                <p className="text-xs text-muted-foreground mt-2">{stats.completionRate}% completed</p>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-destructive" />
-                    <span className="font-medium">High Risk (61-100)</span>
-                  </div>
-                  <span className="text-lg font-semibold">{stats.riskCategories.high}</span>
-                </div>
-                <Progress value={(stats.riskCategories.high / stats.completedTests) * 100} className="h-2" />
+              <div className="p-6 rounded-lg bg-muted/30">
+                <p className="text-sm font-medium text-muted-foreground mb-2">Preference Test</p>
+                <p className="text-2xl font-bold mb-1">{stats.completedTests}</p>
+                <Progress value={stats.completionRate} className="h-2" />
+                <p className="text-xs text-muted-foreground mt-2">{stats.completionRate}% completed</p>
               </div>
             </div>
           </Card>
@@ -158,29 +142,45 @@ const HRDashboard = () => {
           </Card>
         </div>
 
-        {/* Test Completion Details */}
-        <Card className="p-8">
-          <h2 className="text-2xl font-semibold mb-6">Assessment Completion Details</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="p-6 rounded-lg bg-muted/30">
-              <p className="text-sm font-medium text-muted-foreground mb-2">Burnout Test</p>
-              <p className="text-2xl font-bold mb-1">{stats.completedTests}</p>
-              <Progress value={stats.completionRate} className="h-2" />
-              <p className="text-xs text-muted-foreground mt-2">{stats.completionRate}% completed</p>
+        {/* Burnout Risk Distribution - Moved to bottom, full width */}
+        <Card className="p-6">
+          <h2 className="text-2xl font-semibold mb-6">Burnout Risk Distribution</h2>
+          <div className="flex justify-between text-xl text-muted-foreground mb-4">
+            <span>Level</span>
+            <span>Amount of Employees</span>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <TrendingDown className="h-5 w-5 text-success" />
+                  <span className="font-medium">Low Risk (0-30)</span>
+                </div>
+                <span className="text-lg font-semibold">{stats.riskCategories.low}</span>
+              </div>
+              <Progress value={(stats.riskCategories.low / stats.completedTests) * 100} className="h-2" />
             </div>
 
-            <div className="p-6 rounded-lg bg-muted/30">
-              <p className="text-sm font-medium text-muted-foreground mb-2">Channel Perception Test</p>
-              <p className="text-2xl font-bold mb-1">{stats.completedTests}</p>
-              <Progress value={stats.completionRate} className="h-2" />
-              <p className="text-xs text-muted-foreground mt-2">{stats.completionRate}% completed</p>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-warning" />
+                  <span className="font-medium">Moderate Risk (31-60)</span>
+                </div>
+                <span className="text-lg font-semibold">{stats.riskCategories.moderate}</span>
+              </div>
+              <Progress value={(stats.riskCategories.moderate / stats.completedTests) * 100} className="h-2" />
             </div>
 
-            <div className="p-6 rounded-lg bg-muted/30">
-              <p className="text-sm font-medium text-muted-foreground mb-2">Preference Test</p>
-              <p className="text-2xl font-bold mb-1">{stats.completedTests}</p>
-              <Progress value={stats.completionRate} className="h-2" />
-              <p className="text-xs text-muted-foreground mt-2">{stats.completionRate}% completed</p>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-destructive" />
+                  <span className="font-medium">High Risk (61-100)</span>
+                </div>
+                <span className="text-lg font-semibold">{stats.riskCategories.high}</span>
+              </div>
+              <Progress value={(stats.riskCategories.high / stats.completedTests) * 100} className="h-2" />
             </div>
           </div>
         </Card>
