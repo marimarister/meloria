@@ -284,31 +284,36 @@ const PreferenceTest = () => {
 
           <div className="space-y-8">
             {questions.map((question, index) => (
-              <div key={question.id} className="space-y-3">
-                <p className="font-medium">
-                  {index + 1}. {question.text}
-                </p>
-                <RadioGroup
-                  value={answers[question.id]?.toString()}
-                  onValueChange={(value) => handleAnswer(question.id, parseInt(value))}
-                >
-                  <div className="flex gap-2 justify-between">
-                    {scaleOptions.map((option) => (
-                      <div key={option.value} className="flex flex-col items-center gap-2 flex-1">
-                        <RadioGroupItem
-                          value={option.value.toString()}
-                          id={`q${question.id}-${option.value}`}
-                        />
-                        <Label
-                          htmlFor={`q${question.id}-${option.value}`}
-                          className="text-xs text-center cursor-pointer"
-                        >
-                          {option.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </RadioGroup>
+              <div key={question.id}>
+                <div className="space-y-6">
+                  <p className="font-medium">
+                    {index + 1}. {question.text}
+                  </p>
+                  <RadioGroup
+                    value={answers[question.id]?.toString()}
+                    onValueChange={(value) => handleAnswer(question.id, parseInt(value))}
+                  >
+                    <div className="flex gap-2 justify-between">
+                      {scaleOptions.map((option) => (
+                        <div key={option.value} className="flex flex-col items-center gap-2 flex-1">
+                          <RadioGroupItem
+                            value={option.value.toString()}
+                            id={`q${question.id}-${option.value}`}
+                          />
+                          <Label
+                            htmlFor={`q${question.id}-${option.value}`}
+                            className="text-xs text-center cursor-pointer"
+                          >
+                            {option.label}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </RadioGroup>
+                </div>
+                {index < questions.length - 1 && (
+                  <hr className="mt-8 border-border" />
+                )}
               </div>
             ))}
           </div>
