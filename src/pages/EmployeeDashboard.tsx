@@ -7,21 +7,67 @@ import {
   Heart, 
   Calendar,
   ArrowRight,
-  Clock
+  Clock,
+  Check
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
+  const [testStatus, setTestStatus] = useState({
+    burnout: { completed: false, lastTaken: null as string | null, score: null as number | null },
+    perception: { completed: false, lastTaken: null as string | null },
+    preference: { completed: false, lastTaken: null as string | null }
+  });
 
-  // Mock data - will be replaced with real data from backend
-  const testStatus = {
-    burnout: { completed: false, lastTaken: null, score: null },
-    perception: { completed: false, lastTaken: null, score: null },
-    preference: { completed: false, lastTaken: null, score: null }
+  useEffect(() => {
+    // Load test status from localStorage
+    const burnoutData = localStorage.getItem('burnoutTest');
+    const perceptionData = localStorage.getItem('channelPerceptionTest');
+    const preferenceData = localStorage.getItem('preferenceTest');
+
+    setTestStatus({
+      burnout: {
+        completed: !!burnoutData,
+        lastTaken: burnoutData ? JSON.parse(burnoutData).completedAt : null,
+        score: burnoutData ? JSON.parse(burnoutData).scores.total : null
+      },
+      perception: {
+        completed: !!perceptionData,
+        lastTaken: perceptionData ? JSON.parse(perceptionData).completedAt : null
+      },
+      preference: {
+        completed: !!preferenceData,
+        lastTaken: preferenceData ? JSON.parse(preferenceData).completedAt : null
+      }
+    });
+  }, []);
+
+  // Calculate progress
+  const calculateProgress = () => {
+    let progress = 0;
+    
+    // If burnout test completed
+    if (testStatus.burnout.completed) {
+      // If score is <= 44, automatically set to 100%
+      if (testStatus.burnout.score !== null && testStatus.burnout.score <= 44) {
+        return 100;
+      }
+      
+      // Otherwise, burnout contributes 40%
+      progress += 40;
+      
+      // Other tests contribute 30% each if completed
+      if (testStatus.perception.completed) progress += 30;
+      if (testStatus.preference.completed) progress += 30;
+    }
+    
+    return progress;
   };
 
-  const overallProgress = 0; // Will be calculated based on completed tests
+  const overallProgress = calculateProgress();
+  const otherTestsOptional = testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score <= 44;
 
   return (
     <div className="min-h-screen gradient-employee">
@@ -41,11 +87,23 @@ const EmployeeDashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-2xl font-semibold mb-1">Your Progress</h2>
-              <p className="text-muted-foreground">Complete all assessments to unlock personalized insights</p>
+              <p className="text-muted-foreground">
+                {otherTestsOptional 
+                  ? "Great news! Based on your burnout score, the other tests are optional."
+                  : testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score > 44
+                  ? "Complete all assessments to unlock personalized insights"
+                  : "Complete the Burnout Test to get started"}
+              </p>
             </div>
-            <div className="text-4xl font-bold text-primary">{overallProgress}%</div>
+            {overallProgress >= 100 ? (
+              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+                <Check className="h-10 w-10 text-green-500" strokeWidth={3} />
+              </div>
+            ) : (
+              <div className="text-4xl font-bold text-primary">{overallProgress}%</div>
+            )}
           </div>
-          <Progress value={overallProgress} className="h-3" />
+          {overallProgress < 100 && <Progress value={overallProgress} className="h-3" />}
         </Card>
 
         {/* Test Cards */}
@@ -63,7 +121,7 @@ const EmployeeDashboard = () => {
             {testStatus.burnout.lastTaken ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                 <Clock className="h-4 w-4" />
-                <span>Last taken: {testStatus.burnout.lastTaken}</span>
+                <span>Completed: {new Date(testStatus.burnout.lastTaken).toLocaleDateString()}</span>
               </div>
             ) : (
               <div className="flex items-center gap-2 text-sm text-warning mb-4">
@@ -76,7 +134,7 @@ const EmployeeDashboard = () => {
               className="w-full"
               onClick={() => navigate('/test/burnout')}
             >
-              {testStatus.burnout.completed ? 'Retake Test' : 'Start Test'}
+              {testStatus.burnout.completed ? 'View Results' : 'Start Test'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Card>
@@ -94,20 +152,21 @@ const EmployeeDashboard = () => {
             {testStatus.perception.lastTaken ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                 <Clock className="h-4 w-4" />
-                <span>Last taken: {testStatus.perception.lastTaken}</span>
+                <span>Completed: {new Date(testStatus.perception.lastTaken).toLocaleDateString()}</span>
               </div>
             ) : (
               <div className="flex items-center gap-2 text-sm text-warning mb-4">
                 <ClipboardCheck className="h-4 w-4" />
-                <span>Not completed yet</span>
+                <span>{otherTestsOptional ? 'Optional' : testStatus.burnout.completed ? 'Not completed yet' : 'Complete Burnout Test first'}</span>
               </div>
             )}
             
             <Button 
               className="w-full"
               onClick={() => navigate('/test/perception')}
+              disabled={!testStatus.burnout.completed}
             >
-              {testStatus.perception.completed ? 'Retake Test' : 'Start Test'}
+              {testStatus.perception.completed ? 'View Results' : 'Start Test'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Card>
@@ -117,7 +176,7 @@ const EmployeeDashboard = () => {
             <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <ClipboardCheck className="h-7 w-7 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Preference Test</h3>
+            <h3 className="text-xl font-semibold mb-2">Work Preferences & Motivation Test</h3>
             <p className="text-sm text-muted-foreground mb-4">
               Wellness Preferences - Tell us about your wellbeing goals and lifestyle
             </p>
@@ -125,20 +184,21 @@ const EmployeeDashboard = () => {
             {testStatus.preference.lastTaken ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                 <Clock className="h-4 w-4" />
-                <span>Last taken: {testStatus.preference.lastTaken}</span>
+                <span>Completed: {new Date(testStatus.preference.lastTaken).toLocaleDateString()}</span>
               </div>
             ) : (
               <div className="flex items-center gap-2 text-sm text-warning mb-4">
                 <ClipboardCheck className="h-4 w-4" />
-                <span>Not completed yet</span>
+                <span>{otherTestsOptional ? 'Optional' : testStatus.burnout.completed ? 'Not completed yet' : 'Complete Burnout Test first'}</span>
               </div>
             )}
             
             <Button 
               className="w-full"
               onClick={() => navigate('/test/preference')}
+              disabled={!testStatus.burnout.completed}
             >
-              {testStatus.preference.completed ? 'Retake Test' : 'Start Test'}
+              {testStatus.preference.completed ? 'View Results' : 'Start Test'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Card>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -127,6 +127,24 @@ const PreferenceTest = () => {
   const navigate = useNavigate();
   const [stage, setStage] = useState<'intro' | 'test' | 'results'>('intro');
   const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [savedResults, setSavedResults] = useState<any>(null);
+
+  useEffect(() => {
+    // Check if Burnout Test is completed
+    const burnoutTest = localStorage.getItem('burnoutTest');
+    if (!burnoutTest) {
+      navigate('/employee');
+      return;
+    }
+
+    // Check if this test already completed
+    const stored = localStorage.getItem('preferenceTest');
+    if (stored) {
+      const data = JSON.parse(stored);
+      setSavedResults(data);
+      setStage('results');
+    }
+  }, [navigate]);
 
   const handleAnswer = (questionId: number, value: number) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
@@ -150,6 +168,14 @@ const PreferenceTest = () => {
   };
 
   const handleSubmit = () => {
+    const scores = calculateScores();
+    const results = {
+      scores,
+      completedAt: new Date().toISOString(),
+      completed: true
+    };
+    localStorage.setItem('preferenceTest', JSON.stringify(results));
+    setSavedResults(results);
     setStage('results');
   };
 
@@ -193,7 +219,7 @@ const PreferenceTest = () => {
   }
 
   if (stage === 'results') {
-    const scores = calculateScores();
+    const scores = savedResults ? savedResults.scores : calculateScores();
     const interpretation = getInterpretation(scores);
 
     return (
@@ -223,22 +249,18 @@ const PreferenceTest = () => {
               </p>
             </div>
 
-            <div className="flex gap-4">
-              <Button onClick={() => navigate('/employee')} className="flex-1">
-                <Home className="mr-2 h-4 w-4" />
-                Back to Dashboard
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setStage('intro');
-                  setAnswers({});
-                }}
-                className="flex-1"
-              >
-                Retake Test
-              </Button>
-            </div>
+            {savedResults && (
+              <div className="text-center mb-6">
+                <p className="text-sm text-muted-foreground">
+                  Completed: {new Date(savedResults.completedAt).toLocaleDateString()} at {new Date(savedResults.completedAt).toLocaleTimeString()}
+                </p>
+              </div>
+            )}
+
+            <Button onClick={() => navigate('/employee')} className="w-full">
+              <Home className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Button>
           </Card>
         </div>
       </div>
