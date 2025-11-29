@@ -13,7 +13,9 @@ import {
   Eye,
   Volume2,
   Hand,
-  Monitor
+  Monitor,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -27,6 +29,9 @@ const EmployeeDashboard = () => {
     perception: { completed: false, lastTaken: null as string | null },
     preference: { completed: false, lastTaken: null as string | null }
   });
+  
+  // Calendar state - starting at December 1-7, 2025
+  const [currentWeekStart, setCurrentWeekStart] = useState(new Date(2025, 11, 1)); // December 1, 2025
 
   useEffect(() => {
     // Load test status from localStorage
@@ -155,6 +160,40 @@ const EmployeeDashboard = () => {
       });
       toast.success("All test results have been reset");
     }
+  };
+
+  // Calendar navigation
+  const navigateWeek = (direction: 'prev' | 'next') => {
+    const newDate = new Date(currentWeekStart);
+    newDate.setDate(currentWeekStart.getDate() + (direction === 'next' ? 7 : -7));
+    setCurrentWeekStart(newDate);
+  };
+
+  // Generate week days
+  const getWeekDays = () => {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(currentWeekStart);
+      date.setDate(currentWeekStart.getDate() + i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  // Get activity for a specific date
+  const getActivityForDate = (date: Date) => {
+    const activities: Record<string, string> = {
+      '2025-12-02': 'Go on a walk for an hour',
+      '2025-12-05': 'Meditate'
+    };
+    const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    return activities[dateStr] || null;
+  };
+
+  const formatMonthYear = () => {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+    return `${monthNames[currentWeekStart.getMonth()]} ${currentWeekStart.getFullYear()}`;
   };
 
   return (
@@ -359,31 +398,68 @@ const EmployeeDashboard = () => {
           </Card>
         </div>
 
-        {/* Results Section - Shown only when tests are completed */}
+        {/* Weekly Activities Section - Shown only when tests are completed */}
         {overallProgress >= 100 && (
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card className="p-8">
-              <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                <Heart className="h-6 w-6 text-primary" />
-                Your Wellness Score
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Based on your completed assessments
-              </p>
-              {/* Score visualization will go here */}
-            </Card>
-
-            <Card className="p-8">
-              <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+          <Card className="p-8 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
                 <Calendar className="h-6 w-6 text-primary" />
-                Weekly Activities
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Personalized wellness plan for this week
-              </p>
-              {/* Activity calendar will go here */}
-            </Card>
-          </div>
+                <h2 className="text-2xl font-semibold">Suggested Weekly Activities</h2>
+              </div>
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => navigateWeek('prev')}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm font-medium min-w-[150px] text-center">
+                  {formatMonthYear()}
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => navigateWeek('next')}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="grid grid-cols-7 gap-2">
+              {getWeekDays().map((date, index) => {
+                const activity = getActivityForDate(date);
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                
+                return (
+                  <div
+                    key={index}
+                    className={`p-4 rounded-lg border ${
+                      activity 
+                        ? 'bg-primary/5 border-primary/30' 
+                        : 'bg-muted/20 border-border'
+                    } min-h-[120px]`}
+                  >
+                    <div className="text-center mb-2">
+                      <div className="text-xs text-muted-foreground font-medium">
+                        {dayNames[date.getDay()]}
+                      </div>
+                      <div className="text-lg font-semibold">
+                        {date.getDate()}
+                      </div>
+                    </div>
+                    {activity && (
+                      <div className="text-xs text-foreground mt-2 text-center">
+                        {activity}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
         )}
         {/* Reset Button at Bottom */}
         <div className="mt-8 flex justify-center pb-8">

@@ -28,7 +28,7 @@ const NavBar = ({ showBack = true, showProfile = true }: NavBarProps) => {
           className="text-2xl font-bold hover:opacity-80 transition-opacity"
           style={{ color: '#282828' }}
         >
-          Meloria
+          MELORIA
         </button>
 
         {/* Right side - Profile icon */}
