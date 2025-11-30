@@ -48,10 +48,11 @@ const ResetPassword = () => {
 
       toast({
         title: "Success",
-        description: "Your password has been updated",
+        description: "Your password has been updated. Please log in with your new password.",
       });
 
-      setTimeout(() => navigate("/login"), 2000);
+      // Redirect to login immediately
+      navigate("/login");
     } catch (error: any) {
       toast({
         title: "Error",
