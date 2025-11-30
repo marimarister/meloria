@@ -303,12 +303,12 @@ const EmployeeDashboard = () => {
         {/* Test Cards */}
         <div className="grid gap-6 md:grid-cols-3 mb-8">
           {/* Burnout Test */}
-          <Card className="p-6 hover:shadow-lg transition-all animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <Card className="p-6 hover:shadow-lg transition-all animate-slide-up flex flex-col h-full" style={{ animationDelay: '0.1s' }}>
             <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Heart className="h-7 w-7 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Burnout Test</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-4 flex-grow">
               Maslach Burnout Inventory - Assess your emotional exhaustion and workplace stress
             </p>
             
@@ -325,7 +325,7 @@ const EmployeeDashboard = () => {
             )}
             
             <Button 
-              className="w-full"
+              className="w-full mt-auto"
               onClick={() => navigate('/test/burnout')}
             >
               {testStatus.burnout.completed ? 'View Results' : 'Start Test'}
@@ -334,12 +334,12 @@ const EmployeeDashboard = () => {
           </Card>
 
           {/* Channel Perception Test */}
-          <Card className="p-6 hover:shadow-lg transition-all animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <Card className="p-6 hover:shadow-lg transition-all animate-slide-up flex flex-col h-full" style={{ animationDelay: '0.2s' }}>
             <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Brain className="h-7 w-7 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Channel Perception Test</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-4 flex-grow">
               VAK+D Assessment - Discover your optimal learning and communication style
             </p>
             
@@ -356,7 +356,7 @@ const EmployeeDashboard = () => {
             )}
             
             <Button 
-              className="w-full"
+              className="w-full mt-auto"
               onClick={() => navigate('/test/perception')}
               disabled={!testStatus.burnout.completed}
             >
@@ -366,12 +366,12 @@ const EmployeeDashboard = () => {
           </Card>
 
           {/* Preference Test */}
-          <Card className="p-6 hover:shadow-lg transition-all animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          <Card className="p-6 hover:shadow-lg transition-all animate-slide-up flex flex-col h-full" style={{ animationDelay: '0.3s' }}>
             <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <ClipboardCheck className="h-7 w-7 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Work Preferences & Motivation Test</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-4 flex-grow">
               Wellness Preferences - Tell us about your wellbeing goals and lifestyle
             </p>
             
@@ -388,7 +388,7 @@ const EmployeeDashboard = () => {
             )}
             
             <Button 
-              className="w-full"
+              className="w-full mt-auto"
               onClick={() => navigate('/test/preference')}
               disabled={!testStatus.burnout.completed}
             >
