@@ -46,12 +46,15 @@ const ResetPassword = () => {
 
       if (error) throw error;
 
+      // Sign out the user to ensure they must log in again
+      await supabase.auth.signOut();
+
       toast({
         title: "Success",
         description: "Your password has been updated. Please log in with your new password.",
       });
 
-      // Redirect to login immediately
+      // Redirect to login page
       navigate("/login");
     } catch (error: any) {
       toast({
