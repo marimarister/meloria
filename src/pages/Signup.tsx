@@ -17,6 +17,7 @@ const Signup = () => {
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [personalId, setPersonalId] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
@@ -27,6 +28,15 @@ const Signup = () => {
       toast({
         title: "Error",
         description: "Password must be at least 6 characters",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
         variant: "destructive",
       });
       return;
@@ -117,28 +127,30 @@ const Signup = () => {
           </p>
 
           <form className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
+            <div className="flex gap-4">
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="John"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="surname">Surname</Label>
-              <Input
-                id="surname"
-                type="text"
-                placeholder="Doe"
-                value={surname}
-                onChange={(e) => setSurname(e.target.value)}
-                required
-              />
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="surname">Surname</Label>
+                <Input
+                  id="surname"
+                  type="text"
+                  placeholder="Doe"
+                  value={surname}
+                  onChange={(e) => setSurname(e.target.value)}
+                  required
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -173,6 +185,18 @@ const Signup = () => {
                 placeholder="At least 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="Re-enter your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
             </div>
