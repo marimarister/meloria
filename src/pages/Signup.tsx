@@ -199,7 +199,7 @@ const Signup = () => {
                 size="lg"
                 disabled={!agreedToTerms || isLoading}
               >
-                {isLoading ? "Creating..." : "I Am Employee"}
+                {isLoading ? "Creating..." : "I'm an Employee"}
               </Button>
               <Button
                 type="button"
@@ -208,7 +208,7 @@ const Signup = () => {
                 size="lg"
                 disabled={!agreedToTerms || isLoading}
               >
-                {isLoading ? "Creating..." : "I Am HR"}
+                {isLoading ? "Creating..." : "I'm an HR"}
               </Button>
             </div>
           </form>
