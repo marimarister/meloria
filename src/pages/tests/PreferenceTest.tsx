@@ -273,9 +273,9 @@ const PreferenceTest = () => {
         <Card className="p-8 animate-fade-in">
           <h2 className="text-2xl font-semibold mb-6">Please rate each statement</h2>
 
-          <div className="space-y-8">
+          <div className="space-y-6">
             {questions.map((question, index) => (
-              <div key={question.id}>
+              <div key={question.id} className="bg-green-100/50 p-6 rounded-lg">
                 <div className="space-y-6">
                   <p className="font-medium">
                     {index + 1}. {question.text}
@@ -302,9 +302,6 @@ const PreferenceTest = () => {
                     </div>
                   </RadioGroup>
                 </div>
-                {index < questions.length - 1 && (
-                  <hr className="mt-8 border-border" />
-                )}
               </div>
             ))}
           </div>
