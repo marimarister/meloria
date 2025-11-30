@@ -7,20 +7,65 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { UserPlus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [personalId, setPersonalId] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = (role: "employee" | "hr") => {
-    // TODO: Implement actual registration
-    console.log("Registration attempt:", { name, surname, email, personalId, role });
-    setShowVerification(true);
+  const handleRegister = async (role: "employee" | "hr") => {
+    if (password.length < 6) {
+      toast({
+        title: "Error",
+        description: "Password must be at least 6 characters",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            name,
+            surname,
+            personal_id: personalId,
+            role,
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: "Your account has been created.",
+      });
+
+      setShowVerification(true);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create account",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (showVerification) {
@@ -125,7 +170,9 @@ const Signup = () => {
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="At least 6 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
@@ -150,18 +197,18 @@ const Signup = () => {
                 onClick={() => handleRegister("employee")}
                 className="flex-1"
                 size="lg"
-                disabled={!agreedToTerms}
+                disabled={!agreedToTerms || isLoading}
               >
-                Register as Employee
+                {isLoading ? "Creating..." : "Register as Employee"}
               </Button>
               <Button
                 type="button"
                 onClick={() => handleRegister("hr")}
                 className="flex-1"
                 size="lg"
-                disabled={!agreedToTerms}
+                disabled={!agreedToTerms || isLoading}
               >
-                Register as HR
+                {isLoading ? "Creating..." : "Register as HR"}
               </Button>
             </div>
           </form>
