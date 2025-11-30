@@ -131,7 +131,7 @@ const NavBar = ({
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Contact Meloria</DropdownMenuItem>
-                    <DropdownMenuItem>Upgrade to Company Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Upgrade to Premium</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout}>
