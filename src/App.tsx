@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
-import HRDashboard from "./pages/HRDashboard";
+import CompanyDashboard from "./pages/CompanyDashboard";
 import BurnoutTest from "./pages/tests/BurnoutTest";
 import ChannelPerceptionTest from "./pages/tests/ChannelPerceptionTest";
 import PreferenceTest from "./pages/tests/PreferenceTest";
@@ -26,7 +26,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/employee" element={<EmployeeDashboard />} />
-          <Route path="/hr" element={<HRDashboard />} />
+          <Route path="/company" element={<CompanyDashboard />} />
           <Route path="/test/burnout" element={<BurnoutTest />} />
           <Route path="/test/perception" element={<ChannelPerceptionTest />} />
           <Route path="/test/preference" element={<PreferenceTest />} />

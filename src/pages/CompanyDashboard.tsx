@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import NavBar from "@/components/NavBar";
 
-const HRDashboard = () => {
+const CompanyDashboard = () => {
   // Mock data - will be replaced with real data from backend
   const stats = {
     totalEmployees: 150,
@@ -25,14 +25,14 @@ const HRDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-hr">
+    <div className="min-h-screen gradient-company">
       <NavBar />
       
       <div className="px-6 py-8 mx-auto max-w-7xl lg:px-8">
         {/* Header */}
         <div className="mb-10 animate-fade-in">
           <h1 className="text-4xl font-bold text-white mb-2">
-            HR Analytics Dashboard
+            Company Analytics Dashboard
           </h1>
           <p className="text-lg text-white/80">
             Monitor organizational wellness and drive data-informed decisions
@@ -189,4 +189,4 @@ const HRDashboard = () => {
   );
 };
 
-export default HRDashboard;
+export default CompanyDashboard;
