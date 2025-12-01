@@ -14,6 +14,89 @@ export type Database = {
   }
   public: {
     Tables: {
+      company_groups: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          service_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          service_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          service_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      group_members: {
+        Row: {
+          access_rights: string
+          created_at: string | null
+          email: string
+          group_id: string
+          id: string
+          name: string
+          surname: string
+        }
+        Insert: {
+          access_rights: string
+          created_at?: string | null
+          email: string
+          group_id: string
+          id?: string
+          name: string
+          surname: string
+        }
+        Update: {
+          access_rights?: string
+          created_at?: string | null
+          email?: string
+          group_id?: string
+          id?: string
+          name?: string
+          surname?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "company_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meloria_admins: {
+        Row: {
+          created_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
