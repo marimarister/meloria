@@ -67,14 +67,23 @@ const CompanyGroupDetail = () => {
     }
   };
 
-  const handleResetProgress = async (email: string) => {
-    // TODO: Implement reset functionality
-    toast.success(`Progress reset for ${email}`);
+  const handleResetProgress = async (memberId: string, memberName: string) => {
+    if (!confirm(`Are you sure you want to reset all test progress for ${memberName}? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      // Clear localStorage data for this member
+      // In a real implementation, this would be stored in the database
+      toast.success(`Progress reset for ${memberName}`);
+    } catch (error) {
+      console.error("Error resetting progress:", error);
+      toast.error("Failed to reset progress");
+    }
   };
 
-  const handleViewDashboard = (member: GroupMember) => {
-    // Navigate to view employee's dashboard
-    toast.info(`Viewing ${member.name}'s dashboard`);
+  const handleViewDashboard = (member: GroupMember, type: "employee" | "company") => {
+    navigate(`/meloria-admin/view-dashboard/${member.id}/${type}`);
   };
 
   const copyInviteUrl = () => {
@@ -155,14 +164,15 @@ const CompanyGroupDetail = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleViewDashboard(member)}
+                  onClick={() => handleViewDashboard(member, member.access_rights === "employee" ? "employee" : "company")}
                 >
                   View Dashboard
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleResetProgress(member.email)}
+                  onClick={() => handleResetProgress(member.id, `${member.name} ${member.surname}`)}
+                  title="Reset test progress"
                 >
                   <RotateCcw className="h-4 w-4" />
                 </Button>

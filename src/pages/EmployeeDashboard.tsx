@@ -9,7 +9,6 @@ import {
   ArrowRight,
   Clock,
   Check,
-  Trash2,
   Eye,
   Volume2,
   Hand,
@@ -146,20 +145,6 @@ const EmployeeDashboard = () => {
     else archetypes.push("Steady Collaborator");
     
     return archetypes;
-  };
-
-  const handleResetAll = () => {
-    if (window.confirm("Are you sure you want to reset all test results? This action cannot be undone.")) {
-      localStorage.removeItem('burnoutTest');
-      localStorage.removeItem('channelPerceptionTest');
-      localStorage.removeItem('preferenceTest');
-      setTestStatus({
-        burnout: { completed: false, lastTaken: null, score: null },
-        perception: { completed: false, lastTaken: null },
-        preference: { completed: false, lastTaken: null }
-      });
-      toast.success("All test results have been reset");
-    }
   };
 
   // Calendar navigation
@@ -529,16 +514,6 @@ const EmployeeDashboard = () => {
             </div>
           </Card>
         )}
-        {/* Reset Button at Bottom */}
-        <div className="mt-8 flex justify-center pb-8">
-          <Button
-            variant="outline"
-            onClick={handleResetAll}
-            className="w-full max-w-md"
-          >
-            Reset
-          </Button>
-        </div>
       </div>
     </div>
   );
