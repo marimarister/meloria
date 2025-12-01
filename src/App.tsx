@@ -15,6 +15,12 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import MeloriaDashboard from "./pages/MeloriaDashboard";
+import Questionnaires from "./pages/meloria-admin/Questionnaires";
+import CompanyGroups from "./pages/meloria-admin/CompanyGroups";
+import CompanyGroupDetail from "./pages/meloria-admin/CompanyGroupDetail";
+import CreateCompanyGroup from "./pages/meloria-admin/CreateCompanyGroup";
+import PremiumPlans from "./pages/meloria-admin/PremiumPlans";
+import MeloriaSettings from "./pages/meloria-admin/MeloriaSettings";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +41,14 @@ const App = () => (
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/meloria-admin" element={<MeloriaDashboard />} />
+          <Route path="/meloria-admin" element={<MeloriaDashboard />}>
+            <Route path="questionnaires" element={<Questionnaires />} />
+            <Route path="company-groups" element={<CompanyGroups />} />
+            <Route path="company-groups/create" element={<CreateCompanyGroup />} />
+            <Route path="company-groups/:id" element={<CompanyGroupDetail />} />
+            <Route path="premium-plans" element={<PremiumPlans />} />
+            <Route path="settings" element={<MeloriaSettings />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
