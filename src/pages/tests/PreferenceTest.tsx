@@ -275,7 +275,7 @@ const PreferenceTest = () => {
 
           <div className="space-y-6">
             {questions.map((question, index) => (
-              <div key={question.id} className="bg-green-100/50 p-6 rounded-lg">
+              <div key={question.id} className="bg-primary/10 p-6 rounded-lg border border-primary/20">
                 <div className="space-y-6">
                   <p className="font-medium">
                     {index + 1}. {question.text}
