@@ -20,43 +20,69 @@ const NavBar = ({
   } = useToast();
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isMeloriaAdmin, setIsMeloriaAdmin] = useState(false);
+
   useEffect(() => {
     const checkAuth = async () => {
-      const {
-        data: {
-          session
-        }
-      } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
+      
       if (session?.user) {
         setIsAuthenticated(true);
-        const {
-          data: roleData
-        } = await supabase.from("user_roles").select("role").eq("user_id", session.user.id).single();
+        
+        // Check for Meloria admin
+        const { data: adminData } = await supabase
+          .from("meloria_admins" as any)
+          .select("id")
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+        
+        setIsMeloriaAdmin(!!adminData);
+        
+        // Check user role
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .single();
+        
         if (roleData) {
           setUserRole(roleData.role);
         }
       }
     };
+
     checkAuth();
-    const {
-      data: {
-        subscription
-      }
-    } = supabase.auth.onAuthStateChange((event, session) => {
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         setIsAuthenticated(true);
-        supabase.from("user_roles").select("role").eq("user_id", session.user.id).single().then(({
-          data: roleData
-        }) => {
-          if (roleData) {
-            setUserRole(roleData.role);
-          }
-        });
+        
+        // Check for Meloria admin
+        const { data: adminData } = await supabase
+          .from("meloria_admins" as any)
+          .select("id")
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+        
+        setIsMeloriaAdmin(!!adminData);
+        
+        // Check user role
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .single();
+        
+        if (roleData) {
+          setUserRole(roleData.role);
+        }
       } else {
         setIsAuthenticated(false);
         setUserRole(null);
+        setIsMeloriaAdmin(false);
       }
     });
+
     return () => subscription.unsubscribe();
   }, []);
   const handleLogout = async () => {
@@ -93,9 +119,10 @@ const NavBar = ({
           MELORIA
         </button>
 
-        {/* Right side - Profile icon */}
-        <div className="w-10">
-          {showProfile && isAuthenticated && <DropdownMenu>
+        {/* Right side - Profile icon or Sign In */}
+        <div className="w-auto">
+          {showProfile && isAuthenticated && (
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
                   <Avatar className="h-8 w-8">
@@ -106,20 +133,39 @@ const NavBar = ({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                {userRole === "employee" ? <>
+                {isMeloriaAdmin ? (
+                  <>
+                    <DropdownMenuItem onClick={() => navigate("/meloria-admin/questionnaires")}>
+                      My Meloria Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/meloria-admin/company-groups")}>
+                      Company Groups
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => navigate("/meloria-admin/settings")}>
+                      Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>
+                      Log Out
+                    </DropdownMenuItem>
+                  </>
+                ) : userRole === "employee" ? (
+                  <>
                     <DropdownMenuItem onClick={() => navigate("/employee")}>
                       My Dashboard
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate("/employee")}>
                       My Tests
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Contact Company</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Contact Company</DropdownMenuItem>
+                    <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout}>
                       Log Out
                     </DropdownMenuItem>
-                  </> : userRole === "hr" ? <>
+                  </>
+                ) : userRole === "hr" ? (
+                  <>
                     <DropdownMenuItem onClick={() => navigate("/company")}>
                       My Company Dashboard
                     </DropdownMenuItem>
@@ -137,12 +183,16 @@ const NavBar = ({
                     <DropdownMenuItem onClick={handleLogout}>
                       Log Out
                     </DropdownMenuItem>
-                  </> : null}
+                  </>
+                ) : null}
               </DropdownMenuContent>
-            </DropdownMenu>}
-          {showProfile && !isAuthenticated && <Button variant="ghost" size="icon" onClick={() => navigate("/login")}>
-              <User className="h-5 w-5" />
-            </Button>}
+            </DropdownMenu>
+          )}
+          {showProfile && !isAuthenticated && (
+            <Button onClick={() => navigate("/login")}>
+              Sign In
+            </Button>
+          )}
         </div>
       </div>
     </nav>;
