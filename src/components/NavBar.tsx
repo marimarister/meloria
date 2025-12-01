@@ -112,16 +112,16 @@ const NavBar = ({
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate("/employee")}>
                       My Tests
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Contact HR</DropdownMenuItem>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Contact Company</DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout}>
                       Log Out
                     </DropdownMenuItem>
                   </> : userRole === "hr" ? <>
-                    <DropdownMenuItem onClick={() => navigate("/hr")}>
-                      My HR Dashboard
+                    <DropdownMenuItem onClick={() => navigate("/company")}>
+                      My Company Dashboard
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate("/employee")}>
                       My Employee Dashboard

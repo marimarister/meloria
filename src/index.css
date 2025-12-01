@@ -40,8 +40,8 @@ All colors MUST be HSL.
     
     --employee-gradient-start: 150 40% 85%;
     --employee-gradient-end: 250 35% 85%;
-    --hr-gradient-start: 210 80% 25%;
-    --hr-gradient-end: 190 75% 35%;
+    --company-gradient-start: 210 80% 25%;
+    --company-gradient-end: 190 75% 35%;
     
     --success: 142 71% 45%;
     --warning: 38 92% 50%;
@@ -95,8 +95,8 @@ All colors MUST be HSL.
     
     --employee-gradient-start: 150 40% 20%;
     --employee-gradient-end: 250 35% 25%;
-    --hr-gradient-start: 210 60% 15%;
-    --hr-gradient-end: 190 55% 20%;
+    --company-gradient-start: 210 60% 15%;
+    --company-gradient-end: 190 55% 20%;
     
     --success: 142 71% 45%;
     --warning: 38 92% 50%;
@@ -132,8 +132,8 @@ All colors MUST be HSL.
     background: linear-gradient(135deg, hsl(var(--employee-gradient-start)), hsl(var(--employee-gradient-end)));
   }
   
-  .gradient-hr {
-    background: linear-gradient(135deg, hsl(var(--hr-gradient-start)), hsl(var(--hr-gradient-end)));
+  .gradient-company {
+    background: linear-gradient(135deg, hsl(var(--company-gradient-start)), hsl(var(--company-gradient-end)));
   }
   
   .animate-fade-in {

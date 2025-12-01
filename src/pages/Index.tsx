@@ -42,12 +42,12 @@ const Index = () => {
               </Button>
               <Button 
                 size="lg" 
-                variant="outline"
-                className="text-lg font-semibold"
-                onClick={() => navigate('/hr')}
-              >
-                HR Dashboard <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+              variant="outline"
+              className="text-lg font-semibold"
+              onClick={() => navigate('/company')}
+            >
+              Company Dashboard <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
             </div>
           </div>
         </div>
@@ -79,11 +79,11 @@ const Index = () => {
 
             <Card className="p-8 hover:shadow-lg transition-shadow">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">
-                <Users className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-2xl font-semibold mb-3">For HR Teams</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Monitor organizational wellness trends, identify at-risk teams, and implement 
+              <Users className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="text-2xl font-semibold mb-3">For Company Teams</h3>
+            <p className="text-muted-foreground leading-relaxed">
+              Monitor organizational wellness trends, identify at-risk teams, and implement
                 data-driven interventions to create a healthier workplace culture.
               </p>
             </Card>
@@ -121,12 +121,12 @@ const Index = () => {
             </Button>
             <Button 
               size="lg" 
-              variant="outline"
-              className="text-lg font-semibold"
-              onClick={() => navigate('/hr')}
-            >
-              Explore HR Features
-            </Button>
+            variant="outline"
+            className="text-lg font-semibold"
+            onClick={() => navigate('/company')}
+          >
+            Explore Company Features
+          </Button>
           </div>
         </div>
       </section>

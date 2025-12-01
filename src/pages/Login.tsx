@@ -27,12 +27,12 @@ const Login = () => {
           .from("user_roles")
           .select("role")
           .eq("user_id", session.user.id)
-          .single();
-        
-        if (roleData?.role === "hr") {
-          navigate("/hr");
-        } else {
-          navigate("/employee");
+        .single();
+      
+      if (roleData?.role === "hr") {
+        navigate("/company");
+      } else {
+        navigate("/employee");
         }
       }
     };
@@ -64,11 +64,11 @@ const Login = () => {
         description: "You've successfully signed in.",
       });
 
-      // Redirect based on role
-      if (roleData?.role === "hr") {
-        navigate("/hr");
-      } else {
-        navigate("/employee");
+    // Redirect based on role
+    if (roleData?.role === "hr") {
+      navigate("/company");
+    } else {
+      navigate("/employee");
       }
     } catch (error: any) {
       toast({

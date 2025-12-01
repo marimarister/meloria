@@ -247,15 +247,15 @@ const Signup = () => {
               >
                 {isLoading ? "Creating..." : "I'm an Employee"}
               </Button>
-              <Button
-                type="button"
-                onClick={() => handleRegister("hr")}
-                className="flex-1"
-                size="lg"
-                disabled={!agreedToTerms || isLoading}
-              >
-                {isLoading ? "Creating..." : "I'm an HR"}
-              </Button>
+            <Button
+              type="button"
+              onClick={() => handleRegister("hr")}
+              className="flex-1"
+              size="lg"
+              disabled={!agreedToTerms || isLoading}
+            >
+              {isLoading ? "Creating..." : "I'm in Company"}
+            </Button>
             </div>
           </form>
 

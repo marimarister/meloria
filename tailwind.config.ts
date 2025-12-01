@@ -54,9 +54,9 @@ export default {
           start: "hsl(var(--employee-gradient-start))",
           end: "hsl(var(--employee-gradient-end))",
         },
-        hr: {
-          start: "hsl(var(--hr-gradient-start))",
-          end: "hsl(var(--hr-gradient-end))",
+        company: {
+          start: "hsl(var(--company-gradient-start))",
+          end: "hsl(var(--company-gradient-end))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
