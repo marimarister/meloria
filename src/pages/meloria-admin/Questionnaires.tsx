@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const Questionnaires = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="p-8">
       <h1 className="text-4xl font-bold mb-2">Questionnaires</h1>
@@ -14,7 +17,9 @@ const Questionnaires = () => {
             Maslach Burnout Inventory - 22 items measuring emotional exhaustion, 
             depersonalization, and personal accomplishment
           </p>
-          <Button>Edit Questionnaire</Button>
+          <Button onClick={() => navigate("/meloria-admin/questionnaires/burnout")}>
+            Edit Questionnaire
+          </Button>
         </Card>
 
         <Card className="p-6">
@@ -22,7 +27,9 @@ const Questionnaires = () => {
           <p className="text-muted-foreground mb-4">
             VAK+D assessment - 10 items to determine learning and communication preferences
           </p>
-          <Button>Edit Questionnaire</Button>
+          <Button onClick={() => navigate("/meloria-admin/questionnaires/perception")}>
+            Edit Questionnaire
+          </Button>
         </Card>
 
         <Card className="p-6">
@@ -30,7 +37,9 @@ const Questionnaires = () => {
           <p className="text-muted-foreground mb-4">
             8 questions across 4 sections mapping to eight personality archetypes
           </p>
-          <Button>Edit Questionnaire</Button>
+          <Button onClick={() => navigate("/meloria-admin/questionnaires/preference")}>
+            Edit Questionnaire
+          </Button>
         </Card>
       </div>
     </div>
