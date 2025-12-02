@@ -72,10 +72,10 @@ const Accounts = () => {
 
   const fetchAccounts = async () => {
     try {
-      // Fetch profiles
+      // Fetch profiles with email
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, name, surname");
+        .select("id, name, surname, email");
 
       if (profilesError) throw profilesError;
 
@@ -113,7 +113,7 @@ const Accounts = () => {
           user_id: profile.id,
           name: profile.name || "",
           surname: profile.surname || "",
-          email: `${profile.name?.toLowerCase()}.${profile.surname?.toLowerCase()}@example.com`,
+          email: profile.email || `${profile.name?.toLowerCase()}.${profile.surname?.toLowerCase()}@example.com`,
           role: userRole?.role || "employee",
           is_admin: isAdmin || false,
           company_name: isAdmin ? "Meloria" : ((memberInfo as any)?.company_groups?.name || null),
