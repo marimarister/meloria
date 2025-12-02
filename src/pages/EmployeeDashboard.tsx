@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import NavBar from "@/components/NavBar";
+import { supabase } from "@/integrations/supabase/client";
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
@@ -33,26 +34,65 @@ const EmployeeDashboard = () => {
   const [currentWeekStart, setCurrentWeekStart] = useState(new Date(2025, 11, 1)); // December 1, 2025
 
   useEffect(() => {
-    // Load test status from localStorage
-    const burnoutData = localStorage.getItem('burnoutTest');
-    const perceptionData = localStorage.getItem('channelPerceptionTest');
-    const preferenceData = localStorage.getItem('preferenceTest');
+    const loadTestStatus = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        // User is logged in - database is the source of truth
+        const { data: testResults } = await supabase
+          .from("test_results")
+          .select("*")
+          .eq("user_id", user.id);
+        
+        const burnoutData = testResults?.find(r => r.test_type === 'burnout');
+        const perceptionData = testResults?.find(r => r.test_type === 'perception');
+        const preferenceData = testResults?.find(r => r.test_type === 'preference');
+        
+        // Clear localStorage if database doesn't have the data (admin may have reset)
+        if (!burnoutData) localStorage.removeItem('burnoutTest');
+        if (!perceptionData) localStorage.removeItem('channelPerceptionTest');
+        if (!preferenceData) localStorage.removeItem('preferenceTest');
 
-    setTestStatus({
-      burnout: {
-        completed: !!burnoutData,
-        lastTaken: burnoutData ? JSON.parse(burnoutData).completedAt : null,
-        score: burnoutData ? JSON.parse(burnoutData).scores.total : null
-      },
-      perception: {
-        completed: !!perceptionData,
-        lastTaken: perceptionData ? JSON.parse(perceptionData).completedAt : null
-      },
-      preference: {
-        completed: !!preferenceData,
-        lastTaken: preferenceData ? JSON.parse(preferenceData).completedAt : null
+        setTestStatus({
+          burnout: {
+            completed: !!burnoutData,
+            lastTaken: burnoutData ? burnoutData.completed_at : null,
+            score: burnoutData ? (burnoutData.scores as any).total : null
+          },
+          perception: {
+            completed: !!perceptionData,
+            lastTaken: perceptionData ? perceptionData.completed_at : null
+          },
+          preference: {
+            completed: !!preferenceData,
+            lastTaken: preferenceData ? preferenceData.completed_at : null
+          }
+        });
+      } else {
+        // No user - fallback to localStorage
+        const localBurnout = localStorage.getItem('burnoutTest');
+        const localPerception = localStorage.getItem('channelPerceptionTest');
+        const localPreference = localStorage.getItem('preferenceTest');
+
+        setTestStatus({
+          burnout: {
+            completed: !!localBurnout,
+            lastTaken: localBurnout ? JSON.parse(localBurnout).completedAt : null,
+            score: localBurnout ? JSON.parse(localBurnout).scores.total : null
+          },
+          perception: {
+            completed: !!localPerception,
+            lastTaken: localPerception ? JSON.parse(localPerception).completedAt : null
+          },
+          preference: {
+            completed: !!localPreference,
+            lastTaken: localPreference ? JSON.parse(localPreference).completedAt : null
+          }
+        });
       }
-    });
+    };
+
+    loadTestStatus();
   }, []);
 
   // Calculate progress

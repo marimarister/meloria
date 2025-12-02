@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Heart, CheckCircle } from "lucide-react";
 import NavBar from "@/components/NavBar";
+import { supabase } from "@/integrations/supabase/client";
 
 const SCALE_OPTIONS = [
   { value: 0, label: "Never" },
@@ -75,25 +76,69 @@ const BurnoutTest = () => {
   const [savedResults, setSavedResults] = useState<any>(null);
 
   useEffect(() => {
-    // Check if test already completed
-    const stored = localStorage.getItem('burnoutTest');
-    if (stored) {
-      const data = JSON.parse(stored);
-      setSavedResults(data);
-      setShowResults(true);
-    }
+    const checkExistingResults = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        // User is logged in - database is the source of truth
+        const { data } = await supabase
+          .from("test_results")
+          .select("*")
+          .eq("user_id", user.id)
+          .eq("test_type", "burnout")
+          .single();
+        
+        if (data) {
+          setSavedResults({
+            scores: data.scores,
+            completedAt: data.completed_at,
+            completed: true
+          });
+          setShowResults(true);
+        } else {
+          // Database doesn't have this test - clear localStorage (admin may have reset)
+          localStorage.removeItem('burnoutTest');
+        }
+        return;
+      }
+      
+      // No user - fallback to localStorage
+      const stored = localStorage.getItem('burnoutTest');
+      if (stored) {
+        const localData = JSON.parse(stored);
+        setSavedResults(localData);
+        setShowResults(true);
+      }
+    };
+    
+    checkExistingResults();
   }, []);
 
   const progress = (Object.keys(answers).length / QUESTIONS.length) * 100;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const scores = calculateScores();
+    const completedAt = new Date().toISOString();
     const results = {
       scores,
-      completedAt: new Date().toISOString(),
+      completedAt,
       completed: true
     };
+    
+    // Save to localStorage for backward compatibility
     localStorage.setItem('burnoutTest', JSON.stringify(results));
+    
+    // Save to database
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from("test_results").upsert({
+        user_id: user.id,
+        test_type: "burnout",
+        scores: scores,
+        completed_at: completedAt
+      }, { onConflict: 'user_id,test_type' });
+    }
+    
     setSavedResults(results);
     setShowResults(true);
   };
