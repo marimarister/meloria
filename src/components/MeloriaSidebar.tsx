@@ -5,8 +5,6 @@ import {
   CreditCard, 
   Settings, 
   LogOut,
-  ChevronLeft,
-  ChevronRight,
   Users
 } from "lucide-react";
 import {
@@ -83,15 +81,15 @@ export function MeloriaSidebar() {
 
   return (
     <Sidebar className={sidebarOpen ? "w-60" : "w-14"} collapsible="icon">
-      <div className="flex items-center justify-end p-2">
+      <div className="flex items-center justify-end p-2 pt-4">
         <button
           onClick={toggleSidebar}
           className="p-2 hover:bg-muted rounded-md transition-colors"
         >
           {sidebarOpen ? (
-            <ChevronLeft className="h-4 w-4" />
+            <span className="text-sm font-medium">&lt;&lt;</span>
           ) : (
-            <ChevronRight className="h-4 w-4" />
+            <span className="text-sm font-medium">&gt;&gt;</span>
           )}
         </button>
       </div>
