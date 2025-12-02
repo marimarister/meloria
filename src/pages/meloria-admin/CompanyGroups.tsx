@@ -30,7 +30,7 @@ interface CompanyGroup {
   created_at: string;
   member_count: number;
   service_type: "free" | "premium";
-  stress_level: number;
+  stress_level: number | null;
   tests_completed: number;
 }
 
@@ -60,7 +60,7 @@ const CompanyGroups = () => {
 
       if (error) throw error;
 
-      // Mock data for stress level and tests completed
+      // Set default values - will be calculated from actual test data when available
       const groupsWithStats = (data as any[]).map((group: any) => ({
         id: group.id,
         name: group.name,
@@ -68,8 +68,8 @@ const CompanyGroups = () => {
         created_at: group.created_at,
         member_count: group.group_members?.[0]?.count || 0,
         service_type: group.service_type || "free",
-        stress_level: Math.floor(Math.random() * 100), // TODO: Calculate from actual data
-        tests_completed: Math.floor(Math.random() * (group.group_members?.[0]?.count || 0)),
+        stress_level: null, // Will be calculated from actual burnout test results
+        tests_completed: 0, // Will be calculated from actual test completions
       }));
 
       setGroups(groupsWithStats);
@@ -80,7 +80,8 @@ const CompanyGroups = () => {
     }
   };
 
-  const getStressColor = (level: number) => {
+  const getStressColor = (level: number | null) => {
+    if (level === null) return "text-muted-foreground";
     if (level < 30) return "text-green-600";
     if (level < 60) return "text-yellow-600";
     return "text-red-600";
@@ -198,7 +199,7 @@ const CompanyGroups = () => {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Stress Level:</span>
                   <span className={`font-medium ${getStressColor(group.stress_level)}`}>
-                    {group.stress_level}%
+                    {group.stress_level !== null ? `${group.stress_level}%` : "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
