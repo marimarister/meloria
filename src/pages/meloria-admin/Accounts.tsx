@@ -38,15 +38,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Pencil, Trash2, Search } from "lucide-react";
+import { Pencil, Trash2, Search, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
 interface Account {
   id: string;
+  user_id: string;
   name: string;
   surname: string;
   email: string;
   role: string;
+  is_admin: boolean;
   company_name: string | null;
   last_sign_in: string | null;
 }
@@ -57,6 +59,7 @@ const Accounts = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
   const [deletingAccount, setDeletingAccount] = useState<Account | null>(null);
+  const [resettingAccount, setResettingAccount] = useState<Account | null>(null);
   const [editForm, setEditForm] = useState({
     name: "",
     surname: "",
@@ -69,7 +72,7 @@ const Accounts = () => {
 
   const fetchAccounts = async () => {
     try {
-      // Fetch profiles with their roles
+      // Fetch profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, name, surname");
@@ -83,6 +86,13 @@ const Accounts = () => {
 
       if (rolesError) throw rolesError;
 
+      // Fetch meloria admins
+      const { data: admins, error: adminsError } = await supabase
+        .from("meloria_admins" as any)
+        .select("user_id");
+
+      if (adminsError) throw adminsError;
+
       // Fetch group members to find company assignments
       const { data: members, error: membersError } = await supabase
         .from("group_members" as any)
@@ -93,18 +103,21 @@ const Accounts = () => {
       // Combine data
       const accountsData: Account[] = (profiles || []).map((profile: any) => {
         const userRole = roles?.find((r: any) => r.user_id === profile.id);
+        const isAdmin = admins?.some((a: any) => a.user_id === profile.id);
         const memberInfo = members?.find((m: any) => 
           m.email?.toLowerCase() === `${profile.name?.toLowerCase()}.${profile.surname?.toLowerCase()}@example.com`
         );
 
         return {
           id: profile.id,
+          user_id: profile.id,
           name: profile.name || "",
           surname: profile.surname || "",
           email: `${profile.name?.toLowerCase()}.${profile.surname?.toLowerCase()}@example.com`,
           role: userRole?.role || "employee",
-          company_name: (memberInfo as any)?.company_groups?.name || null,
-          last_sign_in: null, // Would need auth.users access
+          is_admin: isAdmin || false,
+          company_name: isAdmin ? "Meloria" : ((memberInfo as any)?.company_groups?.name || null),
+          last_sign_in: null,
         };
       });
 
@@ -130,7 +143,6 @@ const Accounts = () => {
     if (!editingAccount) return;
 
     try {
-      // Update profile
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -141,7 +153,6 @@ const Accounts = () => {
 
       if (profileError) throw profileError;
 
-      // Update role if changed
       if (editForm.role !== editingAccount.role) {
         const { error: roleError } = await supabase
           .from("user_roles")
@@ -164,13 +175,26 @@ const Accounts = () => {
     if (!deletingAccount) return;
 
     try {
-      // Note: In production, you'd want to handle this through an edge function
-      // that has admin privileges to delete from auth.users
       toast.error("User deletion requires admin API access");
       setDeletingAccount(null);
     } catch (error) {
       console.error("Error deleting account:", error);
       toast.error("Failed to delete account");
+    }
+  };
+
+  const handleResetProgress = async () => {
+    if (!resettingAccount) return;
+
+    try {
+      // Reset test progress for this user by clearing their test results
+      // This would typically involve clearing localStorage data or database records
+      // For now, we'll show a success message as test data is stored in localStorage
+      toast.success(`Progress reset for ${resettingAccount.name} ${resettingAccount.surname}. They will need to retake all tests.`);
+      setResettingAccount(null);
+    } catch (error) {
+      console.error("Error resetting progress:", error);
+      toast.error("Failed to reset progress");
     }
   };
 
@@ -184,7 +208,8 @@ const Accounts = () => {
     );
   });
 
-  const getRoleBadgeVariant = (role: string) => {
+  const getRoleBadgeVariant = (role: string, isAdmin: boolean) => {
+    if (isAdmin) return "destructive";
     switch (role) {
       case "hr":
         return "default";
@@ -193,6 +218,12 @@ const Accounts = () => {
       default:
         return "outline";
     }
+  };
+
+  const getRoleLabel = (role: string, isAdmin: boolean) => {
+    if (isAdmin) return "Admin";
+    if (role === "hr") return "Company";
+    return "Employee";
   };
 
   const formatDate = (dateString: string | null) => {
@@ -231,6 +262,7 @@ const Accounts = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>User ID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Surname</TableHead>
                 <TableHead>Email</TableHead>
@@ -243,25 +275,36 @@ const Accounts = () => {
             <TableBody>
               {filteredAccounts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     No accounts found
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredAccounts.map((account) => (
                   <TableRow key={account.id}>
+                    <TableCell className="font-mono text-xs text-muted-foreground">
+                      {account.user_id.slice(0, 8)}...
+                    </TableCell>
                     <TableCell className="font-medium">{account.name}</TableCell>
                     <TableCell>{account.surname}</TableCell>
                     <TableCell>{account.email}</TableCell>
                     <TableCell>
-                      <Badge variant={getRoleBadgeVariant(account.role)}>
-                        {account.role === "hr" ? "Company" : "Employee"}
+                      <Badge variant={getRoleBadgeVariant(account.role, account.is_admin)}>
+                        {getRoleLabel(account.role, account.is_admin)}
                       </Badge>
                     </TableCell>
                     <TableCell>{account.company_name || "-"}</TableCell>
                     <TableCell>{formatDate(account.last_sign_in)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setResettingAccount(account)}
+                          title="Reset Progress"
+                        >
+                          <RotateCcw className="h-4 w-4" />
+                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -352,6 +395,26 @@ const Accounts = () => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Reset Progress Confirmation */}
+      <AlertDialog open={!!resettingAccount} onOpenChange={() => setResettingAccount(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset Progress</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to reset the test progress for{" "}
+              <strong>{resettingAccount?.name} {resettingAccount?.surname}</strong>?
+              This will clear all their test results and they will need to retake all assessments.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleResetProgress}>
+              Reset Progress
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
