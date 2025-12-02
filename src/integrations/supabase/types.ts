@@ -127,6 +127,33 @@ export type Database = {
         }
         Relationships: []
       }
+      test_results: {
+        Row: {
+          completed_at: string
+          created_at: string | null
+          id: string
+          scores: Json
+          test_type: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string | null
+          id?: string
+          scores: Json
+          test_type: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string | null
+          id?: string
+          scores?: Json
+          test_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null

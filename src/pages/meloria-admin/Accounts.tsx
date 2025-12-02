@@ -187,9 +187,14 @@ const Accounts = () => {
     if (!resettingAccount) return;
 
     try {
-      // Reset test progress for this user by clearing their test results
-      // This would typically involve clearing localStorage data or database records
-      // For now, we'll show a success message as test data is stored in localStorage
+      // Delete all test results for this user from the database
+      const { error } = await supabase
+        .from("test_results")
+        .delete()
+        .eq("user_id", resettingAccount.user_id);
+
+      if (error) throw error;
+
       toast.success(`Progress reset for ${resettingAccount.name} ${resettingAccount.surname}. They will need to retake all tests.`);
       setResettingAccount(null);
     } catch (error) {

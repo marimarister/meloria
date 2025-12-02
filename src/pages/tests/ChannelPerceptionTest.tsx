@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, Ear, Hand, Binary, Home, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
+import { supabase } from "@/integrations/supabase/client";
 
 type ChannelType = 'V' | 'A' | 'K' | 'D';
 
@@ -227,32 +228,91 @@ const ChannelPerceptionTest = () => {
   const [savedResults, setSavedResults] = useState<any>(null);
 
   useEffect(() => {
-    // Check if Burnout Test is completed
-    const burnoutTest = localStorage.getItem('burnoutTest');
-    if (!burnoutTest) {
-      navigate('/employee');
-      return;
-    }
+    const checkExistingResults = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        // User is logged in - database is the source of truth
+        // Check database for burnout test
+        const { data: burnoutData } = await supabase
+          .from("test_results")
+          .select("*")
+          .eq("user_id", user.id)
+          .eq("test_type", "burnout")
+          .single();
+        
+        if (!burnoutData) {
+          // No burnout test in database - redirect
+          localStorage.removeItem('burnoutTest');
+          navigate('/employee');
+          return;
+        }
+        
+        // Check if this test already completed in database
+        const { data: perceptionData } = await supabase
+          .from("test_results")
+          .select("*")
+          .eq("user_id", user.id)
+          .eq("test_type", "perception")
+          .single();
+        
+        if (perceptionData) {
+          setSavedResults({
+            scores: perceptionData.scores,
+            completedAt: perceptionData.completed_at,
+            completed: true
+          });
+          setStage('results');
+        } else {
+          // Database doesn't have this test - clear localStorage (admin may have reset)
+          localStorage.removeItem('channelPerceptionTest');
+        }
+        return;
+      }
+      
+      // No user - fallback to localStorage
+      const burnoutTest = localStorage.getItem('burnoutTest');
+      if (!burnoutTest) {
+        navigate('/employee');
+        return;
+      }
 
-    // Check if this test already completed
-    const stored = localStorage.getItem('channelPerceptionTest');
-    if (stored) {
-      const data = JSON.parse(stored);
-      setSavedResults(data);
-      setStage('results');
-    }
+      const stored = localStorage.getItem('channelPerceptionTest');
+      if (stored) {
+        const data = JSON.parse(stored);
+        setSavedResults(data);
+        setStage('results');
+      }
+    };
+    
+    checkExistingResults();
   }, [navigate]);
 
   const progress = (Object.keys(answers).length / questions.length) * 100;
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const scores = calculateScores();
+    const completedAt = new Date().toISOString();
     const results = {
       scores,
-      completedAt: new Date().toISOString(),
+      completedAt,
       completed: true
     };
+    
+    // Save to localStorage for backward compatibility
     localStorage.setItem('channelPerceptionTest', JSON.stringify(results));
+    
+    // Save to database
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await supabase.from("test_results").upsert({
+        user_id: user.id,
+        test_type: "perception",
+        scores: scores,
+        completed_at: completedAt
+      }, { onConflict: 'user_id,test_type' });
+    }
+    
     setSavedResults(results);
     setStage('results');
   };
