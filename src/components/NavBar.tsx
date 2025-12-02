@@ -23,59 +23,45 @@ const NavBar = ({
   const [isMeloriaAdmin, setIsMeloriaAdmin] = useState(false);
 
   useEffect(() => {
+    const fetchUserData = async (userId: string) => {
+      // Run both queries in parallel for faster loading
+      const [adminResult] = await Promise.all([
+        supabase
+          .from("meloria_admins" as any)
+          .select("id")
+          .eq("user_id", userId)
+          .maybeSingle()
+      ]);
+      
+      setIsMeloriaAdmin(!!adminResult.data);
+    };
+
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session?.user) {
         setIsAuthenticated(true);
+        // Use role from user_metadata (faster)
+        const role = session.user.user_metadata?.role;
+        if (role) setUserRole(role);
         
-        // Check for Meloria admin
-        const { data: adminData } = await supabase
-          .from("meloria_admins" as any)
-          .select("id")
-          .eq("user_id", session.user.id)
-          .maybeSingle();
-        
-        setIsMeloriaAdmin(!!adminData);
-        
-        // Check user role
-        const { data: roleData } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id)
-          .single();
-        
-        if (roleData) {
-          setUserRole(roleData.role);
-        }
+        await fetchUserData(session.user.id);
       }
     };
 
     checkAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         setIsAuthenticated(true);
+        // Use role from user_metadata (faster)
+        const role = session.user.user_metadata?.role;
+        if (role) setUserRole(role);
         
-        // Check for Meloria admin
-        const { data: adminData } = await supabase
-          .from("meloria_admins" as any)
-          .select("id")
-          .eq("user_id", session.user.id)
-          .maybeSingle();
-        
-        setIsMeloriaAdmin(!!adminData);
-        
-        // Check user role
-        const { data: roleData } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id)
-          .single();
-        
-        if (roleData) {
-          setUserRole(roleData.role);
-        }
+        // Defer database calls to prevent deadlock
+        setTimeout(() => {
+          fetchUserData(session.user.id);
+        }, 0);
       } else {
         setIsAuthenticated(false);
         setUserRole(null);
