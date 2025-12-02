@@ -19,6 +19,7 @@ import Questionnaires from "./pages/meloria-admin/Questionnaires";
 import CompanyGroups from "./pages/meloria-admin/CompanyGroups";
 import CompanyGroupDetail from "./pages/meloria-admin/CompanyGroupDetail";
 import CreateCompanyGroup from "./pages/meloria-admin/CreateCompanyGroup";
+import Accounts from "./pages/meloria-admin/Accounts";
 import PremiumPlans from "./pages/meloria-admin/PremiumPlans";
 import MeloriaSettings from "./pages/meloria-admin/MeloriaSettings";
 import EditQuestionnaire from "./pages/meloria-admin/EditQuestionnaire";
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="company-groups" element={<CompanyGroups />} />
             <Route path="company-groups/create" element={<CreateCompanyGroup />} />
             <Route path="company-groups/:id" element={<CompanyGroupDetail />} />
+            <Route path="accounts" element={<Accounts />} />
             <Route path="view-dashboard/:memberId/:dashboardType" element={<ViewDashboard />} />
             <Route path="premium-plans" element={<PremiumPlans />} />
             <Route path="premium-plans/:planType" element={<EditPremiumPlan />} />
