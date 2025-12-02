@@ -6,7 +6,8 @@ import {
   Settings, 
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Users
 } from "lucide-react";
 import {
   Sidebar,
@@ -45,6 +46,11 @@ const menuItems = [
     title: "Company Groups", 
     url: "/meloria-admin/company-groups", 
     icon: Building2 
+  },
+  { 
+    title: "Accounts", 
+    url: "/meloria-admin/accounts", 
+    icon: Users 
   },
   { 
     title: "Premium Plans", 

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { MeloriaSidebar } from "@/components/MeloriaSidebar";
+import NavBar from "@/components/NavBar";
 
 const MeloriaDashboard = () => {
   const navigate = useNavigate();
@@ -47,11 +48,14 @@ const MeloriaDashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <MeloriaSidebar />
-        <main className="flex-1 overflow-auto">
-          <Outlet />
-        </main>
+      <div className="min-h-screen flex flex-col w-full">
+        <NavBar showBack={false} />
+        <div className="flex flex-1 w-full">
+          <MeloriaSidebar />
+          <main className="flex-1 overflow-auto">
+            <Outlet />
+          </main>
+        </div>
       </div>
     </SidebarProvider>
   );

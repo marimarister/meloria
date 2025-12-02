@@ -4,7 +4,24 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Plus, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface CompanyGroup {
   id: string;
@@ -21,6 +38,7 @@ const CompanyGroups = () => {
   const navigate = useNavigate();
   const [groups, setGroups] = useState<CompanyGroup[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingGroup, setDeletingGroup] = useState<CompanyGroup | null>(null);
 
   useEffect(() => {
     fetchGroups();
@@ -68,6 +86,35 @@ const CompanyGroups = () => {
     return "text-red-600";
   };
 
+  const handleDeleteGroup = async () => {
+    if (!deletingGroup) return;
+
+    try {
+      // First delete all members of the group
+      const { error: membersError } = await supabase
+        .from("group_members" as any)
+        .delete()
+        .eq("group_id", deletingGroup.id);
+
+      if (membersError) throw membersError;
+
+      // Then delete the group
+      const { error: groupError } = await supabase
+        .from("company_groups" as any)
+        .delete()
+        .eq("id", deletingGroup.id);
+
+      if (groupError) throw groupError;
+
+      toast.success("Group deleted successfully");
+      setDeletingGroup(null);
+      fetchGroups();
+    } catch (error) {
+      console.error("Error deleting group:", error);
+      toast.error("Failed to delete group");
+    }
+  };
+
   if (loading) {
     return <div className="p-8">Loading...</div>;
   }
@@ -97,14 +144,44 @@ const CompanyGroups = () => {
           {groups.map((group) => (
             <Card
               key={group.id}
-              className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+              className="p-6 hover:shadow-lg transition-shadow cursor-pointer relative"
               onClick={() => navigate(`/meloria-admin/company-groups/${group.id}`)}
             >
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-xl font-semibold">{group.name}</h3>
-                <Badge variant={group.service_type === "premium" ? "default" : "secondary"}>
-                  {group.service_type === "premium" ? "Premium" : "Free"}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant={group.service_type === "premium" ? "default" : "secondary"}>
+                    {group.service_type === "premium" ? "Premium" : "Free"}
+                  </Badge>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/meloria-admin/company-groups/${group.id}`);
+                        }}
+                      >
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-destructive"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletingGroup(group);
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
 
               {group.description && (
@@ -135,6 +212,28 @@ const CompanyGroups = () => {
           ))}
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deletingGroup} onOpenChange={() => setDeletingGroup(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Company Group</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{deletingGroup?.name}</strong>?
+              This will also remove all members from the group. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteGroup}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
