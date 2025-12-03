@@ -9,6 +9,19 @@ import NavBar from "@/components/NavBar";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+const signupSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  surname: z.string().trim().min(1, "Surname is required").max(100, "Surname must be less than 100 characters"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  personalId: z.string().trim().min(1, "Personal ID is required").max(50, "Personal ID must be less than 50 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -26,19 +39,21 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = async (role: "employee" | "hr") => {
-    if (password.length < 6) {
-      toast({
-        title: "Error",
-        description: "Password must be at least 6 characters",
-        variant: "destructive",
-      });
-      return;
-    }
+    // Validate all inputs using zod schema
+    const validationResult = signupSchema.safeParse({
+      name,
+      surname,
+      email,
+      personalId,
+      password,
+      confirmPassword
+    });
 
-    if (password !== confirmPassword) {
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
       toast({
-        title: "Error",
-        description: "Passwords do not match",
+        title: "Validation Error",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
