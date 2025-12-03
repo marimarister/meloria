@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Share2, RotateCcw } from "lucide-react";
+import { ArrowLeft, Share2, RotateCcw, Download, Filter } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -14,6 +14,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { QRCodeSVG } from "qrcode.react";
 
 interface TestResult {
@@ -32,6 +39,8 @@ interface GroupMember {
   burnoutScore?: number;
   burnoutLevel?: string;
 }
+
+type FilterOption = "all" | "completed" | "partial" | "none";
 
 const getBurnoutLevel = (score: number): string => {
   if (score <= 22) return "Perfect Wellbeing";
@@ -55,6 +64,7 @@ const CompanyGroupDetail = () => {
   const [groupName, setGroupName] = useState("");
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<FilterOption>("all");
 
   const inviteUrl = `${window.location.origin}/signup?group=${groupName.toLowerCase().replace(/\s+/g, "")}`;
 
@@ -83,10 +93,8 @@ const CompanyGroupDetail = () => {
 
       if (membersError) throw membersError;
 
-      // Fetch test results for each member by matching email with profiles
       const membersWithResults = await Promise.all(
         (memberData as any[]).map(async (member) => {
-          // Find the profile by email to get user_id
           const { data: profile } = await supabase
             .from("profiles")
             .select("id")
@@ -94,7 +102,6 @@ const CompanyGroupDetail = () => {
             .maybeSingle();
 
           if (profile) {
-            // Fetch test results for this user
             const { data: testResults } = await supabase
               .from("test_results")
               .select("test_type, scores, completed_at")
@@ -133,14 +140,69 @@ const CompanyGroupDetail = () => {
     }
   };
 
+  const filteredMembers = members.filter((member) => {
+    const testsCompleted = member.testResults?.length || 0;
+    switch (filter) {
+      case "completed":
+        return testsCompleted === 3;
+      case "partial":
+        return testsCompleted > 0 && testsCompleted < 3;
+      case "none":
+        return testsCompleted === 0;
+      default:
+        return true;
+    }
+  });
+
+  const exportToCSV = () => {
+    const headers = [
+      "Name",
+      "Surname", 
+      "Email",
+      "Role",
+      "Tests Completed",
+      "Burnout Score",
+      "Burnout Level",
+      "Channel Perception",
+      "Work Preference"
+    ];
+
+    const rows = members.map((member) => {
+      const channelTest = member.testResults?.find(t => t.test_type === "channel_perception");
+      const preferenceTest = member.testResults?.find(t => t.test_type === "preference");
+      
+      return [
+        member.name,
+        member.surname,
+        member.email,
+        member.access_rights === "employee" ? "Employee" : "Company",
+        `${member.testResults?.length || 0}/3`,
+        member.burnoutScore?.toString() || "N/A",
+        member.burnoutLevel || "Not completed",
+        (channelTest?.scores as any)?.dominantChannel || "Not completed",
+        (preferenceTest?.scores as any)?.archetype || "Not completed"
+      ];
+    });
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${groupName.toLowerCase().replace(/\s+/g, "-")}-test-results.csv`;
+    link.click();
+    toast.success("CSV exported successfully");
+  };
+
   const handleResetProgress = async (memberId: string, memberName: string) => {
     if (!confirm(`Are you sure you want to reset all test progress for ${memberName}? This action cannot be undone.`)) {
       return;
     }
 
     try {
-      // Clear localStorage data for this member
-      // In a real implementation, this would be stored in the database
       toast.success(`Progress reset for ${memberName}`);
     } catch (error) {
       console.error("Error resetting progress:", error);
@@ -178,43 +240,68 @@ const CompanyGroupDetail = () => {
           <p className="text-muted-foreground">{members.length} members</p>
         </div>
 
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Share2 className="mr-2 h-4 w-4" />
-              Invite
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Invite Members</DialogTitle>
-              <DialogDescription>
-                Share this link or QR code with new members
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={inviteUrl}
-                  readOnly
-                  className="flex-1 px-3 py-2 border rounded-md bg-muted text-sm"
-                />
-                <Button size="sm" onClick={copyInviteUrl}>
-                  Copy
-                </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={exportToCSV}>
+            <Download className="mr-2 h-4 w-4" />
+            Export CSV
+          </Button>
+          
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Share2 className="mr-2 h-4 w-4" />
+                Invite
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Invite Members</DialogTitle>
+                <DialogDescription>
+                  Share this link or QR code with new members
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={inviteUrl}
+                    readOnly
+                    className="flex-1 px-3 py-2 border rounded-md bg-muted text-sm"
+                  />
+                  <Button size="sm" onClick={copyInviteUrl}>
+                    Copy
+                  </Button>
+                </div>
+                <div className="flex justify-center p-4 bg-white rounded-lg">
+                  <QRCodeSVG value={inviteUrl} size={200} />
+                </div>
               </div>
-              <div className="flex justify-center p-4 bg-white rounded-lg">
-                <QRCodeSVG value={inviteUrl} size={200} />
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      {/* Filter Section */}
+      <div className="flex items-center gap-3 mb-6">
+        <Filter className="h-4 w-4 text-muted-foreground" />
+        <Select value={filter} onValueChange={(value: FilterOption) => setFilter(value)}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Filter by completion" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Members</SelectItem>
+            <SelectItem value="completed">All Tests Completed</SelectItem>
+            <SelectItem value="partial">Partially Completed</SelectItem>
+            <SelectItem value="none">No Tests Completed</SelectItem>
+          </SelectContent>
+        </Select>
+        <span className="text-sm text-muted-foreground">
+          Showing {filteredMembers.length} of {members.length} members
+        </span>
       </div>
 
       <div className="space-y-4">
-        {members.map((member) => {
-          const burnoutTest = member.testResults?.find(t => t.test_type === "burnout");
+        {filteredMembers.map((member) => {
           const channelTest = member.testResults?.find(t => t.test_type === "channel_perception");
           const preferenceTest = member.testResults?.find(t => t.test_type === "preference");
           const testsCompleted = member.testResults?.length || 0;
@@ -233,7 +320,6 @@ const CompanyGroupDetail = () => {
                   </div>
                   <p className="text-sm text-muted-foreground mb-3">{member.email}</p>
                   
-                  {/* Test Results */}
                   <div className="flex flex-wrap gap-2">
                     {member.burnoutLevel ? (
                       <Badge variant={getBurnoutBadgeVariant(member.burnoutScore || 0)}>
