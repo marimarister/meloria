@@ -8,9 +8,27 @@ import {
   CheckCircle2,
   AlertCircle
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import NavBar from "@/components/NavBar";
+import { supabase } from "@/integrations/supabase/client";
 
 const CompanyDashboard = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+      setIsLoading(false);
+    };
+    checkAuth();
+  }, [navigate]);
   // Mock data - will be replaced with real data from backend
   const stats = {
     totalEmployees: 150,
@@ -23,6 +41,14 @@ const CompanyDashboard = () => {
       high: 10
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen gradient-company flex items-center justify-center">
+        <p className="text-white">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen gradient-company">

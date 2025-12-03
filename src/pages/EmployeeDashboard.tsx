@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [testStatus, setTestStatus] = useState({
     burnout: { completed: false, lastTaken: null as string | null, score: null as number | null },
     perception: { completed: false, lastTaken: null as string | null },
@@ -33,7 +34,22 @@ const EmployeeDashboard = () => {
   // Calendar state - starting at December 1-7, 2025
   const [currentWeekStart, setCurrentWeekStart] = useState(new Date(2025, 11, 1)); // December 1, 2025
 
+  // Check authentication on mount
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+      setIsLoading(false);
+    };
+    checkAuth();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (isLoading) return; // Don't load test status until auth is confirmed
+    
     const loadTestStatus = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       
@@ -93,7 +109,7 @@ const EmployeeDashboard = () => {
     };
 
     loadTestStatus();
-  }, []);
+  }, [isLoading]);
 
   // Calculate progress
   const calculateProgress = () => {
