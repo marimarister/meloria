@@ -29,6 +29,7 @@ interface CompanyGroup {
   description: string | null;
   created_at: string;
   member_count: number;
+  employee_count: number;
   service_type: "free" | "premium";
   stress_level: number | null;
   tests_completed: number;
@@ -46,7 +47,8 @@ const CompanyGroups = () => {
 
   const fetchGroups = async () => {
     try {
-      const { data, error } = await supabase
+      // Fetch groups with members
+      const { data: groupsData, error: groupsError } = await supabase
         .from("company_groups" as any)
         .select(`
           id,
@@ -54,23 +56,74 @@ const CompanyGroups = () => {
           description,
           created_at,
           service_type,
-          group_members (count)
+          group_members (id, email, access_rights)
         `)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (groupsError) throw groupsError;
 
-      // Set default values - will be calculated from actual test data when available
-      const groupsWithStats = (data as any[]).map((group: any) => ({
-        id: group.id,
-        name: group.name,
-        description: group.description,
-        created_at: group.created_at,
-        member_count: group.group_members?.[0]?.count || 0,
-        service_type: group.service_type || "free",
-        stress_level: null, // Will be calculated from actual burnout test results
-        tests_completed: 0, // Will be calculated from actual test completions
-      }));
+      // Get all profiles to match emails with user_ids
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, email");
+
+      if (profilesError) throw profilesError;
+
+      // Get all test results
+      const { data: testResults, error: testError } = await supabase
+        .from("test_results")
+        .select("user_id, test_type, scores");
+
+      if (testError) throw testError;
+
+      // Calculate stats for each group
+      const groupsWithStats: CompanyGroup[] = (groupsData as any[]).map((group: any) => {
+        const members = group.group_members || [];
+        const employeeMembers = members.filter((m: any) => m.access_rights === "employee");
+        
+        // Find user_ids for employee members
+        const employeeUserIds = employeeMembers
+          .map((member: any) => {
+            const profile = profiles?.find(p => p.email === member.email);
+            return profile?.id;
+          })
+          .filter(Boolean);
+
+        // Get burnout scores for employees
+        const burnoutScores: number[] = [];
+        let testsCompleted = 0;
+
+        employeeUserIds.forEach((userId: string) => {
+          const userResults = testResults?.filter(r => r.user_id === userId) || [];
+          const burnoutResult = userResults.find(r => r.test_type === 'burnout');
+          
+          if (burnoutResult && burnoutResult.scores) {
+            burnoutScores.push((burnoutResult.scores as any).total);
+          }
+
+          // Count as completed if burnout test is done (since other tests may be optional)
+          if (burnoutResult) {
+            testsCompleted++;
+          }
+        });
+
+        // Calculate average stress level (burnout score as percentage of max 132)
+        const avgStressLevel = burnoutScores.length > 0
+          ? Math.round((burnoutScores.reduce((sum, s) => sum + s, 0) / burnoutScores.length / 132) * 100)
+          : null;
+
+        return {
+          id: group.id,
+          name: group.name,
+          description: group.description,
+          created_at: group.created_at,
+          member_count: members.length,
+          employee_count: employeeMembers.length,
+          service_type: group.service_type || "free",
+          stress_level: avgStressLevel,
+          tests_completed: testsCompleted,
+        };
+      });
 
       setGroups(groupsWithStats);
     } catch (error) {
@@ -85,6 +138,16 @@ const CompanyGroups = () => {
     if (level < 30) return "text-green-600";
     if (level < 60) return "text-yellow-600";
     return "text-red-600";
+  };
+
+  const getStressLabel = (level: number | null) => {
+    if (level === null) return "N/A";
+    if (level < 17) return `${level}% (Perfect)`;
+    if (level < 34) return `${level}% (Balanced)`;
+    if (level < 50) return `${level}% (Mild)`;
+    if (level < 67) return `${level}% (Noticeable)`;
+    if (level < 84) return `${level}% (Severe)`;
+    return `${level}% (Extreme)`;
   };
 
   const handleDeleteGroup = async () => {
@@ -193,19 +256,23 @@ const CompanyGroups = () => {
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Employees:</span>
+                  <span className="text-muted-foreground">Total Members:</span>
                   <span className="font-medium">{group.member_count}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Stress Level:</span>
+                  <span className="text-muted-foreground">Employees:</span>
+                  <span className="font-medium">{group.employee_count}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Avg Stress Level:</span>
                   <span className={`font-medium ${getStressColor(group.stress_level)}`}>
-                    {group.stress_level !== null ? `${group.stress_level}%` : "N/A"}
+                    {getStressLabel(group.stress_level)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tests Completed:</span>
                   <span className="font-medium">
-                    {group.tests_completed}/{group.member_count}
+                    {group.tests_completed}/{group.employee_count}
                   </span>
                 </div>
               </div>
