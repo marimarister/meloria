@@ -8,6 +8,12 @@ import NavBar from "@/components/NavBar";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().trim().email("Invalid email address"),
+  password: z.string().min(1, "Password is required")
+});
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,12 +43,24 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate input with zod schema
+    const result = loginSchema.safeParse({ email, password });
+    if (!result.success) {
+      toast({
+        title: "Validation Error",
+        description: result.error.errors[0].message,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: result.data.email,
+        password: result.data.password,
       });
 
       if (error) throw error;
