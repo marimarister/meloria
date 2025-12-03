@@ -15,9 +15,11 @@ const signupSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   surname: z.string().trim().min(1, "Surname is required").max(100, "Surname must be less than 100 characters"),
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  personalId: z.string().trim().min(1, "Personal ID is required").max(50, "Personal ID must be less than 50 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string()
+  confirmPassword: z.string(),
+  agreedToTerms: z.literal(true, {
+    errorMap: () => ({ message: "You must agree to the terms and conditions" }),
+  }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
@@ -31,7 +33,6 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [personalId, setPersonalId] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,9 +45,9 @@ const Signup = () => {
       name,
       surname,
       email,
-      personalId,
       password,
-      confirmPassword
+      confirmPassword,
+      agreedToTerms,
     });
 
     if (!validationResult.success) {
@@ -63,14 +64,13 @@ const Signup = () => {
 
     try {
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: validationResult.data.email,
+        password: validationResult.data.password,
         options: {
           emailRedirectTo: `${window.location.origin}/`,
           data: {
-            name,
-            surname,
-            personal_id: personalId,
+            name: validationResult.data.name,
+            surname: validationResult.data.surname,
             role,
           },
         },
@@ -146,7 +146,7 @@ const Signup = () => {
           <form className="space-y-6">
             <div className="flex gap-4">
               <div className="flex-1 space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Name <span className="text-destructive">*</span></Label>
                 <Input
                   id="name"
                   type="text"
@@ -158,7 +158,7 @@ const Signup = () => {
               </div>
 
               <div className="flex-1 space-y-2">
-                <Label htmlFor="surname">Surname</Label>
+                <Label htmlFor="surname">Surname <span className="text-destructive">*</span></Label>
                 <Input
                   id="surname"
                   type="text"
@@ -171,7 +171,7 @@ const Signup = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email <span className="text-destructive">*</span></Label>
               <Input
                 id="email"
                 type="email"
@@ -183,19 +183,7 @@ const Signup = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="personalId">Personal ID</Label>
-              <Input
-                id="personalId"
-                type="text"
-                placeholder="Enter your personal ID"
-                value={personalId}
-                onChange={(e) => setPersonalId(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Password <span className="text-destructive">*</span></Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -217,7 +205,7 @@ const Signup = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">Confirm Password <span className="text-destructive">*</span></Label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
@@ -248,7 +236,7 @@ const Signup = () => {
                 htmlFor="terms"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Agree to the terms and conditions
+                Agree to the terms and conditions <span className="text-destructive">*</span>
               </label>
             </div>
 
@@ -258,7 +246,7 @@ const Signup = () => {
                 onClick={() => handleRegister("employee")}
                 className="flex-1"
                 size="lg"
-                disabled={!agreedToTerms || isLoading}
+                disabled={isLoading}
               >
                 {isLoading ? "Creating..." : "I'm an Employee"}
               </Button>
@@ -267,7 +255,7 @@ const Signup = () => {
               onClick={() => handleRegister("hr")}
               className="flex-1"
               size="lg"
-              disabled={!agreedToTerms || isLoading}
+              disabled={isLoading}
             >
               {isLoading ? "Creating..." : "I'm in Company"}
             </Button>
