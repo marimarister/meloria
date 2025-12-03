@@ -264,7 +264,7 @@ const Accounts = () => {
                 name: editForm.name,
                 surname: editForm.surname,
                 email: editingAccount.email,
-                access_rights: editForm.role === "hr" ? "Company" : "Employee",
+                access_rights: editForm.role === "hr" ? "company" : "employee",
               });
 
             if (insertMemberError) throw insertMemberError;
