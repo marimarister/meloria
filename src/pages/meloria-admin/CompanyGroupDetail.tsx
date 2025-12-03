@@ -16,13 +16,38 @@ import {
 } from "@/components/ui/dialog";
 import { QRCodeSVG } from "qrcode.react";
 
+interface TestResult {
+  test_type: string;
+  scores: any;
+  completed_at: string;
+}
+
 interface GroupMember {
   id: string;
   name: string;
   surname: string;
   email: string;
   access_rights: "employee" | "company";
+  testResults?: TestResult[];
+  burnoutScore?: number;
+  burnoutLevel?: string;
 }
+
+const getBurnoutLevel = (score: number): string => {
+  if (score <= 22) return "Perfect Wellbeing";
+  if (score <= 44) return "Balanced & Resilient";
+  if (score <= 66) return "Mild Fatigue";
+  if (score <= 88) return "Noticeable Burnout";
+  if (score <= 110) return "Severe Burnout";
+  return "Extreme Burnout Risk";
+};
+
+const getBurnoutBadgeVariant = (score: number): "default" | "secondary" | "destructive" | "outline" => {
+  if (score <= 44) return "default";
+  if (score <= 66) return "secondary";
+  if (score <= 88) return "outline";
+  return "destructive";
+};
 
 const CompanyGroupDetail = () => {
   const { id } = useParams();
@@ -58,7 +83,48 @@ const CompanyGroupDetail = () => {
 
       if (membersError) throw membersError;
 
-      setMembers(memberData as any[]);
+      // Fetch test results for each member by matching email with profiles
+      const membersWithResults = await Promise.all(
+        (memberData as any[]).map(async (member) => {
+          // Find the profile by email to get user_id
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("email", member.email)
+            .maybeSingle();
+
+          if (profile) {
+            // Fetch test results for this user
+            const { data: testResults } = await supabase
+              .from("test_results")
+              .select("test_type, scores, completed_at")
+              .eq("user_id", profile.id);
+
+            const burnoutResult = testResults?.find((t: any) => t.test_type === "burnout");
+            let burnoutScore: number | undefined;
+            let burnoutLevel: string | undefined;
+
+            if (burnoutResult?.scores) {
+              const scores = burnoutResult.scores as any;
+              burnoutScore = (scores.emotionalExhaustion || 0) + 
+                            (scores.depersonalization || 0) + 
+                            (scores.personalAccomplishment || 0);
+              burnoutLevel = getBurnoutLevel(burnoutScore);
+            }
+
+            return {
+              ...member,
+              testResults: testResults || [],
+              burnoutScore,
+              burnoutLevel,
+            };
+          }
+
+          return { ...member, testResults: [] };
+        })
+      );
+
+      setMembers(membersWithResults);
     } catch (error) {
       console.error("Error fetching group details:", error);
       toast.error("Failed to load group details");
@@ -147,39 +213,85 @@ const CompanyGroupDetail = () => {
       </div>
 
       <div className="space-y-4">
-        {members.map((member) => (
-          <Card key={member.id} className="p-6">
-            <div className="flex justify-between items-center">
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg">
-                  {member.name} {member.surname}
-                </h3>
-                <p className="text-sm text-muted-foreground">{member.email}</p>
-                <Badge className="mt-2" variant="outline">
-                  {member.access_rights === "employee" ? "Employee" : "Company"}
-                </Badge>
-              </div>
+        {members.map((member) => {
+          const burnoutTest = member.testResults?.find(t => t.test_type === "burnout");
+          const channelTest = member.testResults?.find(t => t.test_type === "channel_perception");
+          const preferenceTest = member.testResults?.find(t => t.test_type === "preference");
+          const testsCompleted = member.testResults?.length || 0;
 
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleViewDashboard(member, member.access_rights === "employee" ? "employee" : "company")}
-                >
-                  View Dashboard
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleResetProgress(member.id, `${member.name} ${member.surname}`)}
-                  title="Reset test progress"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                </Button>
+          return (
+            <Card key={member.id} className="p-6">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="font-semibold text-lg">
+                      {member.name} {member.surname}
+                    </h3>
+                    <Badge variant="outline">
+                      {member.access_rights === "employee" ? "Employee" : "Company"}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">{member.email}</p>
+                  
+                  {/* Test Results */}
+                  <div className="flex flex-wrap gap-2">
+                    {member.burnoutLevel ? (
+                      <Badge variant={getBurnoutBadgeVariant(member.burnoutScore || 0)}>
+                        Burnout: {member.burnoutLevel} ({member.burnoutScore}/132)
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-muted-foreground">
+                        Burnout: Not completed
+                      </Badge>
+                    )}
+                    
+                    {channelTest ? (
+                      <Badge variant="secondary">
+                        Channel: {(channelTest.scores as any)?.dominantChannel || "Completed"}
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-muted-foreground">
+                        Channel: Not completed
+                      </Badge>
+                    )}
+                    
+                    {preferenceTest ? (
+                      <Badge variant="secondary">
+                        Preference: {(preferenceTest.scores as any)?.archetype || "Completed"}
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-muted-foreground">
+                        Preference: Not completed
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Tests completed: {testsCompleted}/3
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewDashboard(member, member.access_rights === "employee" ? "employee" : "company")}
+                  >
+                    View Dashboard
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleResetProgress(member.id, `${member.name} ${member.surname}`)}
+                    title="Reset test progress"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
