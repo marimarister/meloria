@@ -49,12 +49,19 @@ interface Account {
   email: string;
   role: string;
   is_admin: boolean;
+  company_id: string | null;
   company_name: string | null;
   last_sign_in: string | null;
 }
 
+interface CompanyGroup {
+  id: string;
+  name: string;
+}
+
 const Accounts = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [companyGroups, setCompanyGroups] = useState<CompanyGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
@@ -64,11 +71,27 @@ const Accounts = () => {
     name: "",
     surname: "",
     role: "",
+    company_id: "",
   });
 
   useEffect(() => {
     fetchAccounts();
+    fetchCompanyGroups();
   }, []);
+
+  const fetchCompanyGroups = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("company_groups")
+        .select("id, name")
+        .order("name");
+
+      if (error) throw error;
+      setCompanyGroups(data || []);
+    } catch (error) {
+      console.error("Error fetching company groups:", error);
+    }
+  };
 
   const fetchAccounts = async () => {
     try {
@@ -96,30 +119,43 @@ const Accounts = () => {
       // Fetch group members to find company assignments
       const { data: members, error: membersError } = await supabase
         .from("group_members" as any)
-        .select("email, group_id, company_groups(name)");
+        .select("email, group_id, company_groups(id, name)");
 
       if (membersError) throw membersError;
 
-      // Combine data
-      const accountsData: Account[] = (profiles || []).map((profile: any) => {
-        const userRole = roles?.find((r: any) => r.user_id === profile.id);
-        const isAdmin = admins?.some((a: any) => a.user_id === profile.id);
-        const memberInfo = members?.find((m: any) => 
-          m.email?.toLowerCase() === `${profile.name?.toLowerCase()}.${profile.surname?.toLowerCase()}@example.com`
-        );
+      // Fetch last sign in for each user using the database function
+      const accountsData: Account[] = await Promise.all(
+        (profiles || []).map(async (profile: any) => {
+          const userRole = roles?.find((r: any) => r.user_id === profile.id);
+          const isAdmin = admins?.some((a: any) => a.user_id === profile.id);
+          const memberInfo = members?.find((m: any) => 
+            m.email?.toLowerCase() === profile.email?.toLowerCase()
+          );
 
-        return {
-          id: profile.id,
-          user_id: profile.id,
-          name: profile.name || "",
-          surname: profile.surname || "",
-          email: profile.email || `${profile.name?.toLowerCase()}.${profile.surname?.toLowerCase()}@example.com`,
-          role: userRole?.role || "employee",
-          is_admin: isAdmin || false,
-          company_name: isAdmin ? "Meloria" : ((memberInfo as any)?.company_groups?.name || null),
-          last_sign_in: null,
-        };
-      });
+          // Fetch last sign in using the database function
+          let lastSignIn = null;
+          try {
+            const { data: signInData } = await supabase
+              .rpc('get_user_last_sign_in', { _user_id: profile.id });
+            lastSignIn = signInData;
+          } catch (e) {
+            // Ignore errors for last sign in
+          }
+
+          return {
+            id: profile.id,
+            user_id: profile.id,
+            name: profile.name || "",
+            surname: profile.surname || "",
+            email: profile.email || "",
+            role: userRole?.role || "employee",
+            is_admin: isAdmin || false,
+            company_id: (memberInfo as any)?.company_groups?.id || null,
+            company_name: isAdmin ? "Meloria" : ((memberInfo as any)?.company_groups?.name || null),
+            last_sign_in: lastSignIn,
+          };
+        })
+      );
 
       setAccounts(accountsData);
     } catch (error) {
@@ -135,7 +171,8 @@ const Accounts = () => {
     setEditForm({
       name: account.name,
       surname: account.surname,
-      role: account.role,
+      role: account.is_admin ? "admin" : account.role,
+      company_id: account.company_id || "",
     });
   };
 
@@ -143,6 +180,7 @@ const Accounts = () => {
     if (!editingAccount) return;
 
     try {
+      // Update profile
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -153,13 +191,84 @@ const Accounts = () => {
 
       if (profileError) throw profileError;
 
-      if (editForm.role !== editingAccount.role) {
+      // Handle role changes
+      const wasAdmin = editingAccount.is_admin;
+      const isNowAdmin = editForm.role === "admin";
+      const previousRole = editingAccount.role;
+      const newRole = editForm.role === "admin" ? previousRole : editForm.role;
+
+      // If changing to/from admin, update meloria_admins table
+      if (wasAdmin && !isNowAdmin) {
+        // Remove from meloria_admins
+        const { error: removeAdminError } = await supabase
+          .from("meloria_admins" as any)
+          .delete()
+          .eq("user_id", editingAccount.id);
+
+        if (removeAdminError) throw removeAdminError;
+      } else if (!wasAdmin && isNowAdmin) {
+        // Add to meloria_admins
+        const { error: addAdminError } = await supabase
+          .from("meloria_admins" as any)
+          .insert({ user_id: editingAccount.id });
+
+        if (addAdminError) throw addAdminError;
+      }
+
+      // Update user_roles if role changed (but not if just changing admin status)
+      if (editForm.role !== "admin" && newRole !== previousRole) {
         const { error: roleError } = await supabase
           .from("user_roles")
-          .update({ role: editForm.role as any })
+          .update({ role: newRole as any })
           .eq("user_id", editingAccount.id);
 
         if (roleError) throw roleError;
+      }
+
+      // Handle company assignment
+      const previousCompanyId = editingAccount.company_id;
+      const newCompanyId = editForm.company_id || null;
+
+      if (previousCompanyId !== newCompanyId) {
+        // First, check if user has an existing group_member entry
+        const { data: existingMember } = await supabase
+          .from("group_members" as any)
+          .select("id")
+          .eq("email", editingAccount.email)
+          .maybeSingle();
+
+        if (newCompanyId) {
+          if (existingMember) {
+            // Update existing membership
+            const { error: updateMemberError } = await supabase
+              .from("group_members" as any)
+              .update({ group_id: newCompanyId })
+              .eq("email", editingAccount.email);
+
+            if (updateMemberError) throw updateMemberError;
+          } else {
+            // Create new membership
+            const { error: insertMemberError } = await supabase
+              .from("group_members" as any)
+              .insert({
+                group_id: newCompanyId,
+                name: editForm.name,
+                surname: editForm.surname,
+                email: editingAccount.email,
+                access_rights: editForm.role === "hr" ? "Company" : "Employee",
+              });
+
+            if (insertMemberError) throw insertMemberError;
+          }
+        } else if (existingMember && !newCompanyId) {
+          // Remove from company
+          const { error: removeMemberError } = await supabase
+            .from("group_members" as any)
+            .delete()
+            .eq("email", editingAccount.email);
+
+          if (removeMemberError) throw removeMemberError;
+        }
       }
 
       toast.success("Account updated successfully");
@@ -372,6 +481,26 @@ const Accounts = () => {
                 <SelectContent>
                   <SelectItem value="employee">Employee</SelectItem>
                   <SelectItem value="hr">Company</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="company">Company</Label>
+              <Select
+                value={editForm.company_id}
+                onValueChange={(value) => setEditForm({ ...editForm, company_id: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="No company assigned" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">No company assigned</SelectItem>
+                  {companyGroups.map((group) => (
+                    <SelectItem key={group.id} value={group.id}>
+                      {group.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
