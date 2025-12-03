@@ -488,14 +488,14 @@ const Accounts = () => {
             <div className="space-y-2">
               <Label htmlFor="company">Company</Label>
               <Select
-                value={editForm.company_id}
-                onValueChange={(value) => setEditForm({ ...editForm, company_id: value })}
+                value={editForm.company_id || "none"}
+                onValueChange={(value) => setEditForm({ ...editForm, company_id: value === "none" ? "" : value })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="No company assigned" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No company assigned</SelectItem>
+                  <SelectItem value="none">No company assigned</SelectItem>
                   {companyGroups.map((group) => (
                     <SelectItem key={group.id} value={group.id}>
                       {group.name}
