@@ -207,12 +207,21 @@ const Accounts = () => {
 
         if (removeAdminError) throw removeAdminError;
       } else if (!wasAdmin && isNowAdmin) {
-        // Add to meloria_admins
-        const { error: addAdminError } = await supabase
+        // Check if already exists in meloria_admins first
+        const { data: existingAdmin } = await supabase
           .from("meloria_admins" as any)
-          .insert({ user_id: editingAccount.id });
+          .select("id")
+          .eq("user_id", editingAccount.id)
+          .maybeSingle();
 
-        if (addAdminError) throw addAdminError;
+        if (!existingAdmin) {
+          // Add to meloria_admins only if not already there
+          const { error: addAdminError } = await supabase
+            .from("meloria_admins" as any)
+            .insert({ user_id: editingAccount.id });
+
+          if (addAdminError) throw addAdminError;
+        }
       }
 
       // Update user_roles if role changed (but not if just changing admin status)
@@ -225,11 +234,11 @@ const Accounts = () => {
         if (roleError) throw roleError;
       }
 
-      // Handle company assignment
+      // Handle company assignment - only if user has an email
       const previousCompanyId = editingAccount.company_id;
       const newCompanyId = editForm.company_id || null;
 
-      if (previousCompanyId !== newCompanyId) {
+      if (previousCompanyId !== newCompanyId && editingAccount.email) {
         // First, check if user has an existing group_member entry
         const { data: existingMember } = await supabase
           .from("group_members" as any)
@@ -269,6 +278,8 @@ const Accounts = () => {
 
           if (removeMemberError) throw removeMemberError;
         }
+      } else if (newCompanyId && !editingAccount.email) {
+        toast.error("Cannot assign company to user without email");
       }
 
       toast.success("Account updated successfully");
