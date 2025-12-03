@@ -127,11 +127,27 @@ const getInterpretation = (scores: Record<string, number>) => {
 
 const PreferenceTest = () => {
   const navigate = useNavigate();
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [stage, setStage] = useState<'intro' | 'test' | 'results'>('intro');
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [savedResults, setSavedResults] = useState<any>(null);
 
+  // Check authentication first
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+      setIsAuthChecking(false);
+    };
+    checkAuth();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (isAuthChecking) return;
+    
     const checkExistingResults = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       
@@ -241,6 +257,14 @@ const PreferenceTest = () => {
   };
 
   const allAnswered = questions.every(q => answers[q.id] !== undefined);
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen gradient-employee flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   if (stage === 'intro') {
     return (

@@ -71,11 +71,27 @@ const BURNOUT_LEVELS = [
 
 const BurnoutTest = () => {
   const navigate = useNavigate();
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showResults, setShowResults] = useState(false);
   const [savedResults, setSavedResults] = useState<any>(null);
 
+  // Check authentication first
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+      setIsAuthChecking(false);
+    };
+    checkAuth();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (isAuthChecking) return;
+    
     const checkExistingResults = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       
@@ -112,9 +128,17 @@ const BurnoutTest = () => {
     };
     
     checkExistingResults();
-  }, []);
+  }, [isAuthChecking]);
 
   const progress = (Object.keys(answers).length / QUESTIONS.length) * 100;
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen gradient-employee flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   const handleSubmit = async () => {
     const scores = calculateScores();
