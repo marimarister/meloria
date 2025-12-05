@@ -17,17 +17,32 @@ const CompanyDashboard = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check authentication on mount
+  // Check authentication and authorization on mount
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuthorization = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         navigate('/login');
         return;
       }
+
+      // Verify user has 'hr' role server-side
+      const { data: roleData, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'hr')
+        .maybeSingle();
+
+      if (error || !roleData) {
+        // User doesn't have HR/Company role, redirect to employee dashboard
+        navigate('/employee');
+        return;
+      }
+
       setIsLoading(false);
     };
-    checkAuth();
+    checkAuthorization();
   }, [navigate]);
   // Mock data - will be replaced with real data from backend
   const stats = {
