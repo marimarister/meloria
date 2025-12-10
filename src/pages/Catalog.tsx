@@ -235,20 +235,20 @@ const Catalog = () => {
       {/* Hero Section with Gradient */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-pink-200 via-purple-100 to-indigo-200 opacity-60" />
-        <div className="absolute top-10 right-10 w-32 h-32 bg-teal-400/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-10 w-40 h-40 bg-pink-400/20 rounded-full blur-3xl" />
+        <div className="absolute top-10 right-10 w-32 h-32 bg-blue-400/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-10 w-40 h-40 bg-purple-400/20 rounded-full blur-3xl" />
         
         <div className="relative container mx-auto px-6 py-20 text-center">
-          <p className="text-sm tracking-[0.3em] text-teal-700 font-medium mb-4 uppercase">
+          <p className="text-sm tracking-[0.3em] text-blue-700 font-medium mb-4 uppercase">
             Mindfulness Platform
           </p>
-          <h1 className="text-5xl md:text-6xl font-serif italic text-teal-800 mb-4">
+          <h1 className="text-5xl md:text-6xl font-serif italic text-blue-800 mb-4">
             Meloria
           </h1>
-          <h2 className="text-3xl md:text-4xl font-serif text-rose-700 mb-6">
+          <h2 className="text-3xl md:text-4xl font-serif text-purple-700 mb-6">
             Corporate Wellbeing<br />& Human Potential
           </h2>
-          <p className="text-2xl font-serif text-teal-700 mb-8">Catalogue</p>
+          <p className="text-2xl font-serif text-blue-700 mb-8">Catalogue</p>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Curated practices designed for companies that value clarity, depth and sustainable human potential.
           </p>
@@ -259,10 +259,10 @@ const Catalog = () => {
         {/* What We Offer Overview */}
         <section className="mb-24">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-6">
-              <Heart className="w-8 h-8 text-teal-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6">
+              <Heart className="w-8 h-8 text-blue-600" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-serif text-teal-700 mb-4">
+            <h2 className="text-3xl md:text-4xl font-serif text-blue-700 mb-4">
               What we offer
             </h2>
           </div>
@@ -270,21 +270,21 @@ const Catalog = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
             {offerings.map((offering, index) => (
               <Card 
-                key={index} 
-                className="border-0 bg-gradient-to-b from-white to-rose-50/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+                key={index}
+                className="border-0 bg-gradient-to-b from-white to-purple-50/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
               >
                 <CardHeader className="text-center pb-2">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-teal-100/80 rounded-xl flex items-center justify-center group-hover:bg-teal-200/80 transition-colors">
-                    <offering.icon className="w-8 h-8 text-teal-600" />
+                  <div className="w-16 h-16 mx-auto mb-4 bg-blue-100/80 rounded-xl flex items-center justify-center group-hover:bg-blue-200/80 transition-colors">
+                    <offering.icon className="w-8 h-8 text-blue-600" />
                   </div>
-                  <CardTitle className="text-base font-semibold text-teal-800 leading-tight">
+                  <CardTitle className="text-base font-semibold text-blue-800 leading-tight">
                     {offering.category}
                   </CardTitle>
                   {offering.subtitle && (
                     <p className="text-sm text-muted-foreground">{offering.subtitle}</p>
                   )}
                   {offering.highlight && (
-                    <Badge className="mt-2 bg-teal-100 text-teal-700 hover:bg-teal-200 border-0">
+                    <Badge className="mt-2 bg-blue-100 text-blue-700 hover:bg-blue-200 border-0">
                       {offering.highlight}
                     </Badge>
                   )}
@@ -301,13 +301,13 @@ const Catalog = () => {
 
         {/* Quote Section */}
         <section className="mb-24 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-teal-100/50 via-transparent to-rose-100/50 rounded-3xl" />
-          <div className="relative bg-gradient-to-br from-teal-50 to-rose-50 rounded-3xl p-12 md:p-16 text-center">
-            <TreeDeciduous className="w-12 h-12 text-teal-600 mx-auto mb-6" />
-            <blockquote className="text-xl md:text-2xl font-serif text-teal-800 leading-relaxed mb-4">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-100/50 via-transparent to-purple-100/50 rounded-3xl" />
+          <div className="relative bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-12 md:p-16 text-center">
+            <TreeDeciduous className="w-12 h-12 text-blue-600 mx-auto mb-6" />
+            <blockquote className="text-xl md:text-2xl font-serif text-blue-800 leading-relaxed mb-4">
               Because people are the heartbeat of every organization.
             </blockquote>
-            <p className="text-lg text-rose-700 font-medium">
+            <p className="text-lg text-purple-700 font-medium">
               When they grow, the company grows.<br />
               When they breathe, the whole system expands.
             </p>
@@ -320,11 +320,11 @@ const Catalog = () => {
             <div className={`bg-gradient-to-r ${section.gradient} rounded-2xl p-8 md:p-10 mb-6`}>
               <div className="flex items-center gap-4 mb-2">
                 <div className="w-12 h-12 bg-white/80 rounded-xl flex items-center justify-center shadow-sm">
-                  <section.icon className="w-6 h-6 text-teal-600" />
+                  <section.icon className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-teal-700">{section.number}.</span>
-                  <h2 className="text-xl md:text-2xl font-serif text-teal-800">
+                  <span className="text-sm font-medium text-blue-700">{section.number}.</span>
+                  <h2 className="text-xl md:text-2xl font-serif text-blue-800">
                     {section.section}
                   </h2>
                 </div>
@@ -338,15 +338,15 @@ const Catalog = () => {
                   className="border border-border/50 bg-white/80 backdrop-blur-sm hover:shadow-md transition-shadow"
                 >
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-lg text-teal-800">{item.title}</CardTitle>
+                    <CardTitle className="text-lg text-blue-800">{item.title}</CardTitle>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {item.format && (
-                        <Badge variant="outline" className="text-xs border-teal-200 text-teal-700 bg-teal-50">
+                        <Badge variant="outline" className="text-xs border-blue-200 text-blue-700 bg-blue-50">
                           {item.format}
                         </Badge>
                       )}
                       {item.duration && (
-                        <Badge variant="outline" className="text-xs border-rose-200 text-rose-700 bg-rose-50">
+                        <Badge variant="outline" className="text-xs border-purple-200 text-purple-700 bg-purple-50">
                           <Clock className="w-3 h-3 mr-1" />
                           {item.duration}
                         </Badge>
@@ -366,13 +366,13 @@ const Catalog = () => {
                   <CardContent className="space-y-2 pt-0">
                     {item.purpose && (
                       <p className="text-sm">
-                        <span className="font-medium text-rose-700">Purpose: </span>
+                        <span className="font-medium text-purple-700">Purpose: </span>
                         <span className="text-muted-foreground">{item.purpose}</span>
                       </p>
                     )}
                     {item.idealFor && (
                       <p className="text-sm">
-                        <span className="font-medium text-teal-700">Ideal for: </span>
+                        <span className="font-medium text-blue-700">Ideal for: </span>
                         <span className="text-muted-foreground">{item.idealFor}</span>
                       </p>
                     )}
@@ -388,16 +388,16 @@ const Catalog = () => {
 
         {/* Final CTA */}
         <section className="mt-24 mb-8">
-          <div className="bg-gradient-to-br from-pink-200 via-purple-100 to-teal-100 rounded-3xl p-12 text-center relative overflow-hidden">
+          <div className="bg-gradient-to-br from-pink-200 via-purple-100 to-blue-100 rounded-3xl p-12 text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/30 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-teal-200/40 rounded-full blur-2xl" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-200/40 rounded-full blur-2xl" />
             <div className="relative">
-              <TreeDeciduous className="w-10 h-10 text-teal-600 mx-auto mb-6" />
-              <h3 className="text-2xl md:text-3xl font-serif text-teal-800 mb-4">
+              <TreeDeciduous className="w-10 h-10 text-blue-600 mx-auto mb-6" />
+              <h3 className="text-2xl md:text-3xl font-serif text-blue-800 mb-4">
                 Meloria creates spaces where teams can reset,<br />
                 reconnect and rise
               </h3>
-              <p className="text-lg text-rose-700 font-medium">
+              <p className="text-lg text-purple-700 font-medium">
                 — with clarity, presence and purpose.
               </p>
             </div>
