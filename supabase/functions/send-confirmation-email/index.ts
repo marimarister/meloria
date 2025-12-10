@@ -13,6 +13,61 @@ interface ConfirmationEmailRequest {
   confirmationUrl: string;
 }
 
+// Allowed domains for confirmation URLs
+const ALLOWED_ORIGINS = [
+  "https://mjycqdtvrymajcgbtgfu.lovableproject.com",
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
+
+// Email validation regex
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Validate input parameters
+function validateInput(email: string, name: string, confirmationUrl: string): string | null {
+  // Validate email format
+  if (!email || typeof email !== "string" || !EMAIL_REGEX.test(email.trim())) {
+    return "Invalid email format";
+  }
+  
+  // Validate email length
+  if (email.length > 255) {
+    return "Email address too long";
+  }
+
+  // Validate name
+  if (!name || typeof name !== "string") {
+    return "Name is required";
+  }
+  
+  // Validate name length and characters (alphanumeric, spaces, hyphens, apostrophes)
+  const trimmedName = name.trim();
+  if (trimmedName.length < 1 || trimmedName.length > 100) {
+    return "Name must be between 1 and 100 characters";
+  }
+  
+  if (!/^[a-zA-Z\s\-']+$/.test(trimmedName)) {
+    return "Name contains invalid characters";
+  }
+
+  // Validate confirmation URL
+  if (!confirmationUrl || typeof confirmationUrl !== "string") {
+    return "Confirmation URL is required";
+  }
+
+  // Validate URL domain against allowed origins
+  const isAllowedOrigin = ALLOWED_ORIGINS.some(origin => 
+    confirmationUrl.startsWith(origin)
+  );
+  
+  if (!isAllowedOrigin) {
+    console.error("Invalid confirmation URL origin:", confirmationUrl);
+    return "Invalid confirmation URL domain";
+  }
+
+  return null;
+}
+
 const handler = async (req: Request): Promise<Response> => {
   console.log("send-confirmation-email function called");
   
@@ -22,10 +77,26 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, name, confirmationUrl }: ConfirmationEmailRequest = await req.json();
+    const body = await req.json();
+    const { email, name, confirmationUrl } = body as ConfirmationEmailRequest;
     
-    console.log("Sending confirmation email to:", email);
-    console.log("Confirmation URL:", confirmationUrl);
+    // Validate all inputs
+    const validationError = validateInput(email, name, confirmationUrl);
+    if (validationError) {
+      console.error("Validation error:", validationError);
+      return new Response(
+        JSON.stringify({ success: false, error: validationError }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    const sanitizedEmail = email.trim().toLowerCase();
+    const sanitizedName = name.trim();
+    
+    console.log("Sending confirmation email to:", sanitizedEmail);
 
     const emailHtml = `
       <!DOCTYPE html>
@@ -40,7 +111,7 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
         
         <div style="background-color: #f8f9fa; border-radius: 12px; padding: 30px; margin-bottom: 20px;">
-          <h2 style="color: #282828; margin-top: 0;">Welcome, ${name}! 👋</h2>
+          <h2 style="color: #282828; margin-top: 0;">Welcome, ${sanitizedName}! 👋</h2>
           <p style="font-size: 16px; color: #555;">
             Thank you for registering with Meloria. We're excited to have you on board!
           </p>
@@ -79,7 +150,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: "Meloria <onboarding@resend.dev>",
-        to: [email],
+        to: [sanitizedEmail],
         subject: "Welcome to Meloria - Please Confirm Your Email",
         html: emailHtml,
       }),
@@ -88,20 +159,20 @@ const handler = async (req: Request): Promise<Response> => {
     if (!res.ok) {
       const errorData = await res.text();
       console.error("Resend API error:", errorData);
-      throw new Error(`Failed to send email: ${errorData}`);
+      throw new Error(`Failed to send email`);
     }
 
     const data = await res.json();
-    console.log("Email sent successfully:", data);
+    console.log("Email sent successfully");
 
-    return new Response(JSON.stringify({ success: true, data }), {
+    return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error: any) {
     console.error("Error sending confirmation email:", error);
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Failed to send email" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
