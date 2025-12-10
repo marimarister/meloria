@@ -127,7 +127,6 @@ const NavBar = ({
                 )}
               </div>
             ))}
-            <span className="text-muted-foreground/50">|</span>
           </div>
 
           {/* Desktop Profile/Auth */}
