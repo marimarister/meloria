@@ -65,7 +65,7 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: validationResult.data.email,
         password: validationResult.data.password,
         options: {
@@ -81,9 +81,28 @@ const Signup = () => {
 
       if (error) throw error;
 
+      // Send custom confirmation email via edge function
+      if (data.user) {
+        const confirmationUrl = `${window.location.origin}/login?confirmed=true`;
+        
+        try {
+          await supabase.functions.invoke('send-confirmation-email', {
+            body: {
+              email: validationResult.data.email,
+              name: validationResult.data.name,
+              confirmationUrl,
+            },
+          });
+          console.log("Confirmation email sent successfully");
+        } catch (emailError) {
+          console.error("Failed to send confirmation email:", emailError);
+          // Don't block signup if email fails - Supabase will send its own
+        }
+      }
+
       toast({
         title: "Success!",
-        description: "Your account has been created.",
+        description: "Your account has been created. Please check your email to confirm.",
       });
 
       setShowVerification(true);
