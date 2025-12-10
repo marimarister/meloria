@@ -25,6 +25,9 @@ import MeloriaSettings from "./pages/meloria-admin/MeloriaSettings";
 import EditQuestionnaire from "./pages/meloria-admin/EditQuestionnaire";
 import ViewDashboard from "./pages/meloria-admin/ViewDashboard";
 import EditPremiumPlan from "./pages/meloria-admin/EditPremiumPlan";
+import OurStory from "./pages/OurStory";
+import Catalog from "./pages/Catalog";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +39,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/our-story" element={<OurStory />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/employee" element={<EmployeeDashboard />} />
           <Route path="/company" element={<CompanyDashboard />} />
           <Route path="/test/burnout" element={<BurnoutTest />} />
