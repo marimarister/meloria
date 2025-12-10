@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
+import { Clock, ChevronDown, ChevronUp } from "lucide-react";
 
 interface FlipCardProps {
   title: string;
@@ -27,11 +27,17 @@ const FlipCard = ({
   image,
 }: FlipCardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleExpandClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <div 
-      className="perspective-1000 h-[320px] cursor-pointer"
-      onClick={() => setIsFlipped(!isFlipped)}
+      className={`perspective-1000 cursor-pointer transition-all duration-300 ${isExpanded ? "h-auto min-h-[320px]" : "h-[320px]"}`}
+      onClick={() => !isExpanded && setIsFlipped(!isFlipped)}
     >
       <div 
         className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${
@@ -78,9 +84,23 @@ const FlipCard = ({
                   <span className="text-muted-foreground">{purpose}</span>
                 </p>
               )}
-              <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
-                {description}
-              </p>
+              <div>
+                <p className={`text-muted-foreground text-sm leading-relaxed ${!isExpanded ? "line-clamp-2" : ""}`}>
+                  {description}
+                </p>
+                {description.length > 100 && (
+                  <button
+                    onClick={handleExpandClick}
+                    className="text-xs text-teal-600 font-medium mt-1 flex items-center gap-1 hover:text-teal-700 transition-colors"
+                  >
+                    {isExpanded ? (
+                      <>Show less <ChevronUp className="w-3 h-3" /></>
+                    ) : (
+                      <>Show more <ChevronDown className="w-3 h-3" /></>
+                    )}
+                  </button>
+                )}
+              </div>
               <p className="text-xs text-teal-600 font-medium pt-2">Click to flip →</p>
             </CardContent>
           </Card>
