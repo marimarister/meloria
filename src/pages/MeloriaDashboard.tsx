@@ -4,9 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { MeloriaSidebar } from "@/components/MeloriaSidebar";
-import NavBar from "@/components/NavBar";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const MeloriaDashboard = () => {
   const navigate = useNavigate();
@@ -51,18 +48,12 @@ const MeloriaDashboard = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col w-full">
-        <NavBar showBack={true} />
         <div className="flex flex-1 w-full pt-0">
           <MeloriaSidebar />
           <main className="flex-1 overflow-auto">
             {/* Mobile burger menu trigger */}
             <div className="md:hidden sticky top-0 z-40 flex items-center gap-2 p-4 bg-background border-b">
-              <SidebarTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
-                </Button>
-              </SidebarTrigger>
+              <SidebarTrigger className="h-9 w-9" />
               <span className="font-semibold text-lg">Menu</span>
             </div>
             <Outlet />
