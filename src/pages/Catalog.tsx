@@ -43,7 +43,15 @@ const Catalog = () => {
       gradient: "from-rose-100 via-pink-50 to-purple-100",
       items: [
         {
-          title: "Mandala Art — Sacred Geometry Practice",
+          title: "Sacred Geometry Art Practice",
+          languages: ["EN", "LV", "RU"],
+          purpose: "Focus, clarity, inner alignment",
+          idealFor: "Team workshops, creative sessions",
+          description: "An immersive practice exploring the ancient patterns of sacred geometry — helping teams find harmony, precision and deeper connection through intentional creation.",
+          image: "https://meloria.my.canva.site/_assets/media/96cdf170ba89628af129d4a8c10f867b.jpg",
+        },
+        {
+          title: "Mandala Art",
           languages: ["EN", "LV", "RU"],
           purpose: "Relaxation, focus, inner balance, team harmony",
           idealFor: "Evening sessions, creative teambuildings",
