@@ -48,6 +48,7 @@ const CompanyGroups = () => {
   const fetchGroups = async () => {
     try {
       // Fetch groups with members
+      // Only fetch top-level groups (no parent)
       const { data: groupsData, error: groupsError } = await supabase
         .from("company_groups" as any)
         .select(`
@@ -56,8 +57,10 @@ const CompanyGroups = () => {
           description,
           created_at,
           service_type,
+          parent_group_id,
           group_members (id, email, access_rights)
         `)
+        .is("parent_group_id", null)
         .order("created_at", { ascending: false });
 
       if (groupsError) throw groupsError;

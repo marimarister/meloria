@@ -20,6 +20,7 @@ export type Database = {
           description: string | null
           id: string
           name: string
+          parent_group_id: string | null
           service_type: string | null
           updated_at: string | null
         }
@@ -28,6 +29,7 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
+          parent_group_id?: string | null
           service_type?: string | null
           updated_at?: string | null
         }
@@ -36,10 +38,19 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
+          parent_group_id?: string | null
           service_type?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "company_groups_parent_group_id_fkey"
+            columns: ["parent_group_id"]
+            isOneToOne: false
+            referencedRelation: "company_groups"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       group_members: {
         Row: {
