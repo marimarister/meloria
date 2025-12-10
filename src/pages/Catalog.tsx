@@ -15,6 +15,11 @@ import aromatherapyImg from "@/assets/catalog/aromatherapy.jpg";
 import floralSeminarImg from "@/assets/catalog/floral-seminar.jpg";
 import soundHealingImg from "@/assets/catalog/sound-healing.jpg";
 import miniRetreatImg from "@/assets/catalog/mini-retreat.jpg";
+import energyDynamicsImg from "@/assets/catalog/energy-dynamics.jpeg";
+import intuitiveDanceImg from "@/assets/catalog/intuitive-dance.png";
+import winterOutdoorImg from "@/assets/catalog/winter-outdoor.jpeg";
+import weekendRetreatImg from "@/assets/catalog/weekend-retreat.jpg";
+import deepRechargeImg from "@/assets/catalog/deep-recharge-retreat.jpg";
 
 const Catalog = () => {
   const offerings = [
@@ -146,21 +151,21 @@ const Catalog = () => {
           format: "Active body-based session",
           purpose: "Release tension, regain vitality, reset mental overload",
           description: "A grounding practice that helps restore clarity and strength. For men and mixed groups.",
-          image: "https://meloria.my.canva.site/_assets/media/e65275781597d33ac17c48763a7849d4.jpg",
+          image: energyDynamicsImg,
         },
         {
           title: "Intuitive Dance Practice",
           format: "Guided movement session",
           purpose: "Emotional release, freedom, body awareness",
           description: "Perfect for HR wellbeing days and creative teams.",
-          image: "https://meloria.my.canva.site/_assets/media/63c8b80b5a3c93dd249ccb775f3d3fec.jpg",
+          image: intuitiveDanceImg,
         },
         {
           title: "Winter Outdoor Practices",
           format: "Guided outdoor sports activities",
           purpose: "Team spirit, health, switching off routines",
           description: "Ideal for refreshing corporate retreats.",
-          image: "https://meloria.my.canva.site/_assets/media/e1c82d5201f119193e1e660868771ebf.jpg",
+          image: winterOutdoorImg,
         },
         {
           title: "Women's Bath Ritual",
@@ -247,7 +252,7 @@ const Catalog = () => {
           purpose: "Dive deep into mindfulness and team connection",
           description: "Immersive program with accommodation. Return on Monday with fresh ideas and a real sense of unity.",
           price: "On request",
-          image: "https://meloria.my.canva.site/_assets/media/8c311cd0582b4d081cb31a4b9c90c714.jpg",
+          image: weekendRetreatImg,
         },
         {
           title: "3–4 Day Deep Recharge Retreat",
@@ -255,7 +260,7 @@ const Catalog = () => {
           purpose: "Reset, refocus, and unlock full potential",
           description: "A powerful journey for teams and leaders. Come back with a new vision, stronger bonds, and lasting energy.",
           price: "Tailored to your team's goals",
-          image: "https://meloria.my.canva.site/_assets/media/4f7b515824b8d09723fe24297eb9f8f0.jpg",
+          image: deepRechargeImg,
         },
       ],
     },
