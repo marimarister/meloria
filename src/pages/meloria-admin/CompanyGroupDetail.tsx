@@ -58,6 +58,26 @@ const getBurnoutBadgeVariant = (score: number): "default" | "secondary" | "destr
   return "destructive";
 };
 
+const getDominantChannel = (scores: any): string | null => {
+  if (!scores) return null;
+  const channelNames: Record<string, string> = {
+    V: "Visual",
+    A: "Auditory", 
+    K: "Kinesthetic",
+    D: "Digital"
+  };
+  const channels = ['V', 'A', 'K', 'D'];
+  let maxChannel = channels[0];
+  let maxScore = scores[maxChannel] || 0;
+  for (const channel of channels) {
+    if ((scores[channel] || 0) > maxScore) {
+      maxScore = scores[channel];
+      maxChannel = channel;
+    }
+  }
+  return maxScore > 0 ? channelNames[maxChannel] : null;
+};
+
 const CompanyGroupDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -168,7 +188,7 @@ const CompanyGroupDetail = () => {
     ];
 
     const rows = members.map((member) => {
-      const channelTest = member.testResults?.find(t => t.test_type === "channel_perception");
+      const channelTest = member.testResults?.find(t => t.test_type === "perception");
       const preferenceTest = member.testResults?.find(t => t.test_type === "preference");
       
       return [
@@ -179,7 +199,7 @@ const CompanyGroupDetail = () => {
         `${member.testResults?.length || 0}/3`,
         member.burnoutScore?.toString() || "N/A",
         member.burnoutLevel || "Not completed",
-        (channelTest?.scores as any)?.dominantChannel || "Not completed",
+        getDominantChannel(channelTest?.scores) || "Not completed",
         (preferenceTest?.scores as any)?.archetype || "Not completed"
       ];
     });
@@ -302,9 +322,10 @@ const CompanyGroupDetail = () => {
 
       <div className="space-y-4">
         {filteredMembers.map((member) => {
-          const channelTest = member.testResults?.find(t => t.test_type === "channel_perception");
+          const channelTest = member.testResults?.find(t => t.test_type === "perception");
           const preferenceTest = member.testResults?.find(t => t.test_type === "preference");
           const testsCompleted = member.testResults?.length || 0;
+          const dominantChannel = getDominantChannel(channelTest?.scores);
 
           return (
             <Card key={member.id} className="p-6">
@@ -331,9 +352,9 @@ const CompanyGroupDetail = () => {
                       </Badge>
                     )}
                     
-                    {channelTest ? (
+                    {dominantChannel ? (
                       <Badge variant="secondary">
-                        Channel: {(channelTest.scores as any)?.dominantChannel || "Completed"}
+                        Channel: {dominantChannel}
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="text-muted-foreground">
