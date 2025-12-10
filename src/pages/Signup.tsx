@@ -18,7 +18,7 @@ const signupSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
   agreedToTerms: z.literal(true, {
-    errorMap: () => ({ message: "You must agree to the terms and conditions" }),
+    errorMap: () => ({ message: "You must agree to the Terms & Conditions and Privacy Policy" }),
   }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
@@ -258,7 +258,7 @@ const Signup = () => {
                 htmlFor="terms"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Agree to the terms and conditions <span className="text-destructive">*</span>
+                Agree to the Terms & Conditions and Privacy Policy <span className="text-destructive">*</span>
               </label>
             </div>
 
