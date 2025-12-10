@@ -20,6 +20,8 @@ import intuitiveDanceImg from "@/assets/catalog/intuitive-dance.png";
 import winterOutdoorImg from "@/assets/catalog/winter-outdoor.jpeg";
 import weekendRetreatImg from "@/assets/catalog/weekend-retreat.jpg";
 import deepRechargeImg from "@/assets/catalog/deep-recharge-retreat.jpg";
+import womensBathImg from "@/assets/catalog/womens-bath.jpg";
+import mensBathImg from "@/assets/catalog/mens-bath.jpg";
 
 const Catalog = () => {
   const offerings = [
@@ -172,14 +174,14 @@ const Catalog = () => {
           format: "Gentle sauna/steam ceremony",
           purpose: "Relaxation, emotional reset, feminine support",
           description: "A soothing embodied experience for female employees.",
-          image: "https://meloria.my.canva.site/_assets/media/03f7283b54d54afd7e849ed03826a206.jpg",
+          image: womensBathImg,
         },
         {
           title: "Men's Bath Ritual",
           format: "Sauna/steam ritual",
           purpose: "Recovery, stress relief, nervous system reset",
           description: "A structured and rejuvenating wellness experience.",
-          image: "https://meloria.my.canva.site/_assets/media/8a0d9b6b13c9523676febd82cd7061ef.jpg",
+          image: mensBathImg,
         },
         {
           title: "Breathing Practices & Energy Flow",
