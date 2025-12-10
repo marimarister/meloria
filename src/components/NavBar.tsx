@@ -104,10 +104,9 @@ const NavBar = ({
           )}
           <button
             onClick={() => navigate("/")}
-            style={{ color: '#282828' }}
-            className="text-2xl font-bold hover:opacity-80 transition-opacity font-serif"
+            className="text-2xl font-serif italic text-teal-800 hover:opacity-80 transition-opacity"
           >
-            MELORIA
+            Meloria
           </button>
         </div>
 
