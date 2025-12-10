@@ -54,14 +54,50 @@ const FlipCard = ({
           transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
         }}
       >
-        {/* Front of card */}
+        {/* Front of card - Image with title */}
         <div 
           className="absolute inset-0 backface-hidden"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <Card className="h-full border border-border/50 bg-white/80 backdrop-blur-sm hover:shadow-lg transition-shadow group">
+          <Card className="h-full border border-border/50 overflow-hidden group hover:shadow-lg transition-shadow">
+            <div className="relative h-full">
+              <img 
+                src={image} 
+                alt={title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                <h3 className="font-semibold text-lg mb-1 line-clamp-2">{title}</h3>
+                {format && (
+                  <p className="text-sm text-white/80 line-clamp-1">{format}</p>
+                )}
+                {idealFor && (
+                  <p className="text-xs text-white/70 mt-1">Ideal for: {idealFor}</p>
+                )}
+                <button
+                  onClick={handleFlipClick}
+                  className="text-xs text-white/80 mt-2 flex items-center gap-1 hover:text-white transition-colors"
+                >
+                  <RotateCw className="w-3 h-3" />
+                  Click for details
+                </button>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Back of card - Details */}
+        <div 
+          className="absolute inset-0 backface-hidden"
+          style={{ 
+            backfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+          }}
+        >
+          <Card className="h-full border border-border/50 bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-teal-800 group-hover:text-teal-600 transition-colors line-clamp-2">
+              <CardTitle className="text-lg text-teal-800 line-clamp-2">
                 {title}
               </CardTitle>
               <div className="flex flex-wrap gap-2 mt-2">
@@ -112,39 +148,9 @@ const FlipCard = ({
                 className="text-xs text-teal-600 font-medium pt-2 flex items-center gap-1 hover:text-teal-700 transition-colors"
               >
                 <RotateCw className="w-3 h-3" />
-                Click to flip →
+                Click to flip back
               </button>
             </CardContent>
-          </Card>
-        </div>
-
-        {/* Back of card */}
-        <div 
-          className="absolute inset-0 backface-hidden"
-          style={{ 
-            backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-          }}
-        >
-          <Card className="h-full border border-border/50 overflow-hidden">
-            <div className="relative h-full">
-              <img 
-                src={image} 
-                alt={title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                <h3 className="font-semibold text-lg mb-1 line-clamp-2">{title}</h3>
-                {format && (
-                  <p className="text-sm text-white/80 line-clamp-1">{format}</p>
-                )}
-                {idealFor && (
-                  <p className="text-xs text-white/70 mt-1">Ideal for: {idealFor}</p>
-                )}
-                <p className="text-xs text-white/60 mt-2">Click to flip back</p>
-              </div>
-            </div>
           </Card>
         </div>
       </div>
