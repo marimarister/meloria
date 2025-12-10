@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,11 +21,33 @@ interface GroupMember {
 
 const CreateCompanyGroup = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const parentId = searchParams.get("parent");
+  
+  const [parentGroupName, setParentGroupName] = useState<string | null>(null);
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
   const [serviceType, setServiceType] = useState<"free" | "premium">("free");
   const [uploadedMembers, setUploadedMembers] = useState<GroupMember[]>([]);
   const [creating, setCreating] = useState(false);
+
+  useEffect(() => {
+    if (parentId) {
+      fetchParentGroup();
+    }
+  }, [parentId]);
+
+  const fetchParentGroup = async () => {
+    const { data, error } = await supabase
+      .from("company_groups" as any)
+      .select("name")
+      .eq("id", parentId)
+      .single();
+    
+    if (!error && data) {
+      setParentGroupName((data as any).name);
+    }
+  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -92,11 +114,12 @@ const CreateCompanyGroup = () => {
 
   const handleCreateGroup = async () => {
     if (!groupName.trim()) {
-      toast.error("Please enter a group name");
+      toast.error(`Please enter a ${parentId ? 'department' : 'group'} name`);
       return;
     }
 
-    if (uploadedMembers.length === 0) {
+    // Members are optional for departments
+    if (!parentId && uploadedMembers.length === 0) {
       toast.error("Please upload a file with members");
       return;
     }
@@ -109,54 +132,71 @@ const CreateCompanyGroup = () => {
         .insert({
           name: groupName.trim(),
           description: groupDescription.trim() || null,
-          service_type: serviceType
+          service_type: serviceType,
+          parent_group_id: parentId || null
         })
         .select()
         .single();
 
       if (groupError) throw groupError;
 
-      const membersToInsert = uploadedMembers.map(member => ({
-        group_id: (group as any).id,
-        name: member.name,
-        surname: member.surname,
-        email: member.email,
-        access_rights: member.access_rights
-      }));
+      if (uploadedMembers.length > 0) {
+        const membersToInsert = uploadedMembers.map(member => ({
+          group_id: (group as any).id,
+          name: member.name,
+          surname: member.surname,
+          email: member.email,
+          access_rights: member.access_rights
+        }));
 
-      const { error: membersError } = await supabase
-        .from("group_members" as any)
-        .insert(membersToInsert);
+        const { error: membersError } = await supabase
+          .from("group_members" as any)
+          .insert(membersToInsert);
 
-      if (membersError) throw membersError;
+        if (membersError) throw membersError;
+      }
 
-      toast.success(`Group "${groupName}" created with ${uploadedMembers.length} members`);
-      navigate("/meloria-admin/company-groups");
+      const entityName = parentId ? "Department" : "Group";
+      toast.success(`${entityName} "${groupName}" created${uploadedMembers.length > 0 ? ` with ${uploadedMembers.length} members` : ''}`);
+      
+      if (parentId) {
+        navigate(`/meloria-admin/company-groups/${parentId}`);
+      } else {
+        navigate("/meloria-admin/company-groups");
+      }
     } catch (error: any) {
       console.error("Error creating group:", error);
-      toast.error("Failed to create group: " + error.message);
+      toast.error("Failed to create: " + error.message);
     } finally {
       setCreating(false);
     }
   };
+
+  const entityLabel = parentId ? "Department" : "Company Group";
 
   return (
     <div className="p-8">
       <Button
         variant="ghost"
         className="mb-6"
-        onClick={() => navigate("/meloria-admin/company-groups")}
+        onClick={() => parentId 
+          ? navigate(`/meloria-admin/company-groups/${parentId}`)
+          : navigate("/meloria-admin/company-groups")
+        }
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Groups
+        {parentId ? "Back to Group" : "Back to Groups"}
       </Button>
 
-      <h1 className="text-4xl font-bold mb-8">Create Company Group</h1>
+      <h1 className="text-4xl font-bold mb-2">Create {entityLabel}</h1>
+      {parentGroupName && (
+        <p className="text-muted-foreground mb-8">Under: {parentGroupName}</p>
+      )}
 
       <Card className="p-6 max-w-2xl">
         <div className="space-y-6">
           <div>
-            <Label htmlFor="groupName">Group Name *</Label>
+            <Label htmlFor="groupName">{entityLabel} Name *</Label>
             <Input
               id="groupName"
               value={groupName}
@@ -190,7 +230,7 @@ const CreateCompanyGroup = () => {
           </div>
 
           <div>
-            <Label htmlFor="fileUpload">Upload Members (CSV/Excel) *</Label>
+            <Label htmlFor="fileUpload">Upload Members (CSV/Excel){!parentId ? " *" : ""}</Label>
             <Input
               id="fileUpload"
               type="file"
@@ -200,6 +240,7 @@ const CreateCompanyGroup = () => {
             />
             <p className="text-xs text-muted-foreground mt-1">
               Required columns: Name, Surname, Email, Access rights (Employee/Company)
+              {parentId && " • Optional for departments"}
             </p>
           </div>
 
@@ -216,7 +257,7 @@ const CreateCompanyGroup = () => {
             disabled={creating}
             className="w-full"
           >
-            {creating ? "Creating..." : "Create Group"}
+            {creating ? "Creating..." : `Create ${entityLabel}`}
           </Button>
         </div>
       </Card>
