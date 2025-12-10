@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { Clock, ChevronDown, ChevronUp, RotateCw } from "lucide-react";
 
 interface FlipCardProps {
   title: string;
@@ -32,6 +32,12 @@ const FlipCard = ({
   const handleExpandClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsExpanded(!isExpanded);
+  };
+
+  const handleFlipClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFlipped(!isFlipped);
+    setIsExpanded(false);
   };
 
   return (
@@ -101,7 +107,13 @@ const FlipCard = ({
                   </button>
                 )}
               </div>
-              <p className="text-xs text-teal-600 font-medium pt-2">Click to flip →</p>
+              <button
+                onClick={handleFlipClick}
+                className="text-xs text-teal-600 font-medium pt-2 flex items-center gap-1 hover:text-teal-700 transition-colors"
+              >
+                <RotateCw className="w-3 h-3" />
+                Click to flip →
+              </button>
             </CardContent>
           </Card>
         </div>
