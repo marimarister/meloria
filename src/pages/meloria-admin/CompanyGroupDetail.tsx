@@ -254,13 +254,38 @@ const CompanyGroupDetail = () => {
     toast.success("CSV exported successfully");
   };
 
-  const handleResetProgress = async (memberId: string, memberName: string) => {
+  const handleResetProgress = async (memberEmail: string, memberName: string) => {
     if (!confirm(`Are you sure you want to reset all test progress for ${memberName}? This action cannot be undone.`)) {
       return;
     }
 
     try {
+      // First find the user's profile ID from their email
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("email", memberEmail)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+      
+      if (!profile) {
+        toast.error("User profile not found");
+        return;
+      }
+
+      // Delete all test results for this user
+      const { error: deleteError } = await supabase
+        .from("test_results")
+        .delete()
+        .eq("user_id", profile.id);
+
+      if (deleteError) throw deleteError;
+
       toast.success(`Progress reset for ${memberName}`);
+      
+      // Refresh the data
+      fetchGroupDetails();
     } catch (error) {
       console.error("Error resetting progress:", error);
       toast.error("Failed to reset progress");
@@ -498,7 +523,7 @@ const CompanyGroupDetail = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleResetProgress(member.id, `${member.name} ${member.surname}`)}
+                    onClick={() => handleResetProgress(member.email, `${member.name} ${member.surname}`)}
                     title="Reset test progress"
                   >
                     <RotateCcw className="h-4 w-4" />
