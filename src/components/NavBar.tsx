@@ -130,7 +130,7 @@ const NavBar = ({
           </div>
 
           {/* Desktop Profile/Auth */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 ml-6">
             {showProfile && isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
