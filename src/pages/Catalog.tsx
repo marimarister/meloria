@@ -4,6 +4,18 @@ import { Badge } from "@/components/ui/badge";
 import FlipCard from "@/components/FlipCard";
 import { Calendar, Clock, Users, Palette, Brain, Activity, Flower2, Music, Mountain, Heart, Sparkles, TreeDeciduous } from "lucide-react";
 
+// Catalog images
+import sacredGeometryImg from "@/assets/catalog/sacred-geometry-art-practice.jpg";
+import mandalaArtImg from "@/assets/catalog/mandala-art.jpg";
+import vedicAstrologyImg from "@/assets/catalog/vedic-astrology.jpg";
+import executiveCoachingImg from "@/assets/catalog/executive-coaching.jpg";
+import spiralDynamicsImg from "@/assets/catalog/spiral-dynamics-seminar.png";
+import businessConstellationsImg from "@/assets/catalog/business-constellations.jpg";
+import aromatherapyImg from "@/assets/catalog/aromatherapy.jpg";
+import floralSeminarImg from "@/assets/catalog/floral-seminar.jpg";
+import soundHealingImg from "@/assets/catalog/sound-healing.jpg";
+import miniRetreatImg from "@/assets/catalog/mini-retreat.jpg";
+
 const Catalog = () => {
   const offerings = [
     {
@@ -48,7 +60,7 @@ const Catalog = () => {
           purpose: "Focus, clarity, inner alignment",
           idealFor: "Team workshops, creative sessions",
           description: "An immersive practice exploring the ancient patterns of sacred geometry — helping teams find harmony, precision and deeper connection through intentional creation.",
-          image: "https://meloria.my.canva.site/_assets/media/96cdf170ba89628af129d4a8c10f867b.jpg",
+          image: sacredGeometryImg,
         },
         {
           title: "Mandala Art",
@@ -56,7 +68,7 @@ const Catalog = () => {
           purpose: "Relaxation, focus, inner balance, team harmony",
           idealFor: "Evening sessions, creative teambuildings",
           description: "A gentle immersion into color, pattern and presence — a way for teams to ground, reconnect and return to clarity through meditative creation.",
-          image: "https://meloria.my.canva.site/_assets/media/b5a68647b3ffb54144059ebc7ee2115c.jpg",
+          image: mandalaArtImg,
         },
       ],
     },
@@ -71,7 +83,7 @@ const Catalog = () => {
           purpose: "Better collaboration, communication, role understanding",
           duration: "2–3 hours",
           description: "A structured yet intuitive tool to understand personal strengths, natural roles and energetic dynamics within a team.",
-          image: "https://meloria.my.canva.site/_assets/media/b6f05da217b9952db72eff1c35ec677c.jpg",
+          image: vedicAstrologyImg,
         },
         {
           title: "Transformational Games (Various Themes)",
@@ -92,21 +104,21 @@ const Catalog = () => {
           format: "Individual or small-group",
           purpose: "Support during change, burnout prevention, career clarity",
           description: "Practical, human-centered support for teams navigating transitions.",
-          image: "https://meloria.my.canva.site/_assets/media/74dcbd844041d19ba222a61b0a8ea602.png",
+          image: executiveCoachingImg,
         },
         {
           title: "Spiral Dynamics Seminar",
           format: "Lecture + applied discussion",
           purpose: "Understanding human and organizational development levels",
           description: "An accessible introduction to Spiral Dynamics as a practical tool for leadership, management and self-awareness.",
-          image: "https://meloria.my.canva.site/_assets/media/96cdf170ba89628af129d4a8c10f867b.jpg",
+          image: spiralDynamicsImg,
         },
         {
           title: "Business Constellations for Team Clarity",
           format: "Systemic mapping + guided facilitation",
           purpose: "Reveal hidden structures, unblock team processes",
           description: "A systemic practice based on Bert Hellinger's principles, adapted for corporate dynamics.",
-          image: "https://meloria.my.canva.site/_assets/media/ec767322d8653cc830a8695be2f434f3.png",
+          image: businessConstellationsImg,
         },
       ],
     },
@@ -183,7 +195,7 @@ const Catalog = () => {
           format: "Seminar + sensory practice",
           purpose: "Emotional regulation, stress reduction, burnout support",
           description: "A refined introduction to working with scent as a tool for wellbeing.",
-          image: "https://meloria.my.canva.site/_assets/media/25ccbf840684c97b152dc2ec11623e5e.jpg",
+          image: aromatherapyImg,
         },
       ],
     },
@@ -198,7 +210,7 @@ const Catalog = () => {
           languages: ["LV", "RU"],
           purpose: "Gentle emotional balance through botanicals",
           description: "A unique wellbeing activity that brings together aesthetics, nature and emotional clarity.",
-          image: "https://meloria.my.canva.site/_assets/media/e87bca0ddd2ffa9cbafee114ed135af2.jpg",
+          image: floralSeminarImg,
         },
       ],
     },
@@ -212,7 +224,7 @@ const Catalog = () => {
           format: "60-minute sound immersion",
           purpose: "Deep relaxation, nervous system reset",
           description: "A quiet, resonant experience that restores balance and calm. Perfect as a standalone session or closing ritual.",
-          image: "https://meloria.my.canva.site/_assets/media/00eb03e9034888c2d69ac54d5501b0ee.jpg",
+          image: soundHealingImg,
         },
       ],
     },
@@ -227,7 +239,7 @@ const Catalog = () => {
           purpose: "Quick energy boost, team spirit uplift",
           description: "Art therapy, mindfulness, and team-building practices. Leave in the morning — come back recharged by evening!",
           price: "On request",
-          image: "https://meloria.my.canva.site/_assets/media/7312bc04a20ce093ef819e54c6c21402.jpg",
+          image: miniRetreatImg,
         },
         {
           title: "Weekend Retreat (2 days / 1 night)",
