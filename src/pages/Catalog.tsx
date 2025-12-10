@@ -22,6 +22,10 @@ import weekendRetreatImg from "@/assets/catalog/weekend-retreat.jpg";
 import deepRechargeImg from "@/assets/catalog/deep-recharge-retreat.jpg";
 import womensBathImg from "@/assets/catalog/womens-bath.jpg";
 import mensBathImg from "@/assets/catalog/mens-bath.jpg";
+import signatureGamesImg from "@/assets/catalog/signature-games.jpg";
+import breathingPracticesImg from "@/assets/catalog/breathing-practices.jpg";
+import teddybrickImg from "@/assets/catalog/teddybrick.jpg";
+import transformationalGamesImg from "@/assets/catalog/transformational-games.jpg";
 
 const Catalog = () => {
   const offerings = [
@@ -98,13 +102,13 @@ const Catalog = () => {
           purpose: "Clarifying goals, understanding blocks, activating resources",
           duration: "3-4 hours",
           description: "A soft but powerful method to see where a person is stuck, what they truly want, and the next steps that unlock growth.",
-          image: "https://meloria.my.canva.site/_assets/media/013445fe18c1017ca170c20ceb683a2b.jpg",
+          image: transformationalGamesImg,
         },
         {
           title: 'Signature Games: "Atlas" & "Dream Alchemy"',
           format: "Deep-work mini-group; Ideal for key talents and high-potential employees",
           description: "Atlas: Stability, responsibility, personal backbone. Dream Alchemy: Vision, desire, goal-setting and manifestation.",
-          image: "https://meloria.my.canva.site/_assets/media/be8f6c72a87d5ec5f1b37927ecf9ffa1.jpg",
+          image: signatureGamesImg,
         },
         {
           title: "Executive & Team Coaching Sessions",
@@ -139,7 +143,7 @@ const Catalog = () => {
           format: "Hands-on creation of a personal character/object",
           purpose: "Stress release, creativity, joy, team bonding",
           description: "A light premium teambuilding that brings back play, inspiration and shared energy.",
-          image: "https://meloria.my.canva.site/_assets/media/4164f95876f016c5d5db67f833f887d8.jpg",
+          image: teddybrickImg,
         },
       ],
     },
@@ -188,7 +192,7 @@ const Catalog = () => {
           format: "Breathing practices + energy techniques",
           purpose: "Energy balance, emotional release, grounded presence",
           description: "A guided session combining conscious breathing techniques with gentle energetic practices.",
-          image: "https://meloria.my.canva.site/_assets/media/75a90c347ccc14251debfe76bb1b90b4.jpg",
+          image: breathingPracticesImg,
         },
       ],
     },
