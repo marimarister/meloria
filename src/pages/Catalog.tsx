@@ -1,13 +1,10 @@
 import NavBar from "@/components/NavBar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import FlipCard from "@/components/FlipCard";
 import { Calendar, Clock, Users, Palette, Brain, Activity, Flower2, Music, Mountain, Heart, Sparkles, TreeDeciduous } from "lucide-react";
-import { useState } from "react";
 
 const Catalog = () => {
-  const [selectedItem, setSelectedItem] = useState<any>(null);
-
   const offerings = [
     {
       category: "Team Diagnostics & Assessments",
@@ -44,7 +41,6 @@ const Catalog = () => {
       section: "Art Therapy for Balance & Abundance",
       icon: Palette,
       gradient: "from-rose-100 via-pink-50 to-purple-100",
-      image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop",
       items: [
         {
           title: "Mandala Art — Sacred Geometry Practice",
@@ -52,7 +48,7 @@ const Catalog = () => {
           purpose: "Relaxation, focus, inner balance, team harmony",
           idealFor: "Evening sessions, creative teambuildings",
           description: "A gentle immersion into color, pattern and presence — a way for teams to ground, reconnect and return to clarity through meditative creation.",
-          image: "https://images.unsplash.com/photo-1609619385002-f40f1df9b5a4?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/b5a68647b3ffb54144059ebc7ee2115c.jpg",
         },
       ],
     },
@@ -60,7 +56,6 @@ const Catalog = () => {
       section: "Psychology, Coaching & Transformational Games",
       icon: Brain,
       gradient: "from-teal-50 via-emerald-50 to-cyan-100",
-      image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=400&fit=crop",
       items: [
         {
           title: "Vedic Astrology & Numerology: Team Compatibility Session",
@@ -68,7 +63,7 @@ const Catalog = () => {
           purpose: "Better collaboration, communication, role understanding",
           duration: "2–3 hours",
           description: "A structured yet intuitive tool to understand personal strengths, natural roles and energetic dynamics within a team.",
-          image: "https://images.unsplash.com/photo-1505506874110-6a7a69069a08?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/b6f05da217b9952db72eff1c35ec677c.jpg",
         },
         {
           title: "Transformational Games (Various Themes)",
@@ -76,34 +71,34 @@ const Catalog = () => {
           purpose: "Clarifying goals, understanding blocks, activating resources",
           duration: "3-4 hours",
           description: "A soft but powerful method to see where a person is stuck, what they truly want, and the next steps that unlock growth.",
-          image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/013445fe18c1017ca170c20ceb683a2b.jpg",
         },
         {
           title: 'Signature Games: "Atlas" & "Dream Alchemy"',
           format: "Deep-work mini-group; Ideal for key talents and high-potential employees",
           description: "Atlas: Stability, responsibility, personal backbone. Dream Alchemy: Vision, desire, goal-setting and manifestation.",
-          image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/be8f6c72a87d5ec5f1b37927ecf9ffa1.jpg",
         },
         {
           title: "Executive & Team Coaching Sessions",
           format: "Individual or small-group",
           purpose: "Support during change, burnout prevention, career clarity",
           description: "Practical, human-centered support for teams navigating transitions.",
-          image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/74dcbd844041d19ba222a61b0a8ea602.png",
         },
         {
           title: "Spiral Dynamics Seminar",
           format: "Lecture + applied discussion",
           purpose: "Understanding human and organizational development levels",
           description: "An accessible introduction to Spiral Dynamics as a practical tool for leadership, management and self-awareness.",
-          image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/96cdf170ba89628af129d4a8c10f867b.jpg",
         },
         {
           title: "Business Constellations for Team Clarity",
           format: "Systemic mapping + guided facilitation",
           purpose: "Reveal hidden structures, unblock team processes",
           description: "A systemic practice based on Bert Hellinger's principles, adapted for corporate dynamics.",
-          image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/ec767322d8653cc830a8695be2f434f3.png",
         },
       ],
     },
@@ -111,14 +106,13 @@ const Catalog = () => {
       section: "Creativity",
       icon: Sparkles,
       gradient: "from-amber-50 via-yellow-50 to-orange-100",
-      image: "https://images.unsplash.com/photo-1456086272160-b28b0645b729?w=600&h=400&fit=crop",
       items: [
         {
           title: "TeddyBrick Creative Workshop",
           format: "Hands-on creation of a personal character/object",
           purpose: "Stress release, creativity, joy, team bonding",
           description: "A light premium teambuilding that brings back play, inspiration and shared energy.",
-          image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/4164f95876f016c5d5db67f833f887d8.jpg",
         },
       ],
     },
@@ -126,49 +120,48 @@ const Catalog = () => {
       section: "Body, Energy & Rejuvenation Rituals",
       icon: Activity,
       gradient: "from-violet-100 via-purple-50 to-fuchsia-100",
-      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop",
       items: [
         {
           title: "Energy Dynamics Practice",
           format: "Active body-based session",
           purpose: "Release tension, regain vitality, reset mental overload",
           description: "A grounding practice that helps restore clarity and strength. For men and mixed groups.",
-          image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/e65275781597d33ac17c48763a7849d4.jpg",
         },
         {
           title: "Intuitive Dance Practice",
           format: "Guided movement session",
           purpose: "Emotional release, freedom, body awareness",
           description: "Perfect for HR wellbeing days and creative teams.",
-          image: "https://images.unsplash.com/photo-1508700929628-666bc8bd84ea?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/63c8b80b5a3c93dd249ccb775f3d3fec.jpg",
         },
         {
           title: "Winter Outdoor Practices",
           format: "Guided outdoor sports activities",
           purpose: "Team spirit, health, switching off routines",
           description: "Ideal for refreshing corporate retreats.",
-          image: "https://images.unsplash.com/photo-1551524559-8af4e6624178?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/e1c82d5201f119193e1e660868771ebf.jpg",
         },
         {
           title: "Women's Bath Ritual",
           format: "Gentle sauna/steam ceremony",
           purpose: "Relaxation, emotional reset, feminine support",
           description: "A soothing embodied experience for female employees.",
-          image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/03f7283b54d54afd7e849ed03826a206.jpg",
         },
         {
           title: "Men's Bath Ritual",
           format: "Sauna/steam ritual",
           purpose: "Recovery, stress relief, nervous system reset",
           description: "A structured and rejuvenating wellness experience.",
-          image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/8a0d9b6b13c9523676febd82cd7061ef.jpg",
         },
         {
           title: "Breathing Practices & Energy Flow",
           format: "Breathing practices + energy techniques",
           purpose: "Energy balance, emotional release, grounded presence",
           description: "A guided session combining conscious breathing techniques with gentle energetic practices.",
-          image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/75a90c347ccc14251debfe76bb1b90b4.jpg",
         },
       ],
     },
@@ -176,14 +169,13 @@ const Catalog = () => {
       section: "Aroma & Sensory Practices",
       icon: Flower2,
       gradient: "from-pink-100 via-rose-50 to-red-100",
-      image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&h=400&fit=crop",
       items: [
         {
           title: "Aromatherapy & Olfactotherapy Journey",
           format: "Seminar + sensory practice",
           purpose: "Emotional regulation, stress reduction, burnout support",
           description: "A refined introduction to working with scent as a tool for wellbeing.",
-          image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/25ccbf840684c97b152dc2ec11623e5e.jpg",
         },
       ],
     },
@@ -191,7 +183,6 @@ const Catalog = () => {
       section: "Flowers & Elixirs",
       icon: TreeDeciduous,
       gradient: "from-lime-50 via-green-50 to-emerald-100",
-      image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&h=400&fit=crop",
       items: [
         {
           title: "Floral Seminar with Botanical Elixir",
@@ -199,7 +190,7 @@ const Catalog = () => {
           languages: ["LV", "RU"],
           purpose: "Gentle emotional balance through botanicals",
           description: "A unique wellbeing activity that brings together aesthetics, nature and emotional clarity.",
-          image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/e87bca0ddd2ffa9cbafee114ed135af2.jpg",
         },
       ],
     },
@@ -207,14 +198,13 @@ const Catalog = () => {
       section: "Sound Practices",
       icon: Music,
       gradient: "from-sky-100 via-blue-50 to-indigo-100",
-      image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=600&h=400&fit=crop",
       items: [
         {
           title: "Sound Healing Session — 1 hour",
           format: "60-minute sound immersion",
           purpose: "Deep relaxation, nervous system reset",
           description: "A quiet, resonant experience that restores balance and calm. Perfect as a standalone session or closing ritual.",
-          image: "https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/00eb03e9034888c2d69ac54d5501b0ee.jpg",
         },
       ],
     },
@@ -222,7 +212,6 @@ const Catalog = () => {
       section: "Recharge Retreats",
       icon: Mountain,
       gradient: "from-teal-100 via-cyan-50 to-sky-100",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop",
       items: [
         {
           title: "Mini One-Day Retreat",
@@ -230,7 +219,7 @@ const Catalog = () => {
           purpose: "Quick energy boost, team spirit uplift",
           description: "Art therapy, mindfulness, and team-building practices. Leave in the morning — come back recharged by evening!",
           price: "On request",
-          image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/7312bc04a20ce093ef819e54c6c21402.jpg",
         },
         {
           title: "Weekend Retreat (2 days / 1 night)",
@@ -238,7 +227,7 @@ const Catalog = () => {
           purpose: "Dive deep into mindfulness and team connection",
           description: "Immersive program with accommodation. Return on Monday with fresh ideas and a real sense of unity.",
           price: "On request",
-          image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/8c311cd0582b4d081cb31a4b9c90c714.jpg",
         },
         {
           title: "3–4 Day Deep Recharge Retreat",
@@ -246,7 +235,7 @@ const Catalog = () => {
           purpose: "Reset, refocus, and unlock full potential",
           description: "A powerful journey for teams and leaders. Come back with a new vision, stronger bonds, and lasting energy.",
           price: "Tailored to your team's goals",
-          image: "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=600&h=400&fit=crop",
+          image: "https://meloria.my.canva.site/_assets/media/4f7b515824b8d09723fe24297eb9f8f0.jpg",
         },
       ],
     },
@@ -354,102 +343,18 @@ const Catalog = () => {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {section.items.map((item, itemIndex) => (
-                <Dialog key={itemIndex}>
-                  <DialogTrigger asChild>
-                    <Card 
-                      className="border border-border/50 bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer hover:-translate-y-1 group"
-                    >
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-lg text-teal-800 group-hover:text-teal-600 transition-colors">
-                          {item.title}
-                        </CardTitle>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {item.languages && item.languages.map((lang) => (
-                            <Badge key={lang} className="text-xs bg-blue-100 text-blue-700 hover:bg-blue-200 border-0">
-                              {lang}
-                            </Badge>
-                          ))}
-                          {item.duration && (
-                            <Badge variant="outline" className="text-xs border-purple-200 text-purple-700 bg-purple-50">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {item.duration}
-                            </Badge>
-                          )}
-                          {item.price && (
-                            <Badge className="text-xs bg-amber-100 text-amber-700 hover:bg-amber-200 border-0">
-                              {item.price}
-                            </Badge>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-2 pt-0">
-                        {item.purpose && (
-                          <p className="text-sm">
-                            <span className="font-medium text-purple-700">Purpose: </span>
-                            <span className="text-muted-foreground">{item.purpose}</span>
-                          </p>
-                        )}
-                        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
-                          {item.description}
-                        </p>
-                        <p className="text-xs text-teal-600 font-medium pt-2">Click to view details →</p>
-                      </CardContent>
-                    </Card>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle className="text-xl text-teal-800 font-serif">{item.title}</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div className="relative h-64 w-full overflow-hidden rounded-xl">
-                        <img 
-                          src={item.image} 
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {item.format && (
-                          <Badge variant="outline" className="text-xs border-teal-200 text-teal-700 bg-teal-50">
-                            {item.format}
-                          </Badge>
-                        )}
-                        {item.duration && (
-                          <Badge variant="outline" className="text-xs border-purple-200 text-purple-700 bg-purple-50">
-                            <Clock className="w-3 h-3 mr-1" />
-                            {item.duration}
-                          </Badge>
-                        )}
-                        {item.languages && item.languages.map((lang) => (
-                          <Badge key={lang} className="text-xs bg-blue-100 text-blue-700 border-0">
-                            {lang}
-                          </Badge>
-                        ))}
-                        {item.price && (
-                          <Badge className="text-xs bg-amber-100 text-amber-700 border-0">
-                            {item.price}
-                          </Badge>
-                        )}
-                      </div>
-                      {item.purpose && (
-                        <p className="text-sm">
-                          <span className="font-medium text-purple-700">Purpose: </span>
-                          <span className="text-muted-foreground">{item.purpose}</span>
-                        </p>
-                      )}
-                      {item.idealFor && (
-                        <p className="text-sm">
-                          <span className="font-medium text-teal-700">Ideal for: </span>
-                          <span className="text-muted-foreground">{item.idealFor}</span>
-                        </p>
-                      )}
-                      <p className="text-muted-foreground leading-relaxed">
-                        {item.description}
-                      </p>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <FlipCard
+                  key={itemIndex}
+                  title={item.title}
+                  description={item.description}
+                  purpose={item.purpose}
+                  format={item.format}
+                  duration={item.duration}
+                  languages={item.languages}
+                  price={item.price}
+                  idealFor={item.idealFor}
+                  image={item.image}
+                />
               ))}
             </div>
           </section>
