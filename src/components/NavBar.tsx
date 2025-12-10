@@ -110,23 +110,28 @@ const NavBar = ({
           </button>
         </div>
 
-        {/* Center - Navigation Links (Desktop) */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Right side - Profile/Auth + Mobile Menu */}
+        {/* Right side - Navigation Links + Profile/Auth + Mobile Menu */}
         <div className="flex items-center gap-4">
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-4">
+            {navLinks.map((link, index) => (
+              <div key={link.href} className="flex items-center gap-4">
+                <Link
+                  to={link.href}
+                  className="text-sm italic text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+                {index < navLinks.length - 1 && (
+                  <span className="text-muted-foreground/50">|</span>
+                )}
+              </div>
+            ))}
+            <span className="text-muted-foreground/50">|</span>
+          </div>
+
           {/* Desktop Profile/Auth */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
             {showProfile && isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
