@@ -5,7 +5,8 @@ import {
   CreditCard, 
   Settings, 
   LogOut,
-  Users
+  Users,
+  X
 } from "lucide-react";
 import {
   Sidebar,
@@ -62,9 +63,15 @@ const menuItems = [
 ];
 
 export function MeloriaSidebar() {
-  const { open: sidebarOpen, toggleSidebar } = useSidebar();
+  const { open: sidebarOpen, toggleSidebar, setOpenMobile, isMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const handleNavClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -80,6 +87,17 @@ export function MeloriaSidebar() {
 
   return (
     <Sidebar className={sidebarOpen ? "w-60" : "w-14"} collapsible="icon">
+      {/* Mobile close button */}
+      <div className="md:hidden flex items-center justify-between p-4 border-b">
+        <span className="font-semibold">Menu</span>
+        <button
+          onClick={() => setOpenMobile(false)}
+          className="p-2 hover:bg-muted rounded-md transition-colors"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
       {/* Desktop toggle button - hidden on mobile */}
       <div className="hidden md:flex items-center justify-end p-2 pt-4">
         <button
@@ -106,6 +124,7 @@ export function MeloriaSidebar() {
                       to={item.url}
                       className="hover:bg-muted/50"
                       activeClassName="bg-muted text-primary font-medium"
+                      onClick={handleNavClick}
                     >
                       <item.icon className={sidebarOpen ? "mr-2 h-4 w-4" : "h-4 w-4"} />
                       {sidebarOpen && <span>{item.title}</span>}
