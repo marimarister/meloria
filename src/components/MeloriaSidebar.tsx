@@ -16,7 +16,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -81,7 +80,8 @@ export function MeloriaSidebar() {
 
   return (
     <Sidebar className={sidebarOpen ? "w-60" : "w-14"} collapsible="icon">
-      <div className="flex items-center justify-end p-2 pt-4">
+      {/* Desktop toggle button - hidden on mobile */}
+      <div className="hidden md:flex items-center justify-end p-2 pt-4">
         <button
           onClick={toggleSidebar}
           className="p-2 hover:bg-muted rounded-md transition-colors"
