@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,6 +27,8 @@ const signupSchema = z.object({
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const groupSlug = searchParams.get("group");
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -72,6 +74,7 @@ const Signup = () => {
             name: validationResult.data.name,
             surname: validationResult.data.surname,
             role,
+            group_slug: groupSlug || undefined,
           },
         },
       });
