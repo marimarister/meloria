@@ -127,6 +127,9 @@ const NavBar = ({
                     <DropdownMenuItem onClick={() => navigate("/meloria-admin/company-groups")}>
                       Company Groups
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/employee")}>
+                      My Employee Dashboard
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => navigate("/meloria-admin/settings")}>
                       Settings
