@@ -28,9 +28,14 @@ const Login = () => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        // Use role from user_metadata (faster than DB query)
-        const role = session.user.user_metadata?.role;
-        if (role === "hr") {
+        // Server-side role validation via database query
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', session.user.id)
+          .single();
+        
+        if (roleData?.role === "hr") {
           navigate("/company");
         } else {
           navigate("/employee");
@@ -70,9 +75,14 @@ const Login = () => {
         description: "You've successfully signed in.",
       });
 
-      // Use role from user_metadata (faster than DB query)
-      const role = data.user.user_metadata?.role;
-      if (role === "hr") {
+      // Server-side role validation via database query
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', data.user.id)
+        .single();
+      
+      if (roleData?.role === "hr") {
         navigate("/company");
       } else {
         navigate("/employee");
