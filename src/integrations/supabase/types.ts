@@ -52,6 +52,73 @@ export type Database = {
           },
         ]
       }
+      event_invitations: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          user_email: string
+          viewed_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          user_email: string
+          viewed_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          user_email?: string
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_invitations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          group_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          group_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          group_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "company_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_members: {
         Row: {
           access_rights: string

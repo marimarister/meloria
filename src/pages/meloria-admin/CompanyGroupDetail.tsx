@@ -4,7 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Share2, RotateCcw, Download, Filter, Plus, Building2, Users } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, Share2, RotateCcw, Download, Filter, Plus, Building2, Users, CalendarPlus } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -47,6 +50,13 @@ interface Subgroup {
   description: string | null;
   member_count: number;
   service_type: string;
+}
+
+interface Event {
+  id: string;
+  name: string;
+  description: string | null;
+  created_at: string;
 }
 
 type FilterOption = "all" | "completed" | "partial" | "none";
@@ -94,17 +104,41 @@ const CompanyGroupDetail = () => {
   const [parentGroupId, setParentGroupId] = useState<string | null>(null);
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [subgroups, setSubgroups] = useState<Subgroup[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<FilterOption>("all");
   const [activeTab, setActiveTab] = useState("members");
+  
+  // Event creation state
+  const [eventDialogOpen, setEventDialogOpen] = useState(false);
+  const [eventName, setEventName] = useState("");
+  const [eventDescription, setEventDescription] = useState("");
+  const [creatingEvent, setCreatingEvent] = useState(false);
+  const [createdEventQR, setCreatedEventQR] = useState<{ id: string; name: string } | null>(null);
 
   const inviteUrl = `${window.location.origin}/signup?group=${groupName.toLowerCase().replace(/\s+/g, "")}`;
 
   useEffect(() => {
     if (id) {
       fetchGroupDetails();
+      fetchEvents();
     }
   }, [id]);
+
+  const fetchEvents = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("events" as any)
+        .select("*")
+        .eq("group_id", id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setEvents((data as any[]) || []);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
   const fetchGroupDetails = async () => {
     try {
@@ -194,6 +228,86 @@ const CompanyGroupDetail = () => {
       toast.error("Failed to load group details");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCreateEvent = async () => {
+    if (!eventName.trim()) {
+      toast.error("Please enter an event name");
+      return;
+    }
+
+    setCreatingEvent(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Not authenticated");
+        return;
+      }
+
+      // Create the event
+      const { data: eventData, error: eventError } = await supabase
+        .from("events" as any)
+        .insert({
+          name: eventName.trim(),
+          description: eventDescription.trim() || null,
+          group_id: id,
+          created_by: user.id
+        })
+        .select()
+        .single();
+
+      if (eventError) throw eventError;
+
+      const eventId = (eventData as any).id;
+
+      // Create invitations for all members
+      const invitations = members.map(member => ({
+        event_id: eventId,
+        user_email: member.email
+      }));
+
+      if (invitations.length > 0) {
+        const { error: invError } = await supabase
+          .from("event_invitations" as any)
+          .insert(invitations);
+
+        if (invError) throw invError;
+      }
+
+      // Send emails via edge function
+      const memberEmails = members.map(m => m.email);
+      if (memberEmails.length > 0) {
+        const { error: emailError } = await supabase.functions.invoke("send-event-invites", {
+          body: {
+            eventId,
+            eventName: eventName.trim(),
+            eventDescription: eventDescription.trim(),
+            groupName,
+            memberEmails
+          }
+        });
+
+        if (emailError) {
+          console.error("Error sending emails:", emailError);
+          toast.warning("Event created but some emails may not have been sent");
+        } else {
+          toast.success(`Event created and ${memberEmails.length} invitations sent!`);
+        }
+      } else {
+        toast.success("Event created!");
+      }
+
+      // Show QR code
+      setCreatedEventQR({ id: eventId, name: eventName.trim() });
+      setEventName("");
+      setEventDescription("");
+      fetchEvents();
+    } catch (error) {
+      console.error("Error creating event:", error);
+      toast.error("Failed to create event");
+    } finally {
+      setCreatingEvent(false);
     }
   };
 
@@ -328,6 +442,91 @@ const CompanyGroupDetail = () => {
         </div>
 
         <div className="flex gap-2">
+          {/* Create Event Button */}
+          <Dialog open={eventDialogOpen} onOpenChange={(open) => {
+            setEventDialogOpen(open);
+            if (!open) {
+              setCreatedEventQR(null);
+              setEventName("");
+              setEventDescription("");
+            }
+          }}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <CalendarPlus className="mr-2 h-4 w-4" />
+                Create Event
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Create Event</DialogTitle>
+                <DialogDescription>
+                  Create an event for {groupName}. All members will receive an email invitation.
+                </DialogDescription>
+              </DialogHeader>
+              
+              {createdEventQR ? (
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Event "{createdEventQR.name}" created successfully!
+                    </p>
+                    <div className="flex justify-center p-4 bg-white rounded-lg">
+                      <QRCodeSVG 
+                        value={`${window.location.origin}/event/${createdEventQR.id}`} 
+                        size={200} 
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Event QR Code
+                    </p>
+                  </div>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => {
+                      setCreatedEventQR(null);
+                      setEventDialogOpen(false);
+                    }}
+                  >
+                    Done
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="event-name">Event Name *</Label>
+                    <Input
+                      id="event-name"
+                      placeholder="Enter event name"
+                      value={eventName}
+                      onChange={(e) => setEventName(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="event-description">Description</Label>
+                    <Textarea
+                      id="event-description"
+                      placeholder="Enter event description (optional)"
+                      value={eventDescription}
+                      onChange={(e) => setEventDescription(e.target.value)}
+                      rows={3}
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {members.length} member{members.length !== 1 ? 's' : ''} will be notified
+                  </p>
+                  <Button 
+                    className="w-full" 
+                    onClick={handleCreateEvent}
+                    disabled={creatingEvent || !eventName.trim()}
+                  >
+                    {creatingEvent ? "Creating..." : "Create Event"}
+                  </Button>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
+
           <Button variant="outline" onClick={exportToCSV}>
             <Download className="mr-2 h-4 w-4" />
             Export CSV
@@ -377,6 +576,48 @@ const CompanyGroupDetail = () => {
           </Dialog>
         </div>
       </div>
+
+      {/* Events Section */}
+      {events.length > 0 && (
+        <Card className="p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-4">Recent Events</h2>
+          <div className="space-y-3">
+            {events.slice(0, 3).map((event) => (
+              <div key={event.id} className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                <div>
+                  <p className="font-medium">{event.name}</p>
+                  {event.description && (
+                    <p className="text-sm text-muted-foreground line-clamp-1">{event.description}</p>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(event.created_at).toLocaleDateString()}
+                  </span>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        View QR
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-sm">
+                      <DialogHeader>
+                        <DialogTitle>{event.name}</DialogTitle>
+                      </DialogHeader>
+                      <div className="flex justify-center p-4 bg-white rounded-lg">
+                        <QRCodeSVG 
+                          value={`${window.location.origin}/event/${event.id}`} 
+                          size={200} 
+                        />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Tabs for Departments and Members */}
       {subgroups.length > 0 || !parentGroupId ? (

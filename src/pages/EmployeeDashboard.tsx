@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { 
   ClipboardCheck, 
   Brain, 
@@ -14,13 +15,31 @@ import {
   Hand,
   Monitor,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  CalendarCheck,
+  Bell
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
+
+interface EventInvitation {
+  id: string;
+  event_id: string;
+  viewed_at: string | null;
+  created_at: string;
+  event?: {
+    id: string;
+    name: string;
+    description: string | null;
+    created_at: string;
+    group?: {
+      name: string;
+    };
+  };
+}
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
@@ -30,6 +49,7 @@ const EmployeeDashboard = () => {
     perception: { completed: false, lastTaken: null as string | null },
     preference: { completed: false, lastTaken: null as string | null }
   });
+  const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>([]);
   
   // Calendar state - starting at December 1-7, 2025
   const [currentWeekStart, setCurrentWeekStart] = useState(new Date(2025, 11, 1)); // December 1, 2025
@@ -43,9 +63,82 @@ const EmployeeDashboard = () => {
         return;
       }
       setIsLoading(false);
+      loadEventInvitations(user.id);
     };
     checkAuth();
   }, [navigate]);
+
+  const loadEventInvitations = async (userId: string) => {
+    try {
+      // Get user email from profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", userId)
+        .single();
+
+      if (!profile?.email) return;
+
+      // Get invitations for this user
+      const { data: invitations, error } = await supabase
+        .from("event_invitations" as any)
+        .select("*")
+        .eq("user_email", profile.email)
+        .is("viewed_at", null)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      // Fetch event details for each invitation
+      const invitationsWithEvents = await Promise.all(
+        (invitations as any[] || []).map(async (inv) => {
+          const { data: event } = await supabase
+            .from("events" as any)
+            .select("id, name, description, created_at, group_id")
+            .eq("id", inv.event_id)
+            .single();
+
+          let groupName = "";
+          if (event) {
+            const { data: group } = await supabase
+              .from("company_groups" as any)
+              .select("name")
+              .eq("id", (event as any).group_id)
+              .single();
+            groupName = (group as any)?.name || "";
+          }
+
+          return {
+            ...inv,
+            event: event ? {
+              ...(event as any),
+              group: { name: groupName }
+            } : null
+          };
+        })
+      );
+
+      setEventInvitations(invitationsWithEvents.filter(inv => inv.event));
+    } catch (error) {
+      console.error("Error loading event invitations:", error);
+    }
+  };
+
+  const markInvitationAsViewed = async (invitationId: string) => {
+    try {
+      const { error } = await supabase
+        .from("event_invitations" as any)
+        .update({ viewed_at: new Date().toISOString() })
+        .eq("id", invitationId);
+
+      if (error) throw error;
+      
+      setEventInvitations(prev => prev.filter(inv => inv.id !== invitationId));
+      toast.success("Invitation marked as viewed");
+    } catch (error) {
+      console.error("Error marking invitation as viewed:", error);
+    }
+  };
 
   useEffect(() => {
     if (isLoading) return; // Don't load test status until auth is confirmed
@@ -337,6 +430,43 @@ const EmployeeDashboard = () => {
                   </div>
                 </Card>
               )}
+            </div>
+          </Card>
+        )}
+
+        {/* Event Invitations */}
+        {eventInvitations.length > 0 && (
+          <Card className="p-6 mb-8 animate-slide-up border-primary/30 bg-primary/5">
+            <div className="flex items-center gap-2 mb-4">
+              <Bell className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">Event Invitations</h2>
+              <Badge variant="secondary">{eventInvitations.length}</Badge>
+            </div>
+            <div className="space-y-3">
+              {eventInvitations.map((invitation) => (
+                <div key={invitation.id} className="flex justify-between items-start p-4 bg-background rounded-lg border">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <CalendarCheck className="h-4 w-4 text-primary" />
+                      <p className="font-medium">{invitation.event?.name}</p>
+                    </div>
+                    {invitation.event?.description && (
+                      <p className="text-sm text-muted-foreground mb-1">{invitation.event.description}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      From: {invitation.event?.group?.name} • {new Date(invitation.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => markInvitationAsViewed(invitation.id)}
+                  >
+                    <Check className="h-4 w-4 mr-1" />
+                    Got it
+                  </Button>
+                </div>
+              ))}
             </div>
           </Card>
         )}
