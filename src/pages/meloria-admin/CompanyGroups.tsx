@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CompanyGroup {
   id: string;
@@ -37,6 +38,7 @@ interface CompanyGroup {
 
 const CompanyGroups = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [groups, setGroups] = useState<CompanyGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingGroup, setDeletingGroup] = useState<CompanyGroup | null>(null);
@@ -145,12 +147,12 @@ const CompanyGroups = () => {
 
   const getStressLabel = (level: number | null) => {
     if (level === null) return "N/A";
-    if (level < 17) return `${level}% (Perfect)`;
-    if (level < 34) return `${level}% (Balanced)`;
-    if (level < 50) return `${level}% (Mild)`;
-    if (level < 67) return `${level}% (Noticeable)`;
-    if (level < 84) return `${level}% (Severe)`;
-    return `${level}% (Extreme)`;
+    if (level < 17) return `${level}% (${t('tests.burnout.perfectWellbeing')})`;
+    if (level < 34) return `${level}% (${t('tests.burnout.balancedResilient')})`;
+    if (level < 50) return `${level}% (${t('tests.burnout.mildFatigue')})`;
+    if (level < 67) return `${level}% (${t('tests.burnout.noticeableBurnout')})`;
+    if (level < 84) return `${level}% (${t('tests.burnout.severeBurnout')})`;
+    return `${level}% (${t('tests.burnout.extremeBurnoutRisk')})`;
   };
 
   const handleDeleteGroup = async () => {
@@ -173,37 +175,37 @@ const CompanyGroups = () => {
 
       if (groupError) throw groupError;
 
-      toast.success("Group deleted successfully");
+      toast.success(t('common.success'));
       setDeletingGroup(null);
       fetchGroups();
     } catch (error) {
       console.error("Error deleting group:", error);
-      toast.error("Failed to delete group");
+      toast.error(t('common.error'));
     }
   };
 
   if (loading) {
-    return <div className="p-8">Loading...</div>;
+    return <div className="p-8">{t('common.loading')}</div>;
   }
 
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-4xl font-bold mb-2">Company Groups</h1>
-          <p className="text-muted-foreground">Manage company groups and their members</p>
+          <h1 className="text-4xl font-bold mb-2">{t('meloria.companyGroupsTitle')}</h1>
+          <p className="text-muted-foreground">{t('meloria.companyGroupsDescription')}</p>
         </div>
         <Button onClick={() => navigate("/meloria-admin/company-groups/create")}>
           <Plus className="mr-2 h-4 w-4" />
-          Create Group
+          {t('meloria.createGroup')}
         </Button>
       </div>
 
       {groups.length === 0 ? (
         <Card className="p-12 text-center">
-          <p className="text-muted-foreground mb-4">No company groups created yet</p>
+          <p className="text-muted-foreground mb-4">{t('meloria.noGroupsFound')}</p>
           <Button onClick={() => navigate("/meloria-admin/company-groups/create")}>
-            Create Your First Group
+            {t('meloria.createFirstGroup')}
           </Button>
         </Card>
       ) : (
@@ -218,7 +220,7 @@ const CompanyGroups = () => {
                 <h3 className="text-xl font-semibold">{group.name}</h3>
                 <div className="flex items-center gap-2">
                   <Badge variant={group.service_type === "premium" ? "default" : "secondary"}>
-                    {group.service_type === "premium" ? "Premium" : "Free"}
+                    {group.service_type === "premium" ? t('meloria.premium') : t('meloria.free')}
                   </Badge>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
@@ -226,7 +228,7 @@ const CompanyGroups = () => {
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="bg-background">
                       <DropdownMenuItem
                         onClick={(e) => {
                           e.stopPropagation();
@@ -234,7 +236,7 @@ const CompanyGroups = () => {
                         }}
                       >
                         <Pencil className="mr-2 h-4 w-4" />
-                        Edit
+                        {t('common.edit')}
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="text-destructive"
@@ -244,7 +246,7 @@ const CompanyGroups = () => {
                         }}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
+                        {t('common.delete')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -259,21 +261,21 @@ const CompanyGroups = () => {
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Members:</span>
+                  <span className="text-muted-foreground">{t('meloria.groupMembers')}:</span>
                   <span className="font-medium">{group.member_count}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Employees:</span>
+                  <span className="text-muted-foreground">{t('meloria.employees')}:</span>
                   <span className="font-medium">{group.employee_count}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Avg Stress Level:</span>
+                  <span className="text-muted-foreground">{t('meloria.stressLevel')}:</span>
                   <span className={`font-medium ${getStressColor(group.stress_level)}`}>
                     {getStressLabel(group.stress_level)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Tests Completed:</span>
+                  <span className="text-muted-foreground">{t('meloria.testsComplete')}:</span>
                   <span className="font-medium">
                     {group.tests_completed}/{group.employee_count}
                   </span>
@@ -288,19 +290,19 @@ const CompanyGroups = () => {
       <AlertDialog open={!!deletingGroup} onOpenChange={() => setDeletingGroup(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Company Group</AlertDialogTitle>
+            <AlertDialogTitle>{t('meloria.deleteAccount')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete <strong>{deletingGroup?.name}</strong>?
-              This will also remove all members from the group. This action cannot be undone.
+              {t('meloria.deleteAccountConfirm')} <strong>{deletingGroup?.name}</strong>?
+              {t('meloria.deleteAccountDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDeleteGroup}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              {t('common.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
