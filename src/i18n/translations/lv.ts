@@ -822,6 +822,9 @@ export const lv = {
     motivationPreferences: "Motivācija un preferences",
     employeeRole: "Darbinieks",
     companyRole: "Uzņēmums",
+    completedOn: "Pabeigts",
+    nextTestDue: "Nākamais tests jāveic",
+    testOverdue: "Tests nokavēts - jāatkārto",
   },
 
   // Calendar

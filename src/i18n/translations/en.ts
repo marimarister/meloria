@@ -822,6 +822,9 @@ export const en = {
     motivationPreferences: "Motivation & Preferences",
     employeeRole: "Employee",
     companyRole: "Company",
+    completedOn: "Completed on",
+    nextTestDue: "Next test due",
+    testOverdue: "Test overdue - should be retaken",
   },
 
   // Calendar
