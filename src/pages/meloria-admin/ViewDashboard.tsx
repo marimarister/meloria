@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Heart, Brain, ClipboardCheck, Check, Clock, Eye, Volume2, Hand, Monitor } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface TestResults {
   burnout: { completed: boolean; score: number | null; scores: any };
@@ -17,6 +18,7 @@ interface TestResults {
 const ViewDashboard = () => {
   const { memberId, dashboardType } = useParams<{ memberId: string; dashboardType: "employee" | "company" }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [member, setMember] = useState<any>(null);
   const [testResults, setTestResults] = useState<TestResults>({
     burnout: { completed: false, score: null, scores: null },
@@ -103,12 +105,12 @@ const ViewDashboard = () => {
   };
 
   const getBurnoutLevel = (score: number) => {
-    if (score <= 22) return "Perfect Wellbeing";
-    if (score <= 44) return "Balanced & Resilient";
-    if (score <= 66) return "Mild Fatigue";
-    if (score <= 88) return "Noticeable Burnout Symptoms";
-    if (score <= 110) return "Severe Burnout";
-    return "Extreme Burnout Risk";
+    if (score <= 22) return t("tests.burnout.perfectWellbeing");
+    if (score <= 44) return t("tests.burnout.balancedResilient");
+    if (score <= 66) return t("tests.burnout.mildFatigue");
+    if (score <= 88) return t("tests.burnout.noticeableBurnout");
+    if (score <= 110) return t("tests.burnout.severeBurnout");
+    return t("tests.burnout.extremeBurnout");
   };
 
   const getBurnoutLevelColor = (score: number) => {
@@ -124,25 +126,25 @@ const ViewDashboard = () => {
     if (!testResults.perception.scores) return null;
     const scores = testResults.perception.scores;
     const channels = [
-      { name: 'Visual', score: scores.V },
-      { name: 'Auditory', score: scores.A },
-      { name: 'Kinesthetic', score: scores.K },
-      { name: 'Digital', score: scores.D }
+      { name: 'Visual', key: 'visual', score: scores.V },
+      { name: 'Auditory', key: 'auditory', score: scores.A },
+      { name: 'Kinesthetic', key: 'kinesthetic', score: scores.K },
+      { name: 'Digital', key: 'digital', score: scores.D }
     ];
     const dominant = channels.reduce((max, channel) => 
       channel.score > max.score ? channel : max
     );
-    return dominant.name;
+    return dominant;
   };
 
-  const getChannelIcon = (channel: string | null) => {
+  const getChannelIcon = (channelKey: string | null) => {
     const iconMap: Record<string, any> = {
-      'Visual': Eye,
-      'Auditory': Volume2,
-      'Kinesthetic': Hand,
-      'Digital': Monitor
+      'visual': Eye,
+      'auditory': Volume2,
+      'kinesthetic': Hand,
+      'digital': Monitor
     };
-    return channel ? iconMap[channel] : Brain;
+    return channelKey ? iconMap[channelKey] : Brain;
   };
 
   const getPreferenceArchetypes = () => {
@@ -150,17 +152,17 @@ const ViewDashboard = () => {
     const scores = testResults.preference.scores;
     const archetypes = [];
     
-    if (scores.soloGroup >= 5) archetypes.push("Independent Worker");
-    else archetypes.push("Team Player");
+    if (scores.soloGroup >= 5) archetypes.push(t("tests.preference.independentWorker"));
+    else archetypes.push(t("tests.preference.teamPlayer"));
     
-    if (scores.onlineOffline >= 5) archetypes.push("Digital Navigator");
-    else archetypes.push("In-Person Engager");
+    if (scores.onlineOffline >= 5) archetypes.push(t("tests.preference.digitalNavigator"));
+    else archetypes.push(t("tests.preference.inPersonEngager"));
     
-    if (scores.stabilityFlexibility >= 5) archetypes.push("Structure & Stability Seeker");
-    else archetypes.push("Lifelong Learner");
+    if (scores.stabilityFlexibility >= 5) archetypes.push(t("tests.preference.structureSeeker"));
+    else archetypes.push(t("tests.preference.lifelongLearner"));
     
-    if (scores.dynamicHarmony >= 5) archetypes.push("Adaptive Go-Getter");
-    else archetypes.push("Steady Collaborator");
+    if (scores.dynamicHarmony >= 5) archetypes.push(t("tests.preference.adaptiveGoGetter"));
+    else archetypes.push(t("tests.preference.steadyCollaborator"));
     
     return archetypes;
   };
@@ -168,11 +170,11 @@ const ViewDashboard = () => {
   const overallProgress = calculateProgress();
 
   if (loading) {
-    return <div className="p-8">Loading...</div>;
+    return <div className="p-8">{t("meloria.loading")}</div>;
   }
 
   if (!member) {
-    return <div className="p-8">Member not found</div>;
+    return <div className="p-8">{t("meloria.memberNotFound")}</div>;
   }
 
   return (
@@ -183,16 +185,16 @@ const ViewDashboard = () => {
         onClick={() => navigate(-1)}
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Back
+        {t("meloria.back")}
       </Button>
 
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">
-          {member.name} {member.surname}'s Dashboard
+          {member.name} {member.surname}{t("meloria.viewDashboardTitle")}
         </h1>
         <p className="text-muted-foreground">{member.email}</p>
         <Badge className="mt-2" variant="outline">
-          {member.access_rights === "employee" ? "Employee" : "Company"}
+          {member.access_rights === "employee" ? t("meloria.employeeRole") : t("meloria.companyRole")}
         </Badge>
       </div>
 
@@ -200,7 +202,7 @@ const ViewDashboard = () => {
       <Card className="p-8 mb-8">
         {overallProgress >= 100 ? (
           <div className="flex flex-col items-center justify-center text-center">
-            <h2 className="text-2xl font-semibold mb-4">All Tests Completed</h2>
+            <h2 className="text-2xl font-semibold mb-4">{t("meloria.allTestsCompleted")}</h2>
             <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
               <Check className="h-10 w-10 text-green-500" strokeWidth={3} />
             </div>
@@ -209,11 +211,11 @@ const ViewDashboard = () => {
           <>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-2xl font-semibold mb-1">Test Progress</h2>
+                <h2 className="text-2xl font-semibold mb-1">{t("meloria.testProgress")}</h2>
                 <p className="text-muted-foreground">
                   {testResults.burnout.completed 
-                    ? "Tests in progress"
-                    : "No tests completed yet"}
+                    ? t("meloria.testsInProgress")
+                    : t("meloria.noTestsYet")}
                 </p>
               </div>
               <div className="text-4xl font-bold text-primary">{overallProgress}%</div>
@@ -226,7 +228,7 @@ const ViewDashboard = () => {
       {/* Results Summary - Shown when 100% complete */}
       {overallProgress >= 100 && (
         <Card className="p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-6 text-center">Results</h2>
+          <h2 className="text-xl font-semibold mb-6 text-center">{t("meloria.results")}</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {/* Burnout Test Summary */}
             {testResults.burnout.completed && testResults.burnout.score !== null && (() => {
@@ -237,10 +239,10 @@ const ViewDashboard = () => {
                     <div className={`w-10 h-10 rounded-full ${colors.icon} flex items-center justify-center`}>
                       <Heart className="h-5 w-5" />
                     </div>
-                    <h3 className={`font-semibold ${colors.text}`}>Burnout Level</h3>
+                    <h3 className={`font-semibold ${colors.text}`}>{t("meloria.burnoutLevel")}</h3>
                   </div>
                   <p className={`font-medium ${colors.text}`}>{getBurnoutLevel(testResults.burnout.score)}</p>
-                  <p className={`text-sm ${colors.text} opacity-75`}>Score: {testResults.burnout.score}/132</p>
+                  <p className={`text-sm ${colors.text} opacity-75`}>{t("meloria.score")}: {testResults.burnout.score}/132</p>
                 </Card>
               );
             })()}
@@ -248,16 +250,17 @@ const ViewDashboard = () => {
             {/* Channel Perception Summary */}
             {testResults.perception.completed && (() => {
               const channel = getDominantChannel();
-              const ChannelIcon = getChannelIcon(channel);
+              const ChannelIcon = getChannelIcon(channel?.key || null);
+              const channelName = channel ? t(`tests.perception.${channel.key}`) : '';
               return (
                 <Card className="p-6 bg-purple-50 border-purple-200">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 rounded-full bg-purple-200 flex items-center justify-center">
                       <ChannelIcon className="h-5 w-5 text-purple-700" />
                     </div>
-                    <h3 className="font-semibold text-purple-900">Dominant Style</h3>
+                    <h3 className="font-semibold text-purple-900">{t("meloria.dominantStyle")}</h3>
                   </div>
-                  <p className="font-medium text-purple-800">{channel} Learner</p>
+                  <p className="font-medium text-purple-800">{channelName} {t("meloria.learner")}</p>
                 </Card>
               );
             })()}
@@ -269,7 +272,7 @@ const ViewDashboard = () => {
                   <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center">
                     <Brain className="h-5 w-5 text-blue-700" />
                   </div>
-                  <h3 className="font-semibold text-blue-900">Archetypes</h3>
+                  <h3 className="font-semibold text-blue-900">{t("meloria.archetypes")}</h3>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {getPreferenceArchetypes().map((archetype, idx) => (
@@ -291,19 +294,19 @@ const ViewDashboard = () => {
           <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
             <Heart className="h-7 w-7 text-primary" />
           </div>
-          <h3 className="text-xl font-semibold mb-2">Burnout Test</h3>
+          <h3 className="text-xl font-semibold mb-2">{t("meloria.burnoutTest")}</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            Maslach Burnout Inventory
+            {t("meloria.maslachInventory")}
           </p>
           {testResults.burnout.completed ? (
             <div className="flex items-center gap-2 text-sm text-green-600">
               <Check className="h-4 w-4" />
-              <span>Completed - Score: {testResults.burnout.score}/132</span>
+              <span>{t("meloria.completed")} - {t("meloria.score")}: {testResults.burnout.score}/132</span>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
-              <span>Not completed</span>
+              <span>{t("meloria.notCompleted")}</span>
             </div>
           )}
         </Card>
@@ -313,19 +316,19 @@ const ViewDashboard = () => {
           <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
             <Brain className="h-7 w-7 text-primary" />
           </div>
-          <h3 className="text-xl font-semibold mb-2">Channel Perception</h3>
+          <h3 className="text-xl font-semibold mb-2">{t("meloria.channelPerceptionTest")}</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            VAK+D Assessment
+            {t("meloria.vakdAssessment")}
           </p>
           {testResults.perception.completed ? (
             <div className="flex items-center gap-2 text-sm text-green-600">
               <Check className="h-4 w-4" />
-              <span>Completed - {getDominantChannel()} Dominant</span>
+              <span>{t("meloria.completed")} - {getDominantChannel() ? t(`tests.perception.${getDominantChannel()?.key}`) : ''} {t("meloria.dominant")}</span>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
-              <span>Not completed</span>
+              <span>{t("meloria.notCompleted")}</span>
             </div>
           )}
         </Card>
@@ -335,19 +338,19 @@ const ViewDashboard = () => {
           <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
             <ClipboardCheck className="h-7 w-7 text-primary" />
           </div>
-          <h3 className="text-xl font-semibold mb-2">Work Preferences</h3>
+          <h3 className="text-xl font-semibold mb-2">{t("meloria.workPreferencesTest")}</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            Motivation & Preferences
+            {t("meloria.motivationPreferences")}
           </p>
           {testResults.preference.completed ? (
             <div className="flex items-center gap-2 text-sm text-green-600">
               <Check className="h-4 w-4" />
-              <span>Completed</span>
+              <span>{t("meloria.completed")}</span>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
-              <span>Not completed</span>
+              <span>{t("meloria.notCompleted")}</span>
             </div>
           )}
         </Card>
