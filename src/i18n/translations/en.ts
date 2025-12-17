@@ -297,6 +297,8 @@ export const en = {
     complete: "Complete",
     progress: "Progress",
     month: "month",
+    showMore: "Show more",
+    showLess: "Show less",
   },
 
   // Auth
