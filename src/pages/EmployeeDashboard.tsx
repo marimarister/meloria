@@ -516,12 +516,12 @@ const EmployeeDashboard = () => {
                     {t('employee.completedOn')} {new Date(testStatus.burnout.lastTaken).toLocaleDateString()}
                   </p>
                 )}
-                <Button variant="outline" className="w-full" onClick={() => navigate("/tests/burnout")}>
+                <Button variant="outline" className="w-full" onClick={() => navigate("/test/burnout")}>
                   {t('employee.viewResults')}
                 </Button>
               </div>
             ) : (
-              <Button className="w-full" onClick={() => navigate("/tests/burnout")}>
+              <Button className="w-full" onClick={() => navigate("/test/burnout")}>
                 {t('employee.takeTest')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -551,7 +551,7 @@ const EmployeeDashboard = () => {
                     {t('employee.completedOn')} {new Date(testStatus.perception.lastTaken).toLocaleDateString()}
                   </p>
                 )}
-                <Button variant="outline" className="w-full" onClick={() => navigate("/tests/perception")}>
+                <Button variant="outline" className="w-full" onClick={() => navigate("/test/perception")}>
                   {t('employee.viewResults')}
                 </Button>
               </div>
@@ -572,7 +572,7 @@ const EmployeeDashboard = () => {
                     {t('employee.optional')}
                   </Badge>
                 )}
-                <Button className="w-full" onClick={() => navigate("/tests/perception")}>
+                <Button className="w-full" onClick={() => navigate("/test/perception")}>
                   {t('employee.takeTest')}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -603,7 +603,7 @@ const EmployeeDashboard = () => {
                     {t('employee.completedOn')} {new Date(testStatus.preference.lastTaken).toLocaleDateString()}
                   </p>
                 )}
-                <Button variant="outline" className="w-full" onClick={() => navigate("/tests/preference")}>
+                <Button variant="outline" className="w-full" onClick={() => navigate("/test/preference")}>
                   {t('employee.viewResults')}
                 </Button>
               </div>
@@ -624,7 +624,7 @@ const EmployeeDashboard = () => {
                     {t('employee.optional')}
                   </Badge>
                 )}
-                <Button className="w-full" onClick={() => navigate("/tests/preference")}>
+                <Button className="w-full" onClick={() => navigate("/test/preference")}>
                   {t('employee.takeTest')}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
