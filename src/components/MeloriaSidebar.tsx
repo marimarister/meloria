@@ -43,27 +43,27 @@ export function MeloriaSidebar() {
 
   const menuItems = [
     { 
-      title: t('meloriaDashboard.sidebar.questionnaires'), 
+      title: t('meloria.questionnaires'), 
       url: "/meloria-admin/questionnaires", 
       icon: ClipboardList 
     },
     { 
-      title: t('meloriaDashboard.sidebar.companyGroups'), 
+      title: t('meloria.companyGroups'), 
       url: "/meloria-admin/company-groups", 
       icon: Building2 
     },
     { 
-      title: t('meloriaDashboard.sidebar.accounts'), 
+      title: t('meloria.accounts'), 
       url: "/meloria-admin/accounts", 
       icon: Users 
     },
     { 
-      title: t('meloriaDashboard.sidebar.premiumPlans'), 
+      title: t('meloria.premiumPlans'), 
       url: "/meloria-admin/premium-plans", 
       icon: CreditCard 
     },
     { 
-      title: t('meloriaDashboard.sidebar.settings'), 
+      title: t('meloria.settings'), 
       url: "/meloria-admin/settings", 
       icon: Settings 
     },
@@ -78,10 +78,10 @@ export function MeloriaSidebar() {
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast.error(t('meloriaDashboard.sidebar.logoutFailed'));
+      toast.error("Logout failed");
       return;
     }
-    toast.success(t('meloriaDashboard.sidebar.logoutSuccess'));
+    toast.success("Logged out successfully");
     navigate("/login");
   };
 
@@ -91,7 +91,7 @@ export function MeloriaSidebar() {
     <Sidebar className={sidebarOpen ? "w-60" : "w-14"} collapsible="icon">
       {/* Mobile close button */}
       <div className="md:hidden flex items-center justify-between p-4 border-b">
-        <span className="font-semibold">{t('meloriaDashboard.sidebar.menu')}</span>
+        <span className="font-semibold">{t('meloria.menu')}</span>
         <button
           onClick={() => setOpenMobile(false)}
           className="p-2 hover:bg-muted rounded-md transition-colors"
@@ -116,7 +116,7 @@ export function MeloriaSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t('meloriaDashboard.sidebar.menu')}</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('meloria.menu')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -140,20 +140,20 @@ export function MeloriaSidebar() {
                   <AlertDialogTrigger asChild>
                     <SidebarMenuButton className="hover:bg-muted/50 text-destructive hover:text-destructive">
                       <LogOut className={sidebarOpen ? "mr-2 h-4 w-4" : "h-4 w-4"} />
-                      {sidebarOpen && <span>{t('meloriaDashboard.sidebar.logout')}</span>}
+                      {sidebarOpen && <span>{t('meloria.logOut')}</span>}
                     </SidebarMenuButton>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>{t('meloriaDashboard.sidebar.logoutConfirmTitle')}</AlertDialogTitle>
+                      <AlertDialogTitle>{t('meloria.logOutConfirm')}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        {t('meloriaDashboard.sidebar.logoutConfirmDescription')}
+                        {t('meloria.logOutDescription')}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>{t('meloriaDashboard.sidebar.cancel')}</AlertDialogCancel>
+                      <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                       <AlertDialogAction onClick={handleLogout}>
-                        {t('meloriaDashboard.sidebar.logout')}
+                        {t('meloria.logOut')}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>

@@ -51,12 +51,12 @@ const MeloriaSettings = () => {
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
-      toast.error(t('meloriaDashboard.settings.passwordsDontMatch'));
+      toast.error(t('auth.passwordsDontMatch'));
       return;
     }
 
     if (newPassword.length < 8) {
-      toast.error(t('meloriaDashboard.settings.passwordMinLength'));
+      toast.error(t('auth.passwordMinLength'));
       return;
     }
 
@@ -67,60 +67,59 @@ const MeloriaSettings = () => {
 
       if (error) throw error;
 
-      toast.success(t('meloriaDashboard.settings.passwordUpdated'));
+      toast.success(t('meloria.updatePassword') + " ✓");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (error: any) {
-      toast.error(t('meloriaDashboard.settings.passwordUpdateFailed') + ": " + error.message);
+      toast.error(error.message);
     }
   };
 
   if (loading) {
-    return <div className="p-8">{t('meloriaDashboard.settings.loading')}</div>;
+    return <div className="p-8">{t('common.loading')}</div>;
   }
 
   return (
     <div className="p-8 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-8">{t('meloriaDashboard.settings.title')}</h1>
+      <h1 className="text-4xl font-bold mb-8">{t('meloria.settingsTitle')}</h1>
 
       <div className="space-y-6">
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">{t('meloriaDashboard.settings.profileInfo')}</h2>
+          <h2 className="text-2xl font-semibold mb-6">{t('meloria.personalInfo')}</h2>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>{t('meloriaDashboard.settings.name')}</Label>
+                <Label>{t('auth.name')}</Label>
                 <Input value={profile.name} disabled />
               </div>
               <div>
-                <Label>{t('meloriaDashboard.settings.surname')}</Label>
+                <Label>{t('auth.surname')}</Label>
                 <Input value={profile.surname} disabled />
               </div>
             </div>
             <div>
-              <Label>{t('meloriaDashboard.settings.email')}</Label>
+              <Label>{t('auth.email')}</Label>
               <Input value={profile.email} disabled />
             </div>
             <div>
-              <Label>{t('meloriaDashboard.settings.accountType')}</Label>
-              <Input value={t('meloriaDashboard.settings.meloriaAdministrator')} disabled />
+              <Label>{t('meloria.accountType')}</Label>
+              <Input value={t('meloria.meloriaAdmin')} disabled />
             </div>
           </div>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">{t('meloriaDashboard.settings.password')}</h2>
+          <h2 className="text-2xl font-semibold mb-6">{t('meloria.changePassword')}</h2>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="currentPassword">{t('meloriaDashboard.settings.currentPassword')}</Label>
+              <Label htmlFor="currentPassword">{t('meloria.currentPassword')}</Label>
               <div className="relative">
                 <Input
                   id="currentPassword"
                   type={showPassword ? "text" : "password"}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder={t('meloriaDashboard.settings.enterCurrentPassword')}
                 />
                 <button
                   type="button"
@@ -132,36 +131,34 @@ const MeloriaSettings = () => {
               </div>
             </div>
             <div>
-              <Label htmlFor="newPassword">{t('meloriaDashboard.settings.newPassword')}</Label>
+              <Label htmlFor="newPassword">{t('meloria.newPassword')}</Label>
               <Input
                 id="newPassword"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder={t('meloriaDashboard.settings.enterNewPassword')}
               />
             </div>
             <div>
-              <Label htmlFor="confirmPassword">{t('meloriaDashboard.settings.confirmPassword')}</Label>
+              <Label htmlFor="confirmPassword">{t('meloria.confirmNewPassword')}</Label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder={t('meloriaDashboard.settings.confirmNewPassword')}
               />
             </div>
-            <Button onClick={handlePasswordChange}>{t('meloriaDashboard.settings.updatePassword')}</Button>
+            <Button onClick={handlePasswordChange}>{t('meloria.updatePassword')}</Button>
           </div>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">{t('meloriaDashboard.settings.appearance')}</h2>
+          <h2 className="text-2xl font-semibold mb-6">{t('meloria.appearance')}</h2>
           <div className="flex items-center justify-between">
             <div>
-              <Label>{t('meloriaDashboard.settings.darkMode')}</Label>
+              <Label>{t('meloria.darkMode')}</Label>
               <p className="text-sm text-muted-foreground">
-                {t('meloriaDashboard.settings.darkModeDescription')}
+                {t('meloria.theme')}
               </p>
             </div>
             <Switch

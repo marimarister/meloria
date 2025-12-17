@@ -296,6 +296,7 @@ export const lv = {
     outOf: "no",
     complete: "Pabeigt",
     progress: "Progress",
+    month: "mēnesis",
   },
 
   // Auth

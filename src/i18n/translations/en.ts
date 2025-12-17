@@ -296,6 +296,7 @@ export const en = {
     outOf: "out of",
     complete: "Complete",
     progress: "Progress",
+    month: "month",
   },
 
   // Auth

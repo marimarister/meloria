@@ -9,37 +9,37 @@ const Questionnaires = () => {
 
   return (
     <div className="p-8">
-      <h1 className="text-4xl font-bold mb-2">{t('meloriaDashboard.questionnaires.title')}</h1>
-      <p className="text-muted-foreground mb-8">{t('meloriaDashboard.questionnaires.subtitle')}</p>
+      <h1 className="text-4xl font-bold mb-2">{t('meloria.questionnairesTitle')}</h1>
+      <p className="text-muted-foreground mb-8">{t('meloria.questionnairesDescription')}</p>
 
       <div className="grid gap-6">
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">{t('meloriaDashboard.questionnaires.burnout.title')}</h2>
+          <h2 className="text-2xl font-semibold mb-4">{t('tests.burnout.title')}</h2>
           <p className="text-muted-foreground mb-4">
-            {t('meloriaDashboard.questionnaires.burnout.description')}
+            {t('tests.burnout.subtitle')}
           </p>
           <Button onClick={() => navigate("/meloria-admin/questionnaires/burnout")}>
-            {t('meloriaDashboard.questionnaires.editQuestionnaire')}
+            {t('meloria.editQuestionnaire')}
           </Button>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">{t('meloriaDashboard.questionnaires.perception.title')}</h2>
+          <h2 className="text-2xl font-semibold mb-4">{t('tests.perception.title')}</h2>
           <p className="text-muted-foreground mb-4">
-            {t('meloriaDashboard.questionnaires.perception.description')}
+            {t('tests.perception.subtitle')}
           </p>
           <Button onClick={() => navigate("/meloria-admin/questionnaires/perception")}>
-            {t('meloriaDashboard.questionnaires.editQuestionnaire')}
+            {t('meloria.editQuestionnaire')}
           </Button>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">{t('meloriaDashboard.questionnaires.preference.title')}</h2>
+          <h2 className="text-2xl font-semibold mb-4">{t('tests.preference.title')}</h2>
           <p className="text-muted-foreground mb-4">
-            {t('meloriaDashboard.questionnaires.preference.description')}
+            {t('tests.preference.subtitle')}
           </p>
           <Button onClick={() => navigate("/meloria-admin/questionnaires/preference")}>
-            {t('meloriaDashboard.questionnaires.editQuestionnaire')}
+            {t('meloria.editQuestionnaire')}
           </Button>
         </Card>
       </div>
