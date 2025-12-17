@@ -297,6 +297,8 @@ export const lv = {
     complete: "Pabeigt",
     progress: "Progress",
     month: "mēnesis",
+    showMore: "Rādīt vairāk",
+    showLess: "Rādīt mazāk",
   },
 
   // Auth

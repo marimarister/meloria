@@ -33,242 +33,242 @@ const Catalog = () => {
   
   const offerings = [
     {
-      category: "Team Diagnostics & Assessments",
+      category: t('catalog.offerings.teamDiagnostics'),
       icon: Users,
-      description: "We evaluate communication patterns, energetic compatibility, stress factors and development zones to create a precise, effective program.",
-      highlight: "Measurable results throughout the program",
+      description: t('catalog.offerings.teamDiagnosticsDesc'),
+      highlight: t('catalog.offerings.teamDiagnosticsHighlight'),
     },
     {
-      category: "One-time Experiences",
+      category: t('catalog.offerings.oneTimeExperiences'),
       icon: Calendar,
-      description: "Workshops, rituals, seminars and creative practices tailored to your team's needs.",
+      description: t('catalog.offerings.oneTimeExperiencesDesc'),
     },
     {
-      category: "Short-term Programs",
-      subtitle: "(3–6 months)",
+      category: t('catalog.offerings.shortTermPrograms'),
+      subtitle: t('catalog.offerings.shortTermProgramsSubtitle'),
       icon: Clock,
-      description: "Focused development journeys for stress reduction, emotional balance, leadership growth and team dynamics.",
+      description: t('catalog.offerings.shortTermProgramsDesc'),
     },
     {
-      category: "Long-term Programs",
-      subtitle: "(1–2 years)",
+      category: t('catalog.offerings.longTermPrograms'),
+      subtitle: t('catalog.offerings.longTermProgramsSubtitle'),
       icon: Activity,
-      description: "Deep, systematic human potential development with measurable impact on wellbeing, collaboration and culture.",
+      description: t('catalog.offerings.longTermProgramsDesc'),
     },
     {
-      category: "Corporate & Private Retreats",
+      category: t('catalog.offerings.corporateRetreats'),
       icon: Mountain,
-      description: "One-day, weekend or multi-day retreats — for teams or individuals. Fully curated formats with body, mind, creativity and sensory modules.",
+      description: t('catalog.offerings.corporateRetreatsDesc'),
     },
   ];
 
   const services = [
     {
-      section: "Art Therapy for Balance & Abundance",
+      section: t('catalog.sections.artTherapy'),
       icon: Palette,
       gradient: "from-rose-100 via-pink-50 to-purple-100",
       items: [
         {
-          title: "Sacred Geometry Art Practice",
+          title: t('catalog.services.sacredGeometry.title'),
           languages: ["EN", "LV", "RU"],
-          purpose: "Focus, clarity, inner alignment",
-          idealFor: "Team workshops, creative sessions",
-          description: "An immersive practice exploring the ancient patterns of sacred geometry — helping teams find harmony, precision and deeper connection through intentional creation.",
+          purpose: t('catalog.services.sacredGeometry.purpose'),
+          idealFor: t('catalog.services.sacredGeometry.idealFor'),
+          description: t('catalog.services.sacredGeometry.description'),
           image: sacredGeometryImg,
         },
         {
-          title: "Mandala Art",
+          title: t('catalog.services.mandalaArt.title'),
           languages: ["EN", "LV", "RU"],
-          purpose: "Relaxation, focus, inner balance, team harmony",
-          idealFor: "Evening sessions, creative teambuildings",
-          description: "A gentle immersion into color, pattern and presence — a way for teams to ground, reconnect and return to clarity through meditative creation.",
+          purpose: t('catalog.services.mandalaArt.purpose'),
+          idealFor: t('catalog.services.mandalaArt.idealFor'),
+          description: t('catalog.services.mandalaArt.description'),
           image: mandalaArtImg,
         },
       ],
     },
     {
-      section: "Psychology, Coaching & Transformational Games",
+      section: t('catalog.sections.psychologyCoaching'),
       icon: Brain,
       gradient: "from-teal-50 via-emerald-50 to-cyan-100",
       items: [
         {
-          title: "Vedic Astrology & Numerology: Team Compatibility Session",
-          format: "Seminar + individual birth date compatibility overview",
-          purpose: "Better collaboration, communication, role understanding",
-          duration: "2–3 hours",
-          description: "A structured yet intuitive tool to understand personal strengths, natural roles and energetic dynamics within a team.",
+          title: t('catalog.services.vedicAstrology.title'),
+          format: t('catalog.services.vedicAstrology.format'),
+          purpose: t('catalog.services.vedicAstrology.purpose'),
+          duration: t('catalog.services.vedicAstrology.duration'),
+          description: t('catalog.services.vedicAstrology.description'),
           image: vedicAstrologyImg,
         },
         {
-          title: "Transformational Games (Various Themes)",
-          format: "4–8 participants, game at the table",
-          purpose: "Clarifying goals, understanding blocks, activating resources",
-          duration: "3-4 hours",
-          description: "A soft but powerful method to see where a person is stuck, what they truly want, and the next steps that unlock growth.",
+          title: t('catalog.services.transformationalGames.title'),
+          format: t('catalog.services.transformationalGames.format'),
+          purpose: t('catalog.services.transformationalGames.purpose'),
+          duration: t('catalog.services.transformationalGames.duration'),
+          description: t('catalog.services.transformationalGames.description'),
           image: transformationalGamesImg,
         },
         {
-          title: 'Signature Games: "Atlas" & "Dream Alchemy"',
-          format: "Deep-work mini-group; Ideal for key talents and high-potential employees",
-          description: "Atlas: Stability, responsibility, personal backbone. Dream Alchemy: Vision, desire, goal-setting and manifestation.",
+          title: t('catalog.services.signatureGames.title'),
+          format: t('catalog.services.signatureGames.format'),
+          description: t('catalog.services.signatureGames.description'),
           image: signatureGamesImg,
         },
         {
-          title: "Executive & Team Coaching Sessions",
-          format: "Individual or small-group",
-          purpose: "Support during change, burnout prevention, career clarity",
-          description: "Practical, human-centered support for teams navigating transitions.",
+          title: t('catalog.services.executiveCoaching.title'),
+          format: t('catalog.services.executiveCoaching.format'),
+          purpose: t('catalog.services.executiveCoaching.purpose'),
+          description: t('catalog.services.executiveCoaching.description'),
           image: executiveCoachingImg,
         },
         {
-          title: "Spiral Dynamics Seminar",
-          format: "Lecture + applied discussion",
-          purpose: "Understanding human and organizational development levels",
-          description: "An accessible introduction to Spiral Dynamics as a practical tool for leadership, management and self-awareness.",
+          title: t('catalog.services.spiralDynamics.title'),
+          format: t('catalog.services.spiralDynamics.format'),
+          purpose: t('catalog.services.spiralDynamics.purpose'),
+          description: t('catalog.services.spiralDynamics.description'),
           image: spiralDynamicsImg,
         },
         {
-          title: "Business Constellations for Team Clarity",
-          format: "Systemic mapping + guided facilitation",
-          purpose: "Reveal hidden structures, unblock team processes",
-          description: "A systemic practice based on Bert Hellinger's principles, adapted for corporate dynamics.",
+          title: t('catalog.services.businessConstellations.title'),
+          format: t('catalog.services.businessConstellations.format'),
+          purpose: t('catalog.services.businessConstellations.purpose'),
+          description: t('catalog.services.businessConstellations.description'),
           image: businessConstellationsImg,
         },
       ],
     },
     {
-      section: "Creativity",
+      section: t('catalog.sections.creativity'),
       icon: Sparkles,
       gradient: "from-amber-50 via-yellow-50 to-orange-100",
       items: [
         {
-          title: "TeddyBrick Creative Workshop",
-          format: "Hands-on creation of a personal character/object",
-          purpose: "Stress release, creativity, joy, team bonding",
-          description: "A light premium teambuilding that brings back play, inspiration and shared energy.",
+          title: t('catalog.services.teddybrick.title'),
+          format: t('catalog.services.teddybrick.format'),
+          purpose: t('catalog.services.teddybrick.purpose'),
+          description: t('catalog.services.teddybrick.description'),
           image: teddybrickImg,
         },
       ],
     },
     {
-      section: "Body, Energy & Rejuvenation Rituals",
+      section: t('catalog.sections.bodyEnergy'),
       icon: Activity,
       gradient: "from-violet-100 via-purple-50 to-fuchsia-100",
       items: [
         {
-          title: "Energy Dynamics Practice",
-          format: "Active body-based session",
-          purpose: "Release tension, regain vitality, reset mental overload",
-          description: "A grounding practice that helps restore clarity and strength. For men and mixed groups.",
+          title: t('catalog.services.energyDynamics.title'),
+          format: t('catalog.services.energyDynamics.format'),
+          purpose: t('catalog.services.energyDynamics.purpose'),
+          description: t('catalog.services.energyDynamics.description'),
           image: energyDynamicsImg,
         },
         {
-          title: "Intuitive Dance Practice",
-          format: "Guided movement session",
-          purpose: "Emotional release, freedom, body awareness",
-          description: "Perfect for HR wellbeing days and creative teams.",
+          title: t('catalog.services.intuitiveDance.title'),
+          format: t('catalog.services.intuitiveDance.format'),
+          purpose: t('catalog.services.intuitiveDance.purpose'),
+          description: t('catalog.services.intuitiveDance.description'),
           image: intuitiveDanceImg,
         },
         {
-          title: "Winter Outdoor Practices",
-          format: "Guided outdoor sports activities",
-          purpose: "Team spirit, health, switching off routines",
-          description: "Ideal for refreshing corporate retreats.",
+          title: t('catalog.services.winterOutdoor.title'),
+          format: t('catalog.services.winterOutdoor.format'),
+          purpose: t('catalog.services.winterOutdoor.purpose'),
+          description: t('catalog.services.winterOutdoor.description'),
           image: winterOutdoorImg,
         },
         {
-          title: "Women's Bath Ritual",
-          format: "Gentle sauna/steam ceremony",
-          purpose: "Relaxation, emotional reset, feminine support",
-          description: "A soothing embodied experience for female employees.",
+          title: t('catalog.services.womensBath.title'),
+          format: t('catalog.services.womensBath.format'),
+          purpose: t('catalog.services.womensBath.purpose'),
+          description: t('catalog.services.womensBath.description'),
           image: womensBathImg,
         },
         {
-          title: "Men's Bath Ritual",
-          format: "Sauna/steam ritual",
-          purpose: "Recovery, stress relief, nervous system reset",
-          description: "A structured and rejuvenating wellness experience.",
+          title: t('catalog.services.mensBath.title'),
+          format: t('catalog.services.mensBath.format'),
+          purpose: t('catalog.services.mensBath.purpose'),
+          description: t('catalog.services.mensBath.description'),
           image: mensBathImg,
         },
         {
-          title: "Breathing Practices & Energy Flow",
-          format: "Breathing practices + energy techniques",
-          purpose: "Energy balance, emotional release, grounded presence",
-          description: "A guided session combining conscious breathing techniques with gentle energetic practices.",
+          title: t('catalog.services.breathingPractices.title'),
+          format: t('catalog.services.breathingPractices.format'),
+          purpose: t('catalog.services.breathingPractices.purpose'),
+          description: t('catalog.services.breathingPractices.description'),
           image: breathingPracticesImg,
         },
       ],
     },
     {
-      section: "Aroma & Sensory Practices",
+      section: t('catalog.sections.aromaSensory'),
       icon: Flower2,
       gradient: "from-pink-100 via-rose-50 to-red-100",
       items: [
         {
-          title: "Aromatherapy & Olfactotherapy Journey",
-          format: "Seminar + sensory practice",
-          purpose: "Emotional regulation, stress reduction, burnout support",
-          description: "A refined introduction to working with scent as a tool for wellbeing.",
+          title: t('catalog.services.aromatherapy.title'),
+          format: t('catalog.services.aromatherapy.format'),
+          purpose: t('catalog.services.aromatherapy.purpose'),
+          description: t('catalog.services.aromatherapy.description'),
           image: aromatherapyImg,
         },
       ],
     },
     {
-      section: "Flowers & Elixirs",
+      section: t('catalog.sections.flowersElixirs'),
       icon: TreeDeciduous,
       gradient: "from-lime-50 via-green-50 to-emerald-100",
       items: [
         {
-          title: "Floral Seminar with Botanical Elixir",
-          format: "Lecture + hands-on creation/tasting",
+          title: t('catalog.services.floralSeminar.title'),
+          format: t('catalog.services.floralSeminar.format'),
           languages: ["LV", "RU"],
-          purpose: "Gentle emotional balance through botanicals",
-          description: "A unique wellbeing activity that brings together aesthetics, nature and emotional clarity.",
+          purpose: t('catalog.services.floralSeminar.purpose'),
+          description: t('catalog.services.floralSeminar.description'),
           image: floralSeminarImg,
         },
       ],
     },
     {
-      section: "Sound Practices",
+      section: t('catalog.sections.soundPractices'),
       icon: Music,
       gradient: "from-sky-100 via-blue-50 to-indigo-100",
       items: [
         {
-          title: "Sound Healing Session — 1 hour",
-          format: "60-minute sound immersion",
-          purpose: "Deep relaxation, nervous system reset",
-          description: "A quiet, resonant experience that restores balance and calm. Perfect as a standalone session or closing ritual.",
+          title: t('catalog.services.soundHealing.title'),
+          format: t('catalog.services.soundHealing.format'),
+          purpose: t('catalog.services.soundHealing.purpose'),
+          description: t('catalog.services.soundHealing.description'),
           image: soundHealingImg,
         },
       ],
     },
     {
-      section: "Recharge Retreats",
+      section: t('catalog.sections.rechargeRetreats'),
       icon: Mountain,
       gradient: "from-teal-100 via-cyan-50 to-sky-100",
       items: [
         {
-          title: "Mini One-Day Retreat",
-          format: "All inclusive, zero hassle",
-          purpose: "Quick energy boost, team spirit uplift",
-          description: "Art therapy, mindfulness, and team-building practices. Leave in the morning — come back recharged by evening!",
-          price: "On request",
+          title: t('catalog.services.miniRetreat.title'),
+          format: t('catalog.services.miniRetreat.format'),
+          purpose: t('catalog.services.miniRetreat.purpose'),
+          description: t('catalog.services.miniRetreat.description'),
+          price: t('catalog.onRequest'),
           image: miniRetreatImg,
         },
         {
-          title: "Weekend Retreat (2 days / 1 night)",
-          format: "Accommodation and meals included",
-          purpose: "Dive deep into mindfulness and team connection",
-          description: "Immersive program with accommodation. Return on Monday with fresh ideas and a real sense of unity.",
-          price: "On request",
+          title: t('catalog.services.weekendRetreat.title'),
+          format: t('catalog.services.weekendRetreat.format'),
+          purpose: t('catalog.services.weekendRetreat.purpose'),
+          description: t('catalog.services.weekendRetreat.description'),
+          price: t('catalog.onRequest'),
           image: weekendRetreatImg,
         },
         {
-          title: "3–4 Day Deep Recharge Retreat",
-          format: "All inclusive",
-          purpose: "Reset, refocus, and unlock full potential",
-          description: "A powerful journey for teams and leaders. Come back with a new vision, stronger bonds, and lasting energy.",
-          price: "Tailored to your team's goals",
+          title: t('catalog.services.deepRechargeRetreat.title'),
+          format: t('catalog.services.deepRechargeRetreat.format'),
+          purpose: t('catalog.services.deepRechargeRetreat.purpose'),
+          description: t('catalog.services.deepRechargeRetreat.description'),
+          price: t('catalog.services.deepRechargeRetreat.price'),
           image: deepRechargeImg,
         },
       ],
@@ -287,17 +287,17 @@ const Catalog = () => {
         
         <div className="relative container mx-auto px-6 py-20 text-center">
           <p className="text-sm tracking-[0.3em] text-teal-700 font-medium mb-4 uppercase">
-            Mindfulness Platform
+            {t('catalog.mindfulnessPlatform')}
           </p>
           <h1 className="text-5xl md:text-6xl font-serif italic text-teal-800 mb-4">
             Meloria
           </h1>
           <h2 className="text-3xl md:text-4xl font-serif text-purple-700 mb-6">
-            Corporate Wellbeing<br />& Human Potential
+            {t('catalog.corporateWellbeing')}<br />{t('catalog.humanPotential')}
           </h2>
-          <p className="text-2xl font-serif text-teal-700 mb-8">Catalogue</p>
+          <p className="text-2xl font-serif text-teal-700 mb-8">{t('catalog.catalogueTitle')}</p>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Curated practices designed for companies that value clarity, depth and sustainable human potential.
+            {t('catalog.catalogueSubtitle')}
           </p>
         </div>
       </section>
@@ -310,7 +310,7 @@ const Catalog = () => {
               <Heart className="w-8 h-8 text-teal-600" />
             </div>
             <h2 className="text-3xl md:text-4xl font-serif text-teal-700 mb-4">
-              What we offer
+              {t('catalog.whatWeOffer')}
             </h2>
           </div>
           
@@ -352,11 +352,11 @@ const Catalog = () => {
           <div className="relative bg-gradient-to-br from-teal-50 to-purple-50 rounded-3xl p-12 md:p-16 text-center">
             <TreeDeciduous className="w-12 h-12 text-teal-600 mx-auto mb-6" />
             <blockquote className="text-xl md:text-2xl font-serif text-teal-800 leading-relaxed mb-4">
-              Because people are the heartbeat of every organization.
+              {t('catalog.quoteText')}
             </blockquote>
             <p className="text-lg text-purple-700 font-medium">
-              When they grow, the company grows.<br />
-              When they breathe, the whole system expands.
+              {t('catalog.quoteSubtext1')}<br />
+              {t('catalog.quoteSubtext2')}
             </p>
           </div>
         </section>
@@ -397,17 +397,22 @@ const Catalog = () => {
         {/* Final CTA */}
         <section className="mt-24 mb-8">
           <div className="bg-gradient-to-br from-pink-200 via-purple-100 to-teal-100 rounded-3xl p-12 text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white/30 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-teal-200/40 rounded-full blur-2xl" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-400/10 rounded-full blur-3xl" />
+            
             <div className="relative">
-              <TreeDeciduous className="w-10 h-10 text-teal-600 mx-auto mb-6" />
-              <h3 className="text-2xl md:text-3xl font-serif text-teal-800 mb-4">
-                Meloria creates spaces where teams can reset,<br />
-                reconnect and rise
-              </h3>
-              <p className="text-lg text-purple-700 font-medium">
-                — with clarity, presence and purpose.
+              <h2 className="text-3xl md:text-4xl font-serif text-teal-800 mb-4">
+                {t('catalog.ctaTitle')}
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+                {t('catalog.ctaSubtitle')}
               </p>
+              <a 
+                href="/contact" 
+                className="inline-flex items-center justify-center px-8 py-4 bg-teal-600 text-white rounded-full font-medium hover:bg-teal-700 transition-colors shadow-lg hover:shadow-xl"
+              >
+                {t('catalog.ctaButton')}
+              </a>
             </div>
           </div>
         </section>

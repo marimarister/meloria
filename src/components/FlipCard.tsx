@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, ChevronDown, ChevronUp, RotateCw } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FlipCardProps {
   title: string;
@@ -26,6 +27,7 @@ const FlipCard = ({
   idealFor,
   image,
 }: FlipCardProps) => {
+  const { t } = useLanguage();
   const [isFlipped, setIsFlipped] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -73,14 +75,14 @@ const FlipCard = ({
                   <p className="text-sm text-white/80 line-clamp-1">{format}</p>
                 )}
                 {idealFor && (
-                  <p className="text-xs text-white/70 mt-1">Ideal for: {idealFor}</p>
+                  <p className="text-xs text-white/70 mt-1">{t('catalog.idealFor')}: {idealFor}</p>
                 )}
                 <button
                   onClick={handleFlipClick}
                   className="text-xs text-white/80 mt-2 flex items-center gap-1 hover:text-white transition-colors"
                 >
                   <RotateCw className="w-3 h-3" />
-                  Click for details
+                  {t('catalog.flipToSeeDetails')}
                 </button>
               </div>
             </div>
@@ -122,7 +124,7 @@ const FlipCard = ({
             <CardContent className="space-y-2 pt-0">
               {purpose && (
                 <p className="text-sm">
-                  <span className="font-medium text-purple-700">Purpose: </span>
+                  <span className="font-medium text-purple-700">{t('catalog.purpose')}: </span>
                   <span className="text-muted-foreground">{purpose}</span>
                 </p>
               )}
@@ -136,9 +138,9 @@ const FlipCard = ({
                     className="text-xs text-teal-600 font-medium mt-1 flex items-center gap-1 hover:text-teal-700 transition-colors"
                   >
                     {isExpanded ? (
-                      <>Show less <ChevronUp className="w-3 h-3" /></>
+                      <>{t('common.showLess')} <ChevronUp className="w-3 h-3" /></>
                     ) : (
-                      <>Show more <ChevronDown className="w-3 h-3" /></>
+                      <>{t('common.showMore')} <ChevronDown className="w-3 h-3" /></>
                     )}
                   </button>
                 )}
@@ -148,7 +150,7 @@ const FlipCard = ({
                 className="text-xs text-teal-600 font-medium pt-2 flex items-center gap-1 hover:text-teal-700 transition-colors"
               >
                 <RotateCw className="w-3 h-3" />
-                Click to flip back
+                {t('catalog.flipBack')}
               </button>
             </CardContent>
           </Card>
