@@ -455,6 +455,17 @@ export const lv = {
     noCompanyData: "Nav uzņēmuma datu",
     unableToLoadData: "Nevar ielādēt uzņēmuma analītiku. Lūdzu, sazinieties ar administratoru.",
     noBurnoutResults: "Vēl nav izdegšanas testa rezultātu. Mudiniet darbiniekus pabeigt novērtējumu.",
+    // Premium Plans
+    freePlanDescription: "Pamata labsajūtas izsekošana mazām komandām",
+    freeFeature1: "Līdz 10 darbiniekiem",
+    freeFeature2: "Pamata izdegšanas novērtējums",
+    freeFeature3: "E-pasta atbalsts",
+    premiumPlanDescription: "Pilnīga labsajūtas pārvaldība organizācijām",
+    premiumFeature1: "Neierobežots darbinieku skaits",
+    premiumFeature2: "Visi novērtējumu veidi",
+    premiumFeature3: "Paplašināta analītika",
+    premiumFeature4: "Prioritārs atbalsts",
+    premiumFeature5: "Pielāgotas integrācijas",
   },
 
   // Tests
