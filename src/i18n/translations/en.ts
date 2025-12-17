@@ -378,6 +378,35 @@ export const en = {
     hereAreYourResults: "Here are your results",
     overallBurnoutScore: "Overall Burnout Score",
     pleaseRateEachStatement: "Please rate each statement",
+    
+    // Calendar
+    activities: {
+      walk: "Go on a walk for an hour",
+      meditate: "Meditate",
+    },
+    months: {
+      january: "January",
+      february: "February",
+      march: "March",
+      april: "April",
+      may: "May",
+      june: "June",
+      july: "July",
+      august: "August",
+      september: "September",
+      october: "October",
+      november: "November",
+      december: "December",
+    },
+    days: {
+      sun: "Sun",
+      mon: "Mon",
+      tue: "Tue",
+      wed: "Wed",
+      thu: "Thu",
+      fri: "Fri",
+      sat: "Sat",
+    },
   },
 
   // Company Dashboard

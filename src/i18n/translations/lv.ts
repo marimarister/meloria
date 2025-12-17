@@ -378,6 +378,35 @@ export const lv = {
     hereAreYourResults: "Šeit ir jūsu rezultāti",
     overallBurnoutScore: "Kopējais izdegšanas rezultāts",
     pleaseRateEachStatement: "Lūdzu, novērtējiet katru apgalvojumu",
+    
+    // Calendar
+    activities: {
+      walk: "Doties pastaigā uz stundu",
+      meditate: "Meditēt",
+    },
+    months: {
+      january: "Janvāris",
+      february: "Februāris",
+      march: "Marts",
+      april: "Aprīlis",
+      may: "Maijs",
+      june: "Jūnijs",
+      july: "Jūlijs",
+      august: "Augusts",
+      september: "Septembris",
+      october: "Oktobris",
+      november: "Novembris",
+      december: "Decembris",
+    },
+    days: {
+      sun: "Sv",
+      mon: "Pr",
+      tue: "Ot",
+      wed: "Tr",
+      thu: "Ce",
+      fri: "Pk",
+      sat: "Se",
+    },
   },
 
   // Company Dashboard
