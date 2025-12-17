@@ -707,6 +707,7 @@ export const en = {
     viewDetails: "View Details",
     free: "Free",
     premium: "Premium",
+    level: "Level",
     
     // Create Company Group
     createCompanyGroup: "Create Company Group",

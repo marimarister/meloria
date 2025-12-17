@@ -707,6 +707,7 @@ export const lv = {
     viewDetails: "Skatīt detaļas",
     free: "Bezmaksas",
     premium: "Premium",
+    level: "Līmenis",
     
     // Create Company Group
     createCompanyGroup: "Izveidot uzņēmuma grupu",
