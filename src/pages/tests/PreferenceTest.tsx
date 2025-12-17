@@ -7,6 +7,7 @@ import { ArrowLeft, Home, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Question {
   id: number;
@@ -15,122 +16,83 @@ interface Question {
   reverse?: boolean;
 }
 
-const questions: Question[] = [
-  {
-    id: 1,
-    text: "I prefer to problem-solve on my own.",
-    section: 'solo_group',
-    reverse: false
-  },
-  {
-    id: 2,
-    text: "I get motivated when collaborating with others.",
-    section: 'solo_group',
-    reverse: true
-  },
-  {
-    id: 3,
-    text: "I prefer face-to-face meetings and an atmosphere",
-    section: 'online_offline',
-    reverse: false
-  },
-  {
-    id: 4,
-    text: "I like online (Teams/Zoom) meetings",
-    section: 'online_offline',
-    reverse: true
-  },
-  {
-    id: 5,
-    text: "I am most motivated when I see clear, measurable results from my work.",
-    section: 'stability_flexibility',
-    reverse: false
-  },
-  {
-    id: 6,
-    text: "I prefer tasks that require creativity and innovation.",
-    section: 'stability_flexibility',
-    reverse: true
-  },
-  {
-    id: 7,
-    text: "I prefer a dynamic, eventful atmosphere to calm, harmonious practices.",
-    section: 'dynamic_harmony',
-    reverse: false
-  },
-  {
-    id: 8,
-    text: "I prefer gentle, restorative practices to intense challenges.",
-    section: 'dynamic_harmony',
-    reverse: true
-  }
-];
-
-const scaleOptions = [
-  { value: 1, label: "Strongly Disagree" },
-  { value: 2, label: "Disagree" },
-  { value: 3, label: "Neutral" },
-  { value: 4, label: "Agree" },
-  { value: 5, label: "Strongly Agree" }
-];
-
-const getInterpretation = (scores: Record<string, number>) => {
-  const results = {
-    solo_group: scores.solo_group >= 5 ? 'solo' : 'group',
-    online_offline: scores.online_offline >= 5 ? 'offline' : 'online',
-    stability_flexibility: scores.stability_flexibility >= 5 ? 'stability' : 'flexibility',
-    dynamic_harmony: scores.dynamic_harmony >= 5 ? 'dynamic' : 'harmony'
-  };
-
-  const descriptions = {
-    solo: {
-      title: "Independent Worker",
-      description: "You thrive when you have autonomy and space to make your own decisions. Independent projects, self-led tasks, and flexible work arrangements help you bring out your best."
-    },
-    group: {
-      title: "Team Player",
-      description: "You draw energy from collaboration and shared goals. Working in a supportive team, brainstorming, and group projects are especially motivating for you."
-    },
-    flexibility: {
-      title: "Lifelong Learner",
-      description: "You love new challenges and continuous growth. Opportunities for learning, skill development, and stepping outside your comfort zone keep you engaged."
-    },
-    stability: {
-      title: "Structure & Stability Seeker",
-      description: "You feel at ease when your environment is organized and predictable. Clear routines, guidelines, and well-defined roles help you stay focused and confident."
-    },
-    online: {
-      title: "Digital Navigator",
-      description: "You're at your best when working through screens and digital tools. Online collaboration, virtual spaces, and tech-driven workflows help you stay efficient, connected, and fully in your element."
-    },
-    offline: {
-      title: "In-Person Engager",
-      description: "You thrive in real-world environments where you can interact face-to-face. Hands-on tasks, physical spaces, and direct human connection help you stay focused and energized."
-    },
-    dynamic: {
-      title: "Adaptive Go-Getter",
-      description: "You flourish when things are moving and changing. Fast-paced tasks, evolving challenges, and opportunities to shift gears quickly keep you motivated and performing at your best."
-    },
-    harmony: {
-      title: "Steady Collaborator",
-      description: "You feel most comfortable in calm, well-balanced environments. Consistent routines, supportive interactions, and a peaceful pace help you stay grounded and confident."
-    }
-  };
-
-  return {
-    solo_group: descriptions[results.solo_group],
-    online_offline: descriptions[results.online_offline],
-    stability_flexibility: descriptions[results.stability_flexibility],
-    dynamic_harmony: descriptions[results.dynamic_harmony]
-  };
-};
-
 const PreferenceTest = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [stage, setStage] = useState<'intro' | 'test' | 'results'>('intro');
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [savedResults, setSavedResults] = useState<any>(null);
+
+  const questions: Question[] = [
+    { id: 1, text: t('tests.preference.q1'), section: 'solo_group', reverse: false },
+    { id: 2, text: t('tests.preference.q2'), section: 'solo_group', reverse: true },
+    { id: 3, text: t('tests.preference.q3'), section: 'online_offline', reverse: false },
+    { id: 4, text: t('tests.preference.q4'), section: 'online_offline', reverse: true },
+    { id: 5, text: t('tests.preference.q5'), section: 'stability_flexibility', reverse: false },
+    { id: 6, text: t('tests.preference.q6'), section: 'stability_flexibility', reverse: true },
+    { id: 7, text: t('tests.preference.q7'), section: 'dynamic_harmony', reverse: false },
+    { id: 8, text: t('tests.preference.q8'), section: 'dynamic_harmony', reverse: true }
+  ];
+
+  const scaleOptions = [
+    { value: 1, label: t('tests.preference.stronglyDisagree') },
+    { value: 2, label: t('tests.preference.disagree') },
+    { value: 3, label: t('tests.preference.neutral') },
+    { value: 4, label: t('tests.preference.agree') },
+    { value: 5, label: t('tests.preference.stronglyAgree') }
+  ];
+
+  const getInterpretation = (scores: Record<string, number>) => {
+    const results = {
+      solo_group: scores.solo_group >= 5 ? 'solo' : 'group',
+      online_offline: scores.online_offline >= 5 ? 'offline' : 'online',
+      stability_flexibility: scores.stability_flexibility >= 5 ? 'stability' : 'flexibility',
+      dynamic_harmony: scores.dynamic_harmony >= 5 ? 'dynamic' : 'harmony'
+    };
+
+    const descriptions = {
+      solo: {
+        title: t('tests.preference.independentWorker'),
+        description: t('tests.preference.independentWorkerDesc')
+      },
+      group: {
+        title: t('tests.preference.teamPlayer'),
+        description: t('tests.preference.teamPlayerDesc')
+      },
+      flexibility: {
+        title: t('tests.preference.lifelongLearner'),
+        description: t('tests.preference.lifelongLearnerDesc')
+      },
+      stability: {
+        title: t('tests.preference.structureSeeker'),
+        description: t('tests.preference.structureSeekerDesc')
+      },
+      online: {
+        title: t('tests.preference.digitalNavigator'),
+        description: t('tests.preference.digitalNavigatorDesc')
+      },
+      offline: {
+        title: t('tests.preference.inPersonEngager'),
+        description: t('tests.preference.inPersonEngagerDesc')
+      },
+      dynamic: {
+        title: t('tests.preference.adaptiveGoGetter'),
+        description: t('tests.preference.adaptiveGoGetterDesc')
+      },
+      harmony: {
+        title: t('tests.preference.steadyCollaborator'),
+        description: t('tests.preference.steadyCollaboratorDesc')
+      }
+    };
+
+    return {
+      solo_group: descriptions[results.solo_group],
+      online_offline: descriptions[results.online_offline],
+      stability_flexibility: descriptions[results.stability_flexibility],
+      dynamic_harmony: descriptions[results.dynamic_harmony]
+    };
+  };
 
   // Check authentication first
   useEffect(() => {
@@ -152,8 +114,6 @@ const PreferenceTest = () => {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
-        // User is logged in - database is the source of truth
-        // Check database for burnout test
         const { data: burnoutData } = await supabase
           .from("test_results")
           .select("*")
@@ -162,13 +122,11 @@ const PreferenceTest = () => {
           .single();
         
         if (!burnoutData) {
-          // No burnout test in database - redirect
           localStorage.removeItem('burnoutTest');
           navigate('/employee');
           return;
         }
         
-        // Check if this test already completed in database
         const { data: preferenceData } = await supabase
           .from("test_results")
           .select("*")
@@ -184,13 +142,11 @@ const PreferenceTest = () => {
           });
           setStage('results');
         } else {
-          // Database doesn't have this test - clear localStorage (admin may have reset)
           localStorage.removeItem('preferenceTest');
         }
         return;
       }
       
-      // No user - fallback to localStorage
       const burnoutTest = localStorage.getItem('burnoutTest');
       if (!burnoutTest) {
         navigate('/employee');
@@ -206,7 +162,7 @@ const PreferenceTest = () => {
     };
     
     checkExistingResults();
-  }, [navigate]);
+  }, [navigate, isAuthChecking]);
 
   const handleAnswer = (questionId: number, value: number) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
@@ -238,10 +194,8 @@ const PreferenceTest = () => {
       completed: true
     };
     
-    // Save to localStorage for backward compatibility
     localStorage.setItem('preferenceTest', JSON.stringify(results));
     
-    // Save to database
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       await supabase.from("test_results").upsert({
@@ -261,7 +215,7 @@ const PreferenceTest = () => {
   if (isAuthChecking) {
     return (
       <div className="min-h-screen gradient-employee flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
+        <p className="text-muted-foreground">{t('common.loading')}</p>
       </div>
     );
   }
@@ -272,24 +226,23 @@ const PreferenceTest = () => {
         <NavBar />
         
         <div className="px-6 py-8 mx-auto max-w-4xl">
-
           <Card className="p-8 animate-fade-in">
-            <h1 className="text-3xl font-bold mb-6">Work Preferences & Motivation Test</h1>
+            <h1 className="text-3xl font-bold mb-6">{t('tests.preference.title')}</h1>
             <p className="text-lg text-muted-foreground mb-6">
-              This test helps identify your core work preferences and what motivates you most in a professional environment. Use the results to personalize your development and wellbeing strategies.
+              {t('tests.preference.introText')}
             </p>
 
             <div className="bg-muted/50 p-4 rounded-lg mb-6">
               <p className="text-sm mb-4">
-                <strong>Instructions:</strong> For each statement, rate how much you agree using the scale from Strongly Disagree to Strongly Agree.
+                <strong>{t('tests.preference.instructionNote')}</strong>
               </p>
               <p className="text-sm">
-                <strong>Tip:</strong> Share your results with your team or coach to create a more supportive and motivating work environment!
+                <strong>{t('tests.preference.tip')}</strong>
               </p>
             </div>
 
             <Button onClick={() => setStage('test')} className="w-full" size="lg">
-              Start Test
+              {t('tests.startTest')}
             </Button>
           </Card>
         </div>
@@ -311,8 +264,8 @@ const PreferenceTest = () => {
               <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                 <Brain className="h-10 w-10 text-primary" />
               </div>
-              <h1 className="text-3xl font-bold mb-2">Your Results</h1>
-              <p className="text-muted-foreground">Work Preferences & Motivation Test</p>
+              <h1 className="text-3xl font-bold mb-2">{t('tests.yourResults')}</h1>
+              <p className="text-muted-foreground">{t('tests.preference.title')}</p>
             </div>
 
             <div className="space-y-6 mb-8">
@@ -326,21 +279,21 @@ const PreferenceTest = () => {
 
             <div className="bg-primary/10 p-4 rounded-lg mb-6">
               <p className="text-sm">
-                <strong>Use your top motivators to guide your career and wellbeing choices.</strong>
+                <strong>{t('tests.preference.useMotivators')}</strong>
               </p>
             </div>
 
             {savedResults && (
               <div className="text-center mb-6">
                 <p className="text-sm text-muted-foreground">
-                  Completed: {new Date(savedResults.completedAt).toLocaleDateString()} at {new Date(savedResults.completedAt).toLocaleTimeString()}
+                  {t('employee.completedOn')} {new Date(savedResults.completedAt).toLocaleDateString()} at {new Date(savedResults.completedAt).toLocaleTimeString()}
                 </p>
               </div>
             )}
 
             <Button onClick={() => navigate('/employee')} className="w-full">
               <Home className="mr-2 h-4 w-4" />
-              Back to Dashboard
+              {t('tests.backToDashboard')}
             </Button>
           </Card>
         </div>
@@ -353,9 +306,8 @@ const PreferenceTest = () => {
       <NavBar />
       
       <div className="px-6 py-8 mx-auto max-w-4xl">
-
         <Card className="p-8 animate-fade-in">
-          <h2 className="text-2xl font-semibold mb-6">Please rate each statement</h2>
+          <h2 className="text-2xl font-semibold mb-6">{t('tests.preference.instructions')}</h2>
 
           <div className="space-y-6">
             {questions.map((question, index) => (
@@ -396,7 +348,7 @@ const PreferenceTest = () => {
             className="w-full mt-8"
             size="lg"
           >
-            View Results
+            {t('tests.viewResults')}
           </Button>
         </Card>
       </div>
