@@ -370,6 +370,8 @@ export const lv = {
     viewResults: "Skatīt rezultātus",
     completed: "Pabeigts",
     completedOn: "Pabeigts",
+    nextTestDue: "Nākamais tests",
+    testOverdue: "Tests nokavēts - lūdzu atkārtojiet",
     optional: "Neobligāts",
     locked: "Bloķēts",
     completeBurnoutToUnlock: "Vispirms pabeidziet Izdegšanas testu",

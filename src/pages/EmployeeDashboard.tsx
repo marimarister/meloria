@@ -17,7 +17,8 @@ import {
   ChevronLeft,
   ChevronRight,
   CalendarCheck,
-  Bell
+  Bell,
+  AlertTriangle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -25,6 +26,7 @@ import { toast } from "sonner";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { format, addMonths, isBefore } from "date-fns";
 
 interface EventInvitation {
   id: string;
@@ -512,9 +514,25 @@ const EmployeeDashboard = () => {
                   {t('employee.completed')}
                 </Badge>
                 {testStatus.burnout.lastTaken && (
-                  <p className="text-xs text-muted-foreground text-center">
-                    {t('employee.completedOn')} {new Date(testStatus.burnout.lastTaken).toLocaleDateString()}
-                  </p>
+                  <div className="text-center space-y-1">
+                    <p className="text-xs text-muted-foreground">
+                      {t('employee.completedOn')} {format(new Date(testStatus.burnout.lastTaken), 'PPP')}
+                    </p>
+                    {(() => {
+                      const nextDue = addMonths(new Date(testStatus.burnout.lastTaken), 1);
+                      const isOverdue = isBefore(nextDue, new Date());
+                      return isOverdue ? (
+                        <p className="text-xs text-destructive flex items-center justify-center gap-1">
+                          <AlertTriangle className="h-3 w-3" />
+                          {t('employee.testOverdue')}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-amber-600">
+                          {t('employee.nextTestDue')}: {format(nextDue, 'PPP')}
+                        </p>
+                      );
+                    })()}
+                  </div>
                 )}
                 <Button variant="outline" className="w-full" onClick={() => navigate("/test/burnout")}>
                   {t('employee.viewResults')}
@@ -547,9 +565,25 @@ const EmployeeDashboard = () => {
                   {t('employee.completed')}
                 </Badge>
                 {testStatus.perception.lastTaken && (
-                  <p className="text-xs text-muted-foreground text-center">
-                    {t('employee.completedOn')} {new Date(testStatus.perception.lastTaken).toLocaleDateString()}
-                  </p>
+                  <div className="text-center space-y-1">
+                    <p className="text-xs text-muted-foreground">
+                      {t('employee.completedOn')} {format(new Date(testStatus.perception.lastTaken), 'PPP')}
+                    </p>
+                    {(() => {
+                      const nextDue = addMonths(new Date(testStatus.perception.lastTaken), 1);
+                      const isOverdue = isBefore(nextDue, new Date());
+                      return isOverdue ? (
+                        <p className="text-xs text-destructive flex items-center justify-center gap-1">
+                          <AlertTriangle className="h-3 w-3" />
+                          {t('employee.testOverdue')}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-amber-600">
+                          {t('employee.nextTestDue')}: {format(nextDue, 'PPP')}
+                        </p>
+                      );
+                    })()}
+                  </div>
                 )}
                 <Button variant="outline" className="w-full" onClick={() => navigate("/test/perception")}>
                   {t('employee.viewResults')}
@@ -599,9 +633,25 @@ const EmployeeDashboard = () => {
                   {t('employee.completed')}
                 </Badge>
                 {testStatus.preference.lastTaken && (
-                  <p className="text-xs text-muted-foreground text-center">
-                    {t('employee.completedOn')} {new Date(testStatus.preference.lastTaken).toLocaleDateString()}
-                  </p>
+                  <div className="text-center space-y-1">
+                    <p className="text-xs text-muted-foreground">
+                      {t('employee.completedOn')} {format(new Date(testStatus.preference.lastTaken), 'PPP')}
+                    </p>
+                    {(() => {
+                      const nextDue = addMonths(new Date(testStatus.preference.lastTaken), 1);
+                      const isOverdue = isBefore(nextDue, new Date());
+                      return isOverdue ? (
+                        <p className="text-xs text-destructive flex items-center justify-center gap-1">
+                          <AlertTriangle className="h-3 w-3" />
+                          {t('employee.testOverdue')}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-amber-600">
+                          {t('employee.nextTestDue')}: {format(nextDue, 'PPP')}
+                        </p>
+                      );
+                    })()}
+                  </div>
                 )}
                 <Button variant="outline" className="w-full" onClick={() => navigate("/test/preference")}>
                   {t('employee.viewResults')}
