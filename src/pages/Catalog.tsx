@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import FlipCard from "@/components/FlipCard";
 import { Calendar, Clock, Users, Palette, Brain, Activity, Flower2, Music, Mountain, Heart, Sparkles, TreeDeciduous } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Catalog images
 import sacredGeometryImg from "@/assets/catalog/sacred-geometry-art-practice.jpg";
@@ -28,6 +29,8 @@ import teddybrickImg from "@/assets/catalog/teddybrick.jpg";
 import transformationalGamesImg from "@/assets/catalog/transformational-games.jpg";
 
 const Catalog = () => {
+  const { t } = useLanguage();
+  
   const offerings = [
     {
       category: "Team Diagnostics & Assessments",

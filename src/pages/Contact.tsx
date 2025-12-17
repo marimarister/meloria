@@ -2,8 +2,11 @@ import NavBar from "@/components/NavBar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Linkedin, Instagram, Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Contact = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
@@ -12,10 +15,10 @@ const Contact = () => {
         {/* Hero Section */}
         <section className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6">
-            Contact Us
+            {t('contact.title')}
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            For collaborations, corporate programs, retreats, and tailor-made wellbeing solutions.
+            {t('contact.heroDescription')}
           </p>
         </section>
 
@@ -25,7 +28,7 @@ const Contact = () => {
             {/* Contact Information */}
             <Card className="border-border">
               <CardHeader>
-                <CardTitle className="text-xl font-serif">Get in Touch</CardTitle>
+                <CardTitle className="text-xl font-serif">{t('contact.getInTouch')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <a 
@@ -36,7 +39,7 @@ const Contact = () => {
                     <Mail className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Email</p>
+                    <p className="font-medium text-foreground">{t('contact.email')}</p>
                     <p className="text-sm">Anastasija@meloria.eu</p>
                   </div>
                 </a>
@@ -51,7 +54,7 @@ const Contact = () => {
                     <Phone className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">WhatsApp / Telegram</p>
+                    <p className="font-medium text-foreground">{t('contact.whatsappTelegram')}</p>
                     <p className="text-sm">+371 2527 2127</p>
                   </div>
                 </a>
@@ -61,8 +64,8 @@ const Contact = () => {
                     <MapPin className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Location</p>
-                    <p className="text-sm">Baltics / Europe-wide programs / Thailand</p>
+                    <p className="font-medium text-foreground">{t('contact.location')}</p>
+                    <p className="text-sm">{t('contact.locationValue')}</p>
                   </div>
                 </div>
 
@@ -71,8 +74,8 @@ const Contact = () => {
                     <Globe className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Formats</p>
-                    <p className="text-sm">Online • Offline • Hybrid</p>
+                    <p className="font-medium text-foreground">{t('contact.formats')}</p>
+                    <p className="text-sm">{t('contact.formatsValue')}</p>
                   </div>
                 </div>
               </CardContent>
@@ -81,7 +84,7 @@ const Contact = () => {
             {/* Social & CTA */}
             <Card className="border-border">
               <CardHeader>
-                <CardTitle className="text-xl font-serif">Follow Us</CardTitle>
+                <CardTitle className="text-xl font-serif">{t('contact.followUs')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <a 
@@ -116,11 +119,11 @@ const Contact = () => {
 
                 <div className="pt-6 border-t border-border">
                   <p className="text-muted-foreground mb-4 leading-relaxed">
-                    Let's create a space where your people thrive. With clarity. With intention. With depth.
+                    {t('contact.quoteDescription')}
                   </p>
                   <Button asChild className="w-full">
                     <a href="mailto:Anastasija@meloria.eu">
-                      Send an Email
+                      {t('contact.sendEmail')}
                     </a>
                   </Button>
                 </div>
@@ -132,10 +135,10 @@ const Contact = () => {
         {/* Quote Section */}
         <section className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-12 text-center max-w-4xl mx-auto">
           <blockquote className="text-2xl md:text-3xl font-serif text-foreground italic mb-4">
-            "Drop by or reach out"
+            {t('contact.dropByQuote')}
           </blockquote>
           <p className="text-muted-foreground">
-            We're here to help your team reset, reconnect and rise.
+            {t('contact.dropByDescription')}
           </p>
         </section>
       </main>

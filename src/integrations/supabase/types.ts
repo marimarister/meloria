@@ -182,6 +182,7 @@ export type Database = {
           id: string
           name: string
           personal_id: string | null
+          preferred_language: string | null
           surname: string
           updated_at: string | null
         }
@@ -191,6 +192,7 @@ export type Database = {
           id: string
           name: string
           personal_id?: string | null
+          preferred_language?: string | null
           surname: string
           updated_at?: string | null
         }
@@ -200,6 +202,7 @@ export type Database = {
           id?: string
           name?: string
           personal_id?: string | null
+          preferred_language?: string | null
           surname?: string
           updated_at?: string | null
         }
