@@ -16,6 +16,7 @@ interface ConfirmationEmailRequest {
 // Allowed domains for confirmation URLs
 const ALLOWED_ORIGINS = [
   "https://mjycqdtvrymajcgbtgfu.lovableproject.com",
+  "https://meloria.lovable.app",
   "http://localhost:5173",
   "http://localhost:3000",
 ];
