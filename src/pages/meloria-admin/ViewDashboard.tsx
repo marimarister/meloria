@@ -5,25 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Heart, Brain, ClipboardCheck, Check, Clock, Eye, Volume2, Hand, Monitor } from "lucide-react";
+import { ArrowLeft, Heart, Brain, ClipboardCheck, Check, Clock, Eye, Volume2, Hand, Monitor, AlertTriangle, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { format, addMonths, isBefore } from "date-fns";
 
 interface TestResults {
-  burnout: { completed: boolean; score: number | null; scores: any };
-  perception: { completed: boolean; scores: any };
-  preference: { completed: boolean; scores: any };
+  burnout: { completed: boolean; score: number | null; scores: any; completedAt: string | null };
+  perception: { completed: boolean; scores: any; completedAt: string | null };
+  preference: { completed: boolean; scores: any; completedAt: string | null };
 }
 
 const ViewDashboard = () => {
   const { memberId, dashboardType } = useParams<{ memberId: string; dashboardType: "employee" | "company" }>();
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [member, setMember] = useState<any>(null);
   const [testResults, setTestResults] = useState<TestResults>({
-    burnout: { completed: false, score: null, scores: null },
-    perception: { completed: false, scores: null },
-    preference: { completed: false, scores: null },
+    burnout: { completed: false, score: null, scores: null, completedAt: null },
+    perception: { completed: false, scores: null, completedAt: null },
+    preference: { completed: false, scores: null, completedAt: null },
   });
   const [loading, setLoading] = useState(true);
 
@@ -72,14 +73,17 @@ const ViewDashboard = () => {
             completed: !!burnoutData,
             score: burnoutData ? (burnoutData.scores as any).total : null,
             scores: burnoutData?.scores,
+            completedAt: burnoutData?.completed_at || null,
           },
           perception: {
             completed: !!perceptionData,
             scores: perceptionData?.scores,
+            completedAt: perceptionData?.completed_at || null,
           },
           preference: {
             completed: !!preferenceData,
             scores: preferenceData?.scores,
+            completedAt: preferenceData?.completed_at || null,
           },
         });
       }
@@ -102,6 +106,22 @@ const ViewDashboard = () => {
       if (testResults.preference.completed) progress += 30;
     }
     return progress;
+  };
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '';
+    return format(new Date(dateString), 'dd.MM.yyyy');
+  };
+
+  const getNextTestDate = (completedAt: string | null) => {
+    if (!completedAt) return null;
+    return addMonths(new Date(completedAt), 1);
+  };
+
+  const isTestOverdue = (completedAt: string | null) => {
+    if (!completedAt) return false;
+    const nextDue = getNextTestDate(completedAt);
+    return nextDue ? isBefore(nextDue, new Date()) : false;
   };
 
   const getBurnoutLevel = (score: number) => {
@@ -165,6 +185,37 @@ const ViewDashboard = () => {
     else archetypes.push(t("tests.preference.steadyCollaborator"));
     
     return archetypes;
+  };
+
+  const renderTestDateInfo = (completedAt: string | null) => {
+    if (!completedAt) return null;
+    
+    const nextDue = getNextTestDate(completedAt);
+    const overdue = isTestOverdue(completedAt);
+    
+    return (
+      <div className="mt-3 space-y-1">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Calendar className="h-3 w-3" />
+          <span>{t("meloria.completedOn")}: {formatDate(completedAt)}</span>
+        </div>
+        {nextDue && (
+          <div className={`flex items-center gap-2 text-xs ${overdue ? 'text-red-600 font-medium' : 'text-amber-600'}`}>
+            {overdue ? (
+              <>
+                <AlertTriangle className="h-3 w-3" />
+                <span>{t("meloria.testOverdue")}</span>
+              </>
+            ) : (
+              <>
+                <Clock className="h-3 w-3" />
+                <span>{t("meloria.nextTestDue")}: {format(nextDue, 'dd.MM.yyyy')}</span>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const overallProgress = calculateProgress();
@@ -299,10 +350,13 @@ const ViewDashboard = () => {
             {t("meloria.maslachInventory")}
           </p>
           {testResults.burnout.completed ? (
-            <div className="flex items-center gap-2 text-sm text-green-600">
-              <Check className="h-4 w-4" />
-              <span>{t("meloria.completed")} - {t("meloria.score")}: {testResults.burnout.score}/132</span>
-            </div>
+            <>
+              <div className="flex items-center gap-2 text-sm text-green-600">
+                <Check className="h-4 w-4" />
+                <span>{t("meloria.completed")} - {t("meloria.score")}: {testResults.burnout.score}/132</span>
+              </div>
+              {renderTestDateInfo(testResults.burnout.completedAt)}
+            </>
           ) : (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
@@ -321,10 +375,13 @@ const ViewDashboard = () => {
             {t("meloria.vakdAssessment")}
           </p>
           {testResults.perception.completed ? (
-            <div className="flex items-center gap-2 text-sm text-green-600">
-              <Check className="h-4 w-4" />
-              <span>{t("meloria.completed")} - {getDominantChannel() ? t(`tests.perception.${getDominantChannel()?.key}`) : ''} {t("meloria.dominant")}</span>
-            </div>
+            <>
+              <div className="flex items-center gap-2 text-sm text-green-600">
+                <Check className="h-4 w-4" />
+                <span>{t("meloria.completed")} - {getDominantChannel() ? t(`tests.perception.${getDominantChannel()?.key}`) : ''} {t("meloria.dominant")}</span>
+              </div>
+              {renderTestDateInfo(testResults.perception.completedAt)}
+            </>
           ) : (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
@@ -343,10 +400,13 @@ const ViewDashboard = () => {
             {t("meloria.motivationPreferences")}
           </p>
           {testResults.preference.completed ? (
-            <div className="flex items-center gap-2 text-sm text-green-600">
-              <Check className="h-4 w-4" />
-              <span>{t("meloria.completed")}</span>
-            </div>
+            <>
+              <div className="flex items-center gap-2 text-sm text-green-600">
+                <Check className="h-4 w-4" />
+                <span>{t("meloria.completed")}</span>
+              </div>
+              {renderTestDateInfo(testResults.preference.completedAt)}
+            </>
           ) : (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
