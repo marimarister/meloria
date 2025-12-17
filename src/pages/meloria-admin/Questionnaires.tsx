@@ -1,44 +1,45 @@
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Questionnaires = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <div className="p-8">
-      <h1 className="text-4xl font-bold mb-2">Questionnaires</h1>
-      <p className="text-muted-foreground mb-8">Manage and edit assessment questionnaires</p>
+      <h1 className="text-4xl font-bold mb-2">{t('meloriaDashboard.questionnaires.title')}</h1>
+      <p className="text-muted-foreground mb-8">{t('meloriaDashboard.questionnaires.subtitle')}</p>
 
       <div className="grid gap-6">
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">Burnout Test</h2>
+          <h2 className="text-2xl font-semibold mb-4">{t('meloriaDashboard.questionnaires.burnout.title')}</h2>
           <p className="text-muted-foreground mb-4">
-            Maslach Burnout Inventory - 22 items measuring emotional exhaustion, 
-            depersonalization, and personal accomplishment
+            {t('meloriaDashboard.questionnaires.burnout.description')}
           </p>
           <Button onClick={() => navigate("/meloria-admin/questionnaires/burnout")}>
-            Edit Questionnaire
+            {t('meloriaDashboard.questionnaires.editQuestionnaire')}
           </Button>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">Channel Perception Test</h2>
+          <h2 className="text-2xl font-semibold mb-4">{t('meloriaDashboard.questionnaires.perception.title')}</h2>
           <p className="text-muted-foreground mb-4">
-            VAK+D assessment - 10 items to determine learning and communication preferences
+            {t('meloriaDashboard.questionnaires.perception.description')}
           </p>
           <Button onClick={() => navigate("/meloria-admin/questionnaires/perception")}>
-            Edit Questionnaire
+            {t('meloriaDashboard.questionnaires.editQuestionnaire')}
           </Button>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">Work Preferences & Motivation Test</h2>
+          <h2 className="text-2xl font-semibold mb-4">{t('meloriaDashboard.questionnaires.preference.title')}</h2>
           <p className="text-muted-foreground mb-4">
-            8 questions across 4 sections mapping to eight personality archetypes
+            {t('meloriaDashboard.questionnaires.preference.description')}
           </p>
           <Button onClick={() => navigate("/meloria-admin/questionnaires/preference")}>
-            Edit Questionnaire
+            {t('meloriaDashboard.questionnaires.editQuestionnaire')}
           </Button>
         </Card>
       </div>
