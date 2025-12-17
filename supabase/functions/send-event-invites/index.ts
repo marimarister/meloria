@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -79,6 +80,50 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Verify authentication - require valid JWT
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      console.error("Missing authorization header");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Create Supabase client with user's auth context
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    // Verify user is authenticated
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      console.error("Authentication failed:", userError?.message);
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Verify user is a Meloria admin
+    const { data: adminData, error: adminError } = await supabase
+      .from("meloria_admins")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (adminError || !adminData) {
+      console.error("Admin check failed:", adminError?.message || "Not an admin");
+      return new Response(
+        JSON.stringify({ error: "Forbidden: Admin access required" }),
+        { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    console.log(`Admin ${user.id} authorized to send event invites`);
+
     const { eventId, eventName, eventDescription, groupName, memberEmails }: EventInviteRequest = await req.json();
 
     // Validate all inputs
