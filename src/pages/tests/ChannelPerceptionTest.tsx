@@ -22,32 +22,32 @@ interface Question {
   }[];
 }
 
-const channelInfo = {
+const getChannelInfo = (t: (key: string) => string) => ({
   V: {
     icon: Eye,
-    name: "Visual",
+    name: t('tests.perception.visual'),
     color: "text-blue-500",
     bgColor: "bg-blue-500/10"
   },
   A: {
     icon: Ear,
-    name: "Auditory",
+    name: t('tests.perception.auditory'),
     color: "text-green-500",
     bgColor: "bg-green-500/10"
   },
   K: {
     icon: Hand,
-    name: "Kinesthetic",
+    name: t('tests.perception.kinesthetic'),
     color: "text-orange-500",
     bgColor: "bg-orange-500/10"
   },
   D: {
     icon: Binary,
-    name: "Digital",
+    name: t('tests.perception.digital'),
     color: "text-purple-500",
     bgColor: "bg-purple-500/10"
   }
-};
+});
 
 const ChannelPerceptionTest = () => {
   const navigate = useNavigate();
@@ -402,6 +402,7 @@ const ChannelPerceptionTest = () => {
 
             <div className="grid gap-4 mb-8">
               {(Object.entries(scores) as [ChannelType, number][]).map(([channel, score]) => {
+                const channelInfo = getChannelInfo(t);
                 const info = channelInfo[channel];
                 const Icon = info.icon;
                 const percentage = (score / questions.length) * 100;
