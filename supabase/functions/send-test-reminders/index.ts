@@ -105,6 +105,57 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Verify this is an authorized internal call (from pg_cron or admin)
+  // Check for service role key in authorization header OR valid admin JWT
+  const authHeader = req.headers.get("Authorization");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  
+  // Allow calls with service role key (from pg_cron)
+  const isServiceCall = authHeader?.includes(serviceRoleKey || "INVALID");
+  
+  if (!isServiceCall && authHeader) {
+    // If not service call, verify it's a Meloria admin
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser();
+    if (userError || !user) {
+      console.error("Unauthorized call attempt");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Check if user is Meloria admin
+    const { data: adminData } = await supabaseAuth
+      .from("meloria_admins")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (!adminData) {
+      console.error("Non-admin call attempt");
+      return new Response(
+        JSON.stringify({ error: "Forbidden: Admin access required" }),
+        { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    
+    console.log(`Admin ${user.id} manually triggered test reminders`);
+  } else if (!isServiceCall) {
+    console.error("No authorization provided");
+    return new Response(
+      JSON.stringify({ error: "Unauthorized" }),
+      { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+  } else {
+    console.log("Service role call (pg_cron) authorized");
+  }
+
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
