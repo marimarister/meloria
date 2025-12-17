@@ -33,39 +33,41 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { NavLink } from "@/components/NavLink";
-
-const menuItems = [
-  { 
-    title: "Questionnaires", 
-    url: "/meloria-admin/questionnaires", 
-    icon: ClipboardList 
-  },
-  { 
-    title: "Company Groups", 
-    url: "/meloria-admin/company-groups", 
-    icon: Building2 
-  },
-  { 
-    title: "Accounts", 
-    url: "/meloria-admin/accounts", 
-    icon: Users 
-  },
-  { 
-    title: "Premium Plans", 
-    url: "/meloria-admin/premium-plans", 
-    icon: CreditCard 
-  },
-  { 
-    title: "Settings", 
-    url: "/meloria-admin/settings", 
-    icon: Settings 
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function MeloriaSidebar() {
   const { open: sidebarOpen, toggleSidebar, setOpenMobile, isMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const menuItems = [
+    { 
+      title: t('meloriaDashboard.sidebar.questionnaires'), 
+      url: "/meloria-admin/questionnaires", 
+      icon: ClipboardList 
+    },
+    { 
+      title: t('meloriaDashboard.sidebar.companyGroups'), 
+      url: "/meloria-admin/company-groups", 
+      icon: Building2 
+    },
+    { 
+      title: t('meloriaDashboard.sidebar.accounts'), 
+      url: "/meloria-admin/accounts", 
+      icon: Users 
+    },
+    { 
+      title: t('meloriaDashboard.sidebar.premiumPlans'), 
+      url: "/meloria-admin/premium-plans", 
+      icon: CreditCard 
+    },
+    { 
+      title: t('meloriaDashboard.sidebar.settings'), 
+      url: "/meloria-admin/settings", 
+      icon: Settings 
+    },
+  ];
 
   const handleNavClick = () => {
     if (isMobile) {
@@ -76,10 +78,10 @@ export function MeloriaSidebar() {
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast.error("Failed to log out");
+      toast.error(t('meloriaDashboard.sidebar.logoutFailed'));
       return;
     }
-    toast.success("Logged out successfully");
+    toast.success(t('meloriaDashboard.sidebar.logoutSuccess'));
     navigate("/login");
   };
 
@@ -89,7 +91,7 @@ export function MeloriaSidebar() {
     <Sidebar className={sidebarOpen ? "w-60" : "w-14"} collapsible="icon">
       {/* Mobile close button */}
       <div className="md:hidden flex items-center justify-between p-4 border-b">
-        <span className="font-semibold">Menu</span>
+        <span className="font-semibold">{t('meloriaDashboard.sidebar.menu')}</span>
         <button
           onClick={() => setOpenMobile(false)}
           className="p-2 hover:bg-muted rounded-md transition-colors"
@@ -114,7 +116,7 @@ export function MeloriaSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('meloriaDashboard.sidebar.menu')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -138,20 +140,20 @@ export function MeloriaSidebar() {
                   <AlertDialogTrigger asChild>
                     <SidebarMenuButton className="hover:bg-muted/50 text-destructive hover:text-destructive">
                       <LogOut className={sidebarOpen ? "mr-2 h-4 w-4" : "h-4 w-4"} />
-                      {sidebarOpen && <span>Log out</span>}
+                      {sidebarOpen && <span>{t('meloriaDashboard.sidebar.logout')}</span>}
                     </SidebarMenuButton>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+                      <AlertDialogTitle>{t('meloriaDashboard.sidebar.logoutConfirmTitle')}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        You will be redirected to the login page.
+                        {t('meloriaDashboard.sidebar.logoutConfirmDescription')}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel>{t('meloriaDashboard.sidebar.cancel')}</AlertDialogCancel>
                       <AlertDialogAction onClick={handleLogout}>
-                        Log out
+                        {t('meloriaDashboard.sidebar.logout')}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>

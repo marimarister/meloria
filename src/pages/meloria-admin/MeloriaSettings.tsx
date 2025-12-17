@@ -8,9 +8,11 @@ import { Switch } from "@/components/ui/switch";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const MeloriaSettings = () => {
   const { theme, setTheme } = useTheme();
+  const { t } = useLanguage();
   const [profile, setProfile] = useState({ name: "", surname: "", email: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -49,12 +51,12 @@ const MeloriaSettings = () => {
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
-      toast.error("New passwords don't match");
+      toast.error(t('meloriaDashboard.settings.passwordsDontMatch'));
       return;
     }
 
     if (newPassword.length < 8) {
-      toast.error("Password must be at least 8 characters");
+      toast.error(t('meloriaDashboard.settings.passwordMinLength'));
       return;
     }
 
@@ -65,60 +67,60 @@ const MeloriaSettings = () => {
 
       if (error) throw error;
 
-      toast.success("Password updated successfully");
+      toast.success(t('meloriaDashboard.settings.passwordUpdated'));
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (error: any) {
-      toast.error("Failed to update password: " + error.message);
+      toast.error(t('meloriaDashboard.settings.passwordUpdateFailed') + ": " + error.message);
     }
   };
 
   if (loading) {
-    return <div className="p-8">Loading...</div>;
+    return <div className="p-8">{t('meloriaDashboard.settings.loading')}</div>;
   }
 
   return (
     <div className="p-8 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-8">Settings</h1>
+      <h1 className="text-4xl font-bold mb-8">{t('meloriaDashboard.settings.title')}</h1>
 
       <div className="space-y-6">
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Profile Information</h2>
+          <h2 className="text-2xl font-semibold mb-6">{t('meloriaDashboard.settings.profileInfo')}</h2>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Name</Label>
+                <Label>{t('meloriaDashboard.settings.name')}</Label>
                 <Input value={profile.name} disabled />
               </div>
               <div>
-                <Label>Surname</Label>
+                <Label>{t('meloriaDashboard.settings.surname')}</Label>
                 <Input value={profile.surname} disabled />
               </div>
             </div>
             <div>
-              <Label>Email</Label>
+              <Label>{t('meloriaDashboard.settings.email')}</Label>
               <Input value={profile.email} disabled />
             </div>
             <div>
-              <Label>Account Type</Label>
-              <Input value="Meloria Administrator" disabled />
+              <Label>{t('meloriaDashboard.settings.accountType')}</Label>
+              <Input value={t('meloriaDashboard.settings.meloriaAdministrator')} disabled />
             </div>
           </div>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Password</h2>
+          <h2 className="text-2xl font-semibold mb-6">{t('meloriaDashboard.settings.password')}</h2>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="currentPassword">Current Password</Label>
+              <Label htmlFor="currentPassword">{t('meloriaDashboard.settings.currentPassword')}</Label>
               <div className="relative">
                 <Input
                   id="currentPassword"
                   type={showPassword ? "text" : "password"}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter current password"
+                  placeholder={t('meloriaDashboard.settings.enterCurrentPassword')}
                 />
                 <button
                   type="button"
@@ -130,36 +132,36 @@ const MeloriaSettings = () => {
               </div>
             </div>
             <div>
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="newPassword">{t('meloriaDashboard.settings.newPassword')}</Label>
               <Input
                 id="newPassword"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter new password"
+                placeholder={t('meloriaDashboard.settings.enterNewPassword')}
               />
             </div>
             <div>
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword">{t('meloriaDashboard.settings.confirmPassword')}</Label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm new password"
+                placeholder={t('meloriaDashboard.settings.confirmNewPassword')}
               />
             </div>
-            <Button onClick={handlePasswordChange}>Update Password</Button>
+            <Button onClick={handlePasswordChange}>{t('meloriaDashboard.settings.updatePassword')}</Button>
           </div>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Appearance</h2>
+          <h2 className="text-2xl font-semibold mb-6">{t('meloriaDashboard.settings.appearance')}</h2>
           <div className="flex items-center justify-between">
             <div>
-              <Label>Dark Mode</Label>
+              <Label>{t('meloriaDashboard.settings.darkMode')}</Label>
               <p className="text-sm text-muted-foreground">
-                Toggle between light and dark themes
+                {t('meloriaDashboard.settings.darkModeDescription')}
               </p>
             </div>
             <Switch
