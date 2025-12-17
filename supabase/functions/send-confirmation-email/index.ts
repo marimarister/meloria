@@ -143,6 +143,7 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
+    // Send confirmation email to user
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -163,8 +164,61 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(`Failed to send email`);
     }
 
-    const data = await res.json();
-    console.log("Email sent successfully");
+    console.log("Confirmation email sent successfully");
+
+    // Send notification email to Meloria admin
+    const adminNotificationHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h1 style="color: #282828; font-size: 28px; margin: 0;">Meloria</h1>
+        </div>
+        
+        <div style="background-color: #f8f9fa; border-radius: 12px; padding: 30px; margin-bottom: 20px;">
+          <h2 style="color: #282828; margin-top: 0;">New User Registration 🎉</h2>
+          <p style="font-size: 16px; color: #555;">
+            A new user has registered on the Meloria platform:
+          </p>
+          <div style="background-color: #ffffff; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <p style="margin: 8px 0;"><strong>Name:</strong> ${sanitizedName}</p>
+            <p style="margin: 8px 0;"><strong>Email:</strong> ${sanitizedEmail}</p>
+            <p style="margin: 8px 0;"><strong>Registration Time:</strong> ${new Date().toLocaleString('en-GB', { timeZone: 'Europe/Tallinn' })}</p>
+          </div>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; color: #888; font-size: 12px;">
+          <p style="margin-top: 20px;">© ${new Date().getFullYear()} Meloria. All rights reserved.</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const adminRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Meloria <onboarding@resend.dev>",
+        to: ["info@meloria.eu"],
+        subject: `New User Registration: ${sanitizedName}`,
+        html: adminNotificationHtml,
+      }),
+    });
+
+    if (!adminRes.ok) {
+      const adminErrorData = await adminRes.text();
+      console.error("Admin notification email error:", adminErrorData);
+      // Don't fail the whole request if admin notification fails
+    } else {
+      console.log("Admin notification email sent successfully");
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
