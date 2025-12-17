@@ -8,6 +8,7 @@ import { Eye, Ear, Hand, Binary, Home, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type ChannelType = 'V' | 'A' | 'K' | 'D';
 
@@ -20,109 +21,6 @@ interface Question {
     channel: ChannelType;
   }[];
 }
-
-const questions: Question[] = [
-  {
-    id: 1,
-    text: "When learning something new, I prefer to:",
-    options: [
-      { label: "a", text: "See diagrams, charts, or pictures", channel: "V" },
-      { label: "b", text: "Listen to explanations or discussions", channel: "A" },
-      { label: "c", text: "Try it out myself, hands-on", channel: "K" },
-      { label: "d", text: "Read step-by-step instructions", channel: "D" }
-    ]
-  },
-  {
-    id: 2,
-    text: "I remember things best when I:",
-    options: [
-      { label: "a", text: "Visualize them in my mind", channel: "V" },
-      { label: "b", text: "Repeat them aloud or hear them", channel: "A" },
-      { label: "c", text: "Practice or physically do them", channel: "K" },
-      { label: "d", text: "Write lists or structured notes", channel: "D" }
-    ]
-  },
-  {
-    id: 3,
-    text: "In a meeting, I:",
-    options: [
-      { label: "a", text: "Like slides, graphs, or visuals", channel: "V" },
-      { label: "b", text: "Prefer to listen to the speaker", channel: "A" },
-      { label: "c", text: "Need to move or doodle to focus", channel: "K" },
-      { label: "d", text: "Want an agenda or summary in writing", channel: "D" }
-    ]
-  },
-  {
-    id: 4,
-    text: "When following directions, I:",
-    options: [
-      { label: "a", text: "Look at a map or diagram", channel: "V" },
-      { label: "b", text: "Ask someone to explain verbally", channel: "A" },
-      { label: "c", text: "Like to walk through the route", channel: "K" },
-      { label: "d", text: "Read written instructions", channel: "D" }
-    ]
-  },
-  {
-    id: 5,
-    text: "My favorite way to relax is:",
-    options: [
-      { label: "a", text: "Watching movies or looking at art", channel: "V" },
-      { label: "b", text: "Listening to music or podcasts", channel: "A" },
-      { label: "c", text: "Sports, dancing, or hands-on hobbies", channel: "K" },
-      { label: "d", text: "Reading or doing puzzles", channel: "D" }
-    ]
-  },
-  {
-    id: 6,
-    text: "When stressed, I:",
-    options: [
-      { label: "a", text: "Visualize a calm place", channel: "V" },
-      { label: "b", text: "Talk to someone or listen to soothing sounds", channel: "A" },
-      { label: "c", text: "Go for a walk or do something physical", channel: "K" },
-      { label: "d", text: "Make a plan or list", channel: "D" }
-    ]
-  },
-  {
-    id: 7,
-    text: "In a workshop, I:",
-    options: [
-      { label: "a", text: "Like handouts and visuals", channel: "V" },
-      { label: "b", text: "Enjoy group discussions", channel: "A" },
-      { label: "c", text: "Prefer interactive activities", channel: "K" },
-      { label: "d", text: "Value clear, logical instructions", channel: "D" }
-    ]
-  },
-  {
-    id: 8,
-    text: "When shopping for something new, I:",
-    options: [
-      { label: "a", text: "Look at the design and appearance", channel: "V" },
-      { label: "b", text: "Ask for recommendations", channel: "A" },
-      { label: "c", text: "Try it out or touch it", channel: "K" },
-      { label: "d", text: "Read product specs or reviews", channel: "D" }
-    ]
-  },
-  {
-    id: 9,
-    text: "My notes are usually:",
-    options: [
-      { label: "a", text: "Filled with sketches, color, or diagrams", channel: "V" },
-      { label: "b", text: "Written as reminders to say aloud", channel: "A" },
-      { label: "c", text: "Brief, with action steps", channel: "K" },
-      { label: "d", text: "Detailed and organized", channel: "D" }
-    ]
-  },
-  {
-    id: 10,
-    text: "I solve problems by:",
-    options: [
-      { label: "a", text: "Drawing or mapping out ideas", channel: "V" },
-      { label: "b", text: "Talking them through", channel: "A" },
-      { label: "c", text: "Experimenting or trying different things", channel: "K" },
-      { label: "d", text: "Analyzing and structuring information", channel: "D" }
-    ]
-  }
-];
 
 const channelInfo = {
   V: {
@@ -151,82 +49,151 @@ const channelInfo = {
   }
 };
 
-const getInterpretation = (scores: Record<ChannelType, number>) => {
-  const maxScore = Math.max(...Object.values(scores));
-  const dominantChannels = (Object.keys(scores) as ChannelType[]).filter(
-    channel => scores[channel] === maxScore
-  );
-
-  if (dominantChannels.length === 1) {
-    const channel = dominantChannels[0];
-    const interpretations = {
-      V: {
-        title: "The Visual Learner",
-        description: "You process information best through images, diagrams, colors, and visual cues. When learning or working, use charts, mind maps, and visual materials. Surround yourself with inspiring visuals and organize information in a way that's easy to see at a glance."
-      },
-      A: {
-        title: "The Auditory Communicator",
-        description: "You learn and remember best by listening and speaking. Discussions, podcasts, and verbal instructions work well for you. Try recording notes, participating in group conversations, and using music or rhythm to help memorize and process information."
-      },
-      K: {
-        title: "The Experiential Explorer",
-        description: "You thrive through hands-on experience, movement, and touch. Practice by doing, use role-play, or incorporate physical activity into your learning. Take frequent breaks to move, and use real-life examples or models to understand new concepts."
-      },
-      D: {
-        title: "The Analytical Thinker",
-        description: "You excel with logical, structured, and step-by-step information. You like written instructions, lists, and frameworks. Organize your work with plans and checklists, and break complex tasks into clear, manageable steps. Analytical tools and structured routines will support your growth."
-      }
-    };
-    return interpretations[channel];
-  }
-
-  // Combination results
-  if (dominantChannels.length === 2) {
-    const combo = dominantChannels.sort().join('');
-    const combinations: Record<string, { title: string; description: string }> = {
-      'AV': {
-        title: "The Visual Listener",
-        description: "You learn best when you can both see and hear information. Combine visual materials with verbal explanations for optimal results. Consider using videos with narration or presenting information with both slides and discussion."
-      },
-      'KV': {
-        title: "The Creative Doer",
-        description: "You learn best when you can both see and physically engage with information. Combine visual materials with hands-on practice for optimal results. Use diagrams while practicing, or create visual representations through physical activities."
-      },
-      'DV': {
-        title: "The Structured Visualizer",
-        description: "You process information well by combining visual organization with logical structure. Use flowcharts, organized diagrams, and structured visual frameworks to optimize your learning and work."
-      },
-      'AK': {
-        title: "The Active Communicator",
-        description: "You excel when combining verbal discussion with physical engagement. Try talking through problems while moving, or participate in interactive group activities. Role-play and hands-on discussions work well for you."
-      },
-      'AD': {
-        title: "The Logical Listener",
-        description: "You process information well by listening and then organizing it in a clear, structured way. Try summarizing conversations into lists or diagrams. Record lectures and create structured notes from them."
-      },
-      'DK': {
-        title: "The Practical Analyst",
-        description: "You combine analytical thinking with hands-on experience. You like to understand the logic behind tasks and then practice them systematically. Use structured experiments and step-by-step practical exercises."
-      }
-    };
-    return combinations[combo] || {
-      title: "The Balanced Learner",
-      description: "You have strengths in multiple learning styles, which gives you flexibility in how you process information. Use a combination of approaches to maximize your learning and wellbeing."
-    };
-  }
-
-  return {
-    title: "The Balanced Learner",
-    description: "You have strengths across multiple learning styles, which gives you great flexibility in how you process information. Use a combination of approaches to maximize your learning and wellbeing."
-  };
-};
-
 const ChannelPerceptionTest = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [stage, setStage] = useState<'intro' | 'test' | 'results'>('intro');
   const [answers, setAnswers] = useState<Record<number, ChannelType>>({});
   const [savedResults, setSavedResults] = useState<any>(null);
+
+  const questions: Question[] = [
+    {
+      id: 1,
+      text: t('tests.perception.q1'),
+      options: [
+        { label: "a", text: t('tests.perception.q1a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q1b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q1c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q1d'), channel: "D" }
+      ]
+    },
+    {
+      id: 2,
+      text: t('tests.perception.q2'),
+      options: [
+        { label: "a", text: t('tests.perception.q2a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q2b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q2c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q2d'), channel: "D" }
+      ]
+    },
+    {
+      id: 3,
+      text: t('tests.perception.q3'),
+      options: [
+        { label: "a", text: t('tests.perception.q3a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q3b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q3c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q3d'), channel: "D" }
+      ]
+    },
+    {
+      id: 4,
+      text: t('tests.perception.q4'),
+      options: [
+        { label: "a", text: t('tests.perception.q4a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q4b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q4c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q4d'), channel: "D" }
+      ]
+    },
+    {
+      id: 5,
+      text: t('tests.perception.q5'),
+      options: [
+        { label: "a", text: t('tests.perception.q5a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q5b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q5c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q5d'), channel: "D" }
+      ]
+    },
+    {
+      id: 6,
+      text: t('tests.perception.q6'),
+      options: [
+        { label: "a", text: t('tests.perception.q6a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q6b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q6c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q6d'), channel: "D" }
+      ]
+    },
+    {
+      id: 7,
+      text: t('tests.perception.q7'),
+      options: [
+        { label: "a", text: t('tests.perception.q7a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q7b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q7c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q7d'), channel: "D" }
+      ]
+    },
+    {
+      id: 8,
+      text: t('tests.perception.q8'),
+      options: [
+        { label: "a", text: t('tests.perception.q8a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q8b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q8c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q8d'), channel: "D" }
+      ]
+    },
+    {
+      id: 9,
+      text: t('tests.perception.q9'),
+      options: [
+        { label: "a", text: t('tests.perception.q9a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q9b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q9c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q9d'), channel: "D" }
+      ]
+    },
+    {
+      id: 10,
+      text: t('tests.perception.q10'),
+      options: [
+        { label: "a", text: t('tests.perception.q10a'), channel: "V" },
+        { label: "b", text: t('tests.perception.q10b'), channel: "A" },
+        { label: "c", text: t('tests.perception.q10c'), channel: "K" },
+        { label: "d", text: t('tests.perception.q10d'), channel: "D" }
+      ]
+    }
+  ];
+
+  const getInterpretation = (scores: Record<ChannelType, number>) => {
+    const maxScore = Math.max(...Object.values(scores));
+    const dominantChannels = (Object.keys(scores) as ChannelType[]).filter(
+      channel => scores[channel] === maxScore
+    );
+
+    if (dominantChannels.length === 1) {
+      const channel = dominantChannels[0];
+      const interpretations = {
+        V: {
+          title: t('tests.perception.visualLearner'),
+          description: t('tests.perception.visualLearnerDesc')
+        },
+        A: {
+          title: t('tests.perception.auditoryComm'),
+          description: t('tests.perception.auditoryCommDesc')
+        },
+        K: {
+          title: t('tests.perception.kinestheticExp'),
+          description: t('tests.perception.kinestheticExpDesc')
+        },
+        D: {
+          title: t('tests.perception.digitalThinker'),
+          description: t('tests.perception.digitalThinkerDesc')
+        }
+      };
+      return interpretations[channel];
+    }
+
+    return {
+      title: t('tests.perception.balancedLearner'),
+      description: t('tests.perception.balancedLearnerDesc')
+    };
+  };
 
   // Check authentication first
   useEffect(() => {
@@ -248,8 +215,6 @@ const ChannelPerceptionTest = () => {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
-        // User is logged in - database is the source of truth
-        // Check database for burnout test
         const { data: burnoutData } = await supabase
           .from("test_results")
           .select("*")
@@ -258,13 +223,11 @@ const ChannelPerceptionTest = () => {
           .single();
         
         if (!burnoutData) {
-          // No burnout test in database - redirect
           localStorage.removeItem('burnoutTest');
           navigate('/employee');
           return;
         }
         
-        // Check if this test already completed in database
         const { data: perceptionData } = await supabase
           .from("test_results")
           .select("*")
@@ -280,13 +243,11 @@ const ChannelPerceptionTest = () => {
           });
           setStage('results');
         } else {
-          // Database doesn't have this test - clear localStorage (admin may have reset)
           localStorage.removeItem('channelPerceptionTest');
         }
         return;
       }
       
-      // No user - fallback to localStorage
       const burnoutTest = localStorage.getItem('burnoutTest');
       if (!burnoutTest) {
         navigate('/employee');
@@ -302,7 +263,7 @@ const ChannelPerceptionTest = () => {
     };
     
     checkExistingResults();
-  }, [navigate]);
+  }, [navigate, isAuthChecking]);
 
   const progress = (Object.keys(answers).length / questions.length) * 100;
 
@@ -315,10 +276,8 @@ const ChannelPerceptionTest = () => {
       completed: true
     };
     
-    // Save to localStorage for backward compatibility
     localStorage.setItem('channelPerceptionTest', JSON.stringify(results));
     
-    // Save to database
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       await supabase.from("test_results").upsert({
@@ -344,7 +303,7 @@ const ChannelPerceptionTest = () => {
   if (isAuthChecking) {
     return (
       <div className="min-h-screen gradient-employee flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
+        <p className="text-muted-foreground">{t('common.loading')}</p>
       </div>
     );
   }
@@ -356,9 +315,9 @@ const ChannelPerceptionTest = () => {
         
         <div className="px-6 py-8 mx-auto max-w-4xl">
           <Card className="p-8 animate-fade-in">
-            <h1 className="text-3xl font-bold mb-6">Channel Perception Test</h1>
+            <h1 className="text-3xl font-bold mb-6">{t('tests.perception.title')}</h1>
             <p className="text-lg text-muted-foreground mb-8">
-              This test helps identify your dominant learning and communication style:
+              {t('tests.perception.introText')}
             </p>
 
             <div className="grid gap-6 md:grid-cols-2 mb-8">
@@ -367,8 +326,8 @@ const ChannelPerceptionTest = () => {
                   <Eye className="h-6 w-6 text-blue-500" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-blue-500 mb-1">Visual (V)</h3>
-                  <p className="text-sm text-muted-foreground">Learn through images, diagrams, and visual cues</p>
+                  <h3 className="font-semibold text-blue-500 mb-1">{t('tests.perception.visual')} (V)</h3>
+                  <p className="text-sm text-muted-foreground">{t('tests.perception.visualDesc')}</p>
                 </div>
               </div>
 
@@ -377,8 +336,8 @@ const ChannelPerceptionTest = () => {
                   <Ear className="h-6 w-6 text-green-500" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-green-500 mb-1">Auditory (A)</h3>
-                  <p className="text-sm text-muted-foreground">Learn through listening and speaking</p>
+                  <h3 className="font-semibold text-green-500 mb-1">{t('tests.perception.auditory')} (A)</h3>
+                  <p className="text-sm text-muted-foreground">{t('tests.perception.auditoryDesc')}</p>
                 </div>
               </div>
 
@@ -387,8 +346,8 @@ const ChannelPerceptionTest = () => {
                   <Hand className="h-6 w-6 text-orange-500" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-orange-500 mb-1">Kinesthetic (K)</h3>
-                  <p className="text-sm text-muted-foreground">Learn through hands-on experience and movement</p>
+                  <h3 className="font-semibold text-orange-500 mb-1">{t('tests.perception.kinesthetic')} (K)</h3>
+                  <p className="text-sm text-muted-foreground">{t('tests.perception.kinestheticDesc')}</p>
                 </div>
               </div>
 
@@ -397,21 +356,20 @@ const ChannelPerceptionTest = () => {
                   <Binary className="h-6 w-6 text-purple-500" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-purple-500 mb-1">Digital (D)</h3>
-                  <p className="text-sm text-muted-foreground">Learn through logical, structured information</p>
+                  <h3 className="font-semibold text-purple-500 mb-1">{t('tests.perception.digital')} (D)</h3>
+                  <p className="text-sm text-muted-foreground">{t('tests.perception.digitalDesc')}</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-muted/50 p-4 rounded-lg mb-6">
               <p className="text-sm">
-                <strong>Instructions:</strong> For each question, select the option that best describes you. 
-                The test takes approximately 3-5 minutes to complete.
+                <strong>{t('tests.perception.instructionNote')}</strong>
               </p>
             </div>
 
             <Button onClick={() => setStage('test')} className="w-full" size="lg">
-              Start Test
+              {t('tests.startTest')}
             </Button>
           </Card>
         </div>
@@ -433,8 +391,8 @@ const ChannelPerceptionTest = () => {
               <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                 <Brain className="h-10 w-10 text-primary" />
               </div>
-              <h1 className="text-3xl font-bold mb-2">Your Results</h1>
-              <p className="text-muted-foreground">Channel Perception Test</p>
+              <h1 className="text-3xl font-bold mb-2">{t('tests.yourResults')}</h1>
+              <p className="text-muted-foreground">{t('tests.perception.title')}</p>
             </div>
 
             <div className="mb-8">
@@ -449,15 +407,11 @@ const ChannelPerceptionTest = () => {
                 const percentage = (score / questions.length) * 100;
 
                 return (
-                  <div key={channel} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-full ${info.bgColor} flex items-center justify-center`}>
-                          <Icon className={`h-5 w-5 ${info.color}`} />
-                        </div>
-                        <span className="font-medium">{info.name}</span>
-                      </div>
-                      <span className="text-sm font-semibold">{score}/10</span>
+                  <div key={channel} className={`p-4 rounded-lg ${info.bgColor}`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <Icon className={`h-5 w-5 ${info.color}`} />
+                      <span className={`font-medium ${info.color}`}>{info.name}</span>
+                      <span className="ml-auto text-sm font-bold">{score}/{questions.length}</span>
                     </div>
                     <Progress value={percentage} className="h-2" />
                   </div>
@@ -468,14 +422,14 @@ const ChannelPerceptionTest = () => {
             {savedResults && (
               <div className="text-center mb-6">
                 <p className="text-sm text-muted-foreground">
-                  Completed: {new Date(savedResults.completedAt).toLocaleDateString()} at {new Date(savedResults.completedAt).toLocaleTimeString()}
+                  {t('employee.completedOn')} {new Date(savedResults.completedAt).toLocaleDateString()} at {new Date(savedResults.completedAt).toLocaleTimeString()}
                 </p>
               </div>
             )}
 
             <Button onClick={() => navigate('/employee')} className="w-full">
               <Home className="mr-2 h-4 w-4" />
-              Back to Dashboard
+              {t('tests.backToDashboard')}
             </Button>
           </Card>
         </div>
@@ -491,41 +445,39 @@ const ChannelPerceptionTest = () => {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">
-              Progress: {Object.keys(answers).length} of {questions.length}
+              {t('tests.question')}: {Object.keys(answers).length} {t('tests.of')} {questions.length}
             </span>
-            <span className="text-sm font-medium">{Math.round(progress)}% Complete</span>
+            <span className="text-sm font-medium">{Math.round(progress)}%</span>
           </div>
           <Progress value={progress} className="h-2" />
         </div>
 
         <Card className="p-8 animate-fade-in">
-          <h2 className="text-2xl font-semibold mb-6">Please select the option that best describes you</h2>
-
-          <div className="space-y-4">
-            {questions.map((q, index) => (
-              <div key={q.id} className="p-6 rounded-lg bg-green-50">
+          <div className="space-y-8">
+            {questions.map((question, index) => (
+              <div key={question.id} className="border-b border-border pb-6 last:border-0">
                 <p className="font-medium mb-4">
-                  {index + 1}. {q.text}
+                  {index + 1}. {question.text}
                 </p>
                 <RadioGroup
-                  value={answers[q.id]}
-                  onValueChange={(value) => setAnswers(prev => ({ ...prev, [q.id]: value as ChannelType }))}
+                  value={answers[question.id]}
+                  onValueChange={(value) => setAnswers(prev => ({ ...prev, [question.id]: value as ChannelType }))}
                 >
                   <div className="space-y-2">
-                    {q.options.map((option) => (
+                    {question.options.map((option) => (
                       <div
                         key={option.label}
                         className="flex items-center space-x-2 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
                       >
                         <RadioGroupItem
                           value={option.channel}
-                          id={`q${q.id}-${option.label}`}
+                          id={`q${question.id}-${option.label}`}
                         />
                         <Label
-                          htmlFor={`q${q.id}-${option.label}`}
+                          htmlFor={`q${question.id}-${option.label}`}
                           className="flex-1 cursor-pointer text-sm"
                         >
-                          {option.text}
+                          {option.label}) {option.text}
                         </Label>
                       </div>
                     ))}
@@ -537,11 +489,11 @@ const ChannelPerceptionTest = () => {
 
           <Button
             onClick={handleNext}
-            disabled={Object.keys(answers).length !== questions.length}
+            disabled={Object.keys(answers).length < questions.length}
             className="w-full mt-8"
             size="lg"
           >
-            View Results
+            {t('tests.viewResults')}
           </Button>
         </Card>
       </div>
