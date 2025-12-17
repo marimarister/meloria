@@ -4,9 +4,11 @@ import { ArrowRight, Users, Heart, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-wellness.jpg";
 import NavBar from "@/components/NavBar";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background">
@@ -25,12 +27,11 @@ const Index = () => {
         <div className="relative px-6 py-24 mx-auto max-w-7xl lg:px-8 lg:py-32">
           <div className="max-w-3xl animate-fade-in">
             <h1 className="text-5xl font-bold tracking-tight lg:text-7xl text-foreground mb-6">
-              Prevent Burnout,<br />
-              <span className="text-primary">Empower Wellness</span>
+              {t('index.heroTitle1')}<br />
+              <span className="text-primary">{t('index.heroTitle2')}</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
-              Science-backed assessments and personalized insights to help employees thrive 
-              and organizations build healthier workplaces.
+              {t('index.heroDescription')}
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button 
@@ -38,16 +39,16 @@ const Index = () => {
                 className="text-lg font-semibold"
                 onClick={() => navigate('/employee')}
               >
-                Employee Dashboard <ArrowRight className="ml-2 h-5 w-5" />
+                {t('index.employeeDashboard')} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button 
                 size="lg" 
-              variant="outline"
-              className="text-lg font-semibold"
-              onClick={() => navigate('/company')}
-            >
-              Company Dashboard <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+                variant="outline"
+                className="text-lg font-semibold"
+                onClick={() => navigate('/company')}
+              >
+                {t('index.companyDashboard')} <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
             </div>
           </div>
         </div>
@@ -58,10 +59,10 @@ const Index = () => {
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-16 animate-slide-up">
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              Comprehensive Wellness Insights
+              {t('index.featuresTitle')}
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Evidence-based assessments designed to identify risks early and provide actionable wellness strategies
+              {t('index.featuresDescription')}
             </p>
           </div>
           
@@ -70,21 +71,19 @@ const Index = () => {
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">
                 <Heart className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-2xl font-semibold mb-3">For Employees</h3>
+              <h3 className="text-2xl font-semibold mb-3">{t('index.forEmployees')}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Take evidence-based assessments to understand your burnout risk, learning style, 
-                and wellness preferences. Receive personalized strategies and track your journey.
+                {t('index.forEmployeesDescription')}
               </p>
             </Card>
 
             <Card className="p-8 hover:shadow-lg transition-shadow">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">
-              <Users className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="text-2xl font-semibold mb-3">For Company Teams</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Monitor organizational wellness trends, identify at-risk teams, and implement
-                data-driven interventions to create a healthier workplace culture.
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-2xl font-semibold mb-3">{t('index.forCompanyTeams')}</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {t('index.forCompanyTeamsDescription')}
               </p>
             </Card>
 
@@ -92,10 +91,9 @@ const Index = () => {
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">
                 <TrendingUp className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-2xl font-semibold mb-3">Proven Methods</h3>
+              <h3 className="text-2xl font-semibold mb-3">{t('index.provenMethods')}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Built on the Maslach Burnout Inventory and VAK+D learning frameworks, 
-                backed by decades of psychological research and workplace wellness studies.
+                {t('index.provenMethodsDescription')}
               </p>
             </Card>
           </div>
@@ -106,10 +104,10 @@ const Index = () => {
       <section className="px-6 py-20">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-4xl font-bold text-foreground mb-6">
-            Ready to Transform Your Workplace Wellness?
+            {t('index.ctaTitle')}
           </h2>
           <p className="text-xl text-muted-foreground mb-10">
-            Join organizations building healthier, more resilient teams
+            {t('index.ctaDescription')}
           </p>
           <div className="flex flex-col gap-4 sm:flex-row justify-center">
             <Button 
@@ -117,16 +115,16 @@ const Index = () => {
               className="text-lg font-semibold"
               onClick={() => navigate('/employee')}
             >
-              Start Your Assessment
+              {t('index.startAssessment')}
             </Button>
             <Button 
               size="lg" 
-            variant="outline"
-            className="text-lg font-semibold"
-            onClick={() => navigate('/company')}
-          >
-            Explore Company Features
-          </Button>
+              variant="outline"
+              className="text-lg font-semibold"
+              onClick={() => navigate('/company')}
+            >
+              {t('index.exploreCompanyFeatures')}
+            </Button>
           </div>
         </div>
       </section>

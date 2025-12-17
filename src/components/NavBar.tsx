@@ -6,6 +6,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/LanguageToggle";
 
 interface NavBarProps {
   showBack?: boolean;
@@ -18,6 +20,7 @@ const NavBar = ({
 }: NavBarProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMeloriaAdmin, setIsMeloriaAdmin] = useState(false);
@@ -74,12 +77,12 @@ const NavBar = ({
     if (error) {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: t('common.error'),
         description: "Failed to log out. Please try again."
       });
     } else {
       toast({
-        title: "Logged out",
+        title: t('common.success'),
         description: "You have been successfully logged out."
       });
       navigate("/login");
@@ -87,9 +90,9 @@ const NavBar = ({
   };
 
   const navLinks = [
-    { label: "Our Story", href: "/our-story" },
-    { label: "Our Catalog", href: "/catalog" },
-    { label: "Contact Us", href: "/contact" },
+    { label: t('nav.ourStory'), href: "/our-story" },
+    { label: t('nav.ourCatalog'), href: "/catalog" },
+    { label: t('nav.contactUs'), href: "/contact" },
   ];
 
   return (
@@ -110,7 +113,7 @@ const NavBar = ({
           </button>
         </div>
 
-        {/* Right side - Navigation Links + Profile/Auth + Mobile Menu */}
+        {/* Right side - Navigation Links + Language + Profile/Auth + Mobile Menu */}
         <div className="flex items-center gap-4">
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center gap-4">
@@ -129,8 +132,13 @@ const NavBar = ({
             ))}
           </div>
 
+          {/* Language Toggle - Desktop */}
+          <div className="hidden md:block ml-4">
+            <LanguageToggle />
+          </div>
+
           {/* Desktop Profile/Auth */}
-          <div className="hidden md:flex items-center gap-4 ml-6">
+          <div className="hidden md:flex items-center gap-4">
             {showProfile && isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -146,55 +154,55 @@ const NavBar = ({
                   {isMeloriaAdmin ? (
                     <>
                       <DropdownMenuItem onClick={() => navigate("/meloria-admin/questionnaires")}>
-                        My Meloria Dashboard
+                        {t('nav.myMeloriaDashboard')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => navigate("/meloria-admin/company-groups")}>
-                        Company Groups
+                        {t('nav.companyGroups')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => navigate("/employee")}>
-                        My Employee Dashboard
+                        {t('nav.myEmployeeDashboard')}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => navigate("/meloria-admin/settings")}>
-                        Settings
+                        {t('nav.settings')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleLogout}>
-                        Log Out
+                        {t('nav.logOut')}
                       </DropdownMenuItem>
                     </>
                   ) : userRole === "employee" ? (
                     <>
                       <DropdownMenuItem onClick={() => navigate("/employee")}>
-                        My Dashboard
+                        {t('nav.myDashboard')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => navigate("/employee")}>
-                        My Tests
+                        {t('nav.myTests')}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Contact Company</DropdownMenuItem>
-                      <DropdownMenuItem>Settings</DropdownMenuItem>
+                      <DropdownMenuItem>{t('nav.contactCompany')}</DropdownMenuItem>
+                      <DropdownMenuItem>{t('nav.settings')}</DropdownMenuItem>
                       <DropdownMenuItem onClick={handleLogout}>
-                        Log Out
+                        {t('nav.logOut')}
                       </DropdownMenuItem>
                     </>
                   ) : userRole === "hr" ? (
                     <>
                       <DropdownMenuItem onClick={() => navigate("/company")}>
-                        My Company Dashboard
+                        {t('nav.myCompanyDashboard')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => navigate("/employee")}>
-                        My Employee Dashboard
+                        {t('nav.myEmployeeDashboard')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => navigate("/employee")}>
-                        My Tests
+                        {t('nav.myTests')}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Contact Meloria</DropdownMenuItem>
-                      <DropdownMenuItem>Upgrade to Premium</DropdownMenuItem>
+                      <DropdownMenuItem>{t('nav.contactMeloria')}</DropdownMenuItem>
+                      <DropdownMenuItem>{t('nav.upgradeToPremium')}</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Settings</DropdownMenuItem>
+                      <DropdownMenuItem>{t('nav.settings')}</DropdownMenuItem>
                       <DropdownMenuItem onClick={handleLogout}>
-                        Log Out
+                        {t('nav.logOut')}
                       </DropdownMenuItem>
                     </>
                   ) : null}
@@ -203,7 +211,7 @@ const NavBar = ({
             )}
             {showProfile && !isAuthenticated && (
               <Button onClick={() => navigate("/login")}>
-                Sign In
+                {t('nav.signIn')}
               </Button>
             )}
           </div>
@@ -232,39 +240,45 @@ const NavBar = ({
                 {link.label}
               </Link>
             ))}
+            
+            {/* Language Toggle - Mobile */}
+            <div className="py-2">
+              <LanguageToggle />
+            </div>
+            
             <div className="border-t border-border pt-4">
               {showProfile && isAuthenticated ? (
                 <div className="flex flex-col gap-2">
                   {isMeloriaAdmin ? (
                     <>
                       <Button variant="ghost" className="justify-start" onClick={() => { navigate("/meloria-admin/questionnaires"); setMobileMenuOpen(false); }}>
-                        My Meloria Dashboard
+                        {t('nav.myMeloriaDashboard')}
                       </Button>
                       <Button variant="ghost" className="justify-start" onClick={() => { navigate("/employee"); setMobileMenuOpen(false); }}>
-                        My Employee Dashboard
+                        {t('nav.myEmployeeDashboard')}
                       </Button>
                     </>
                   ) : userRole === "employee" ? (
                     <Button variant="ghost" className="justify-start" onClick={() => { navigate("/employee"); setMobileMenuOpen(false); }}>
-                      My Dashboard
+                      {t('nav.myDashboard')}
                     </Button>
                   ) : userRole === "hr" ? (
                     <>
                       <Button variant="ghost" className="justify-start" onClick={() => { navigate("/company"); setMobileMenuOpen(false); }}>
-                        My Company Dashboard
+                        {t('nav.myCompanyDashboard')}
                       </Button>
                       <Button variant="ghost" className="justify-start" onClick={() => { navigate("/employee"); setMobileMenuOpen(false); }}>
-                        My Employee Dashboard
+                        {t('nav.myEmployeeDashboard')}
                       </Button>
                     </>
                   ) : null}
                   <Button variant="outline" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>
-                    Log Out
+                    {t('nav.logOut')}
                   </Button>
                 </div>
               ) : (
                 <Button onClick={() => { navigate("/login"); setMobileMenuOpen(false); }} className="w-full">
-                  Sign In
+                  {t('nav.signIn')}
                 </Button>
               )}
             </div>
