@@ -9,6 +9,7 @@ import NavBar from "@/components/NavBar";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { z } from "zod";
 
 const signupSchema = z.object({
@@ -30,6 +31,7 @@ const Signup = () => {
   const [searchParams] = useSearchParams();
   const groupSlug = searchParams.get("group");
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
@@ -42,7 +44,6 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = async (role: "employee" | "hr") => {
-    // Validate all inputs using zod schema
     const validationResult = signupSchema.safeParse({
       name,
       surname,
@@ -55,7 +56,7 @@ const Signup = () => {
     if (!validationResult.success) {
       const firstError = validationResult.error.errors[0];
       toast({
-        title: "Validation Error",
+        title: t('common.error'),
         description: firstError.message,
         variant: "destructive",
       });
@@ -81,7 +82,6 @@ const Signup = () => {
 
       if (error) throw error;
 
-      // Send custom confirmation email via edge function
       if (data.user) {
         const confirmationUrl = `${window.location.origin}/login?confirmed=true`;
         
@@ -96,19 +96,18 @@ const Signup = () => {
           console.log("Confirmation email sent successfully");
         } catch (emailError) {
           console.error("Failed to send confirmation email:", emailError);
-          // Don't block signup if email fails - Supabase will send its own
         }
       }
 
       toast({
-        title: "Success!",
-        description: "Your account has been created. Please check your email to confirm.",
+        title: t('common.success'),
+        description: t('auth.verifyEmailDescription'),
       });
 
       setShowVerification(true);
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: error.message || "Failed to create account",
         variant: "destructive",
       });
@@ -130,17 +129,17 @@ const Signup = () => {
               </div>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">Verify Your Email</h1>
+            <h1 className="text-3xl font-bold mb-4">{t('auth.verifyEmail')}</h1>
             <p className="text-muted-foreground mb-8">
-              We've sent a verification link to <strong>{email}</strong>. 
-              Please check your inbox and click the link to verify your account.
+              {t('auth.verificationSent')} <strong>{email}</strong>. 
+              {t('auth.checkInbox')}
             </p>
 
             <Button 
               onClick={() => navigate("/login")} 
               className="w-full"
             >
-              Go to Login
+              {t('auth.goToLogin')}
             </Button>
           </Card>
         </div>
@@ -160,15 +159,15 @@ const Signup = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-center mb-2">Create Account</h1>
+          <h1 className="text-3xl font-bold text-center mb-2">{t('auth.createAccount')}</h1>
           <p className="text-center text-muted-foreground mb-8">
-            Join Meloria today
+            {t('auth.joinMeloria')}
           </p>
 
           <form className="space-y-6">
             <div className="flex gap-4">
               <div className="flex-1 space-y-2">
-                <Label htmlFor="name">Name <span className="text-destructive">*</span></Label>
+                <Label htmlFor="name">{t('auth.name')} <span className="text-destructive">*</span></Label>
                 <Input
                   id="name"
                   type="text"
@@ -180,7 +179,7 @@ const Signup = () => {
               </div>
 
               <div className="flex-1 space-y-2">
-                <Label htmlFor="surname">Surname <span className="text-destructive">*</span></Label>
+                <Label htmlFor="surname">{t('auth.surname')} <span className="text-destructive">*</span></Label>
                 <Input
                   id="surname"
                   type="text"
@@ -193,7 +192,7 @@ const Signup = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email <span className="text-destructive">*</span></Label>
+              <Label htmlFor="email">{t('auth.email')} <span className="text-destructive">*</span></Label>
               <Input
                 id="email"
                 type="email"
@@ -205,12 +204,12 @@ const Signup = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password <span className="text-destructive">*</span></Label>
+              <Label htmlFor="password">{t('auth.password')} <span className="text-destructive">*</span></Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="At least 6 characters"
+                  placeholder={t('auth.atLeastChars')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -227,12 +226,12 @@ const Signup = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password <span className="text-destructive">*</span></Label>
+              <Label htmlFor="confirmPassword">{t('auth.confirmPassword')} <span className="text-destructive">*</span></Label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Re-enter your password"
+                  placeholder={t('auth.reenterPassword')}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
@@ -258,7 +257,7 @@ const Signup = () => {
                 htmlFor="terms"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Agree to the Terms & Conditions and Privacy Policy <span className="text-destructive">*</span>
+                {t('auth.agreeToTermsAndPrivacy')} <span className="text-destructive">*</span>
               </label>
             </div>
 
@@ -270,7 +269,7 @@ const Signup = () => {
                 size="lg"
                 disabled={isLoading}
               >
-                {isLoading ? "Creating..." : "I'm an Employee"}
+                {isLoading ? t('auth.creating') : t('auth.imAnEmployee')}
               </Button>
             <Button
               type="button"
@@ -279,19 +278,19 @@ const Signup = () => {
               size="lg"
               disabled={isLoading}
             >
-              {isLoading ? "Creating..." : "I'm in Company"}
+              {isLoading ? t('auth.creating') : t('auth.imInCompany')}
             </Button>
             </div>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              Already have an account?{" "}
+              {t('auth.alreadyHaveAccount')}{" "}
               <button
                 onClick={() => navigate("/login")}
                 className="text-primary hover:underline font-medium"
               >
-                Sign in
+                {t('auth.signIn')}
               </button>
             </p>
           </div>

@@ -8,10 +8,12 @@ import NavBar from "@/components/NavBar";
 import { Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +23,7 @@ const ResetPassword = () => {
 
     if (password !== confirmPassword) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: "Passwords do not match",
         variant: "destructive",
       });
@@ -30,7 +32,7 @@ const ResetPassword = () => {
 
     if (password.length < 6) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: "Password must be at least 6 characters",
         variant: "destructive",
       });
@@ -46,19 +48,17 @@ const ResetPassword = () => {
 
       if (error) throw error;
 
-      // Sign out the user to ensure they must log in again
       await supabase.auth.signOut();
 
       toast({
-        title: "Success",
-        description: "Your password has been updated. Please log in with your new password.",
+        title: t('common.success'),
+        description: t('auth.verifyEmailDescription'),
       });
 
-      // Redirect to login page
       navigate("/login");
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: error.message || "Failed to update password",
         variant: "destructive",
       });
@@ -79,14 +79,14 @@ const ResetPassword = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-center mb-2">New Password</h1>
+          <h1 className="text-3xl font-bold text-center mb-2">{t('auth.newPassword')}</h1>
           <p className="text-center text-muted-foreground mb-8">
-            Enter your new password below
+            {t('auth.enterNewPassword')}
           </p>
 
           <form onSubmit={handleUpdatePassword} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="password">New Password</Label>
+              <Label htmlFor="password">{t('auth.newPassword')}</Label>
               <Input
                 id="password"
                 type="password"
@@ -98,7 +98,7 @@ const ResetPassword = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -110,7 +110,7 @@ const ResetPassword = () => {
             </div>
 
             <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-              {isLoading ? "Updating..." : "Update Password"}
+              {isLoading ? t('auth.updating') : t('auth.updatePassword')}
             </Button>
           </form>
         </Card>
