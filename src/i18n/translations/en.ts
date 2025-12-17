@@ -370,6 +370,8 @@ export const en = {
     viewResults: "View Results",
     completed: "Completed",
     completedOn: "Completed on",
+    nextTestDue: "Next test due",
+    testOverdue: "Test overdue - please retake",
     optional: "Optional",
     locked: "Locked",
     completeBurnoutToUnlock: "Complete Burnout Test first",
