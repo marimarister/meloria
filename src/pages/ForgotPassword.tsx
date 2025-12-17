@@ -8,10 +8,12 @@ import NavBar from "@/components/NavBar";
 import { Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,14 +29,14 @@ const ForgotPassword = () => {
       if (error) throw error;
 
       toast({
-        title: "Check your email",
-        description: "We've sent you a password reset link.",
+        title: t('common.success'),
+        description: t('auth.verifyEmailDescription'),
       });
 
       setTimeout(() => navigate("/login"), 2000);
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: error.message || "Failed to send reset email",
         variant: "destructive",
       });
@@ -55,14 +57,14 @@ const ForgotPassword = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-center mb-2">Reset Password</h1>
+          <h1 className="text-3xl font-bold text-center mb-2">{t('auth.resetPassword')}</h1>
           <p className="text-center text-muted-foreground mb-8">
-            Enter your email and we'll send you a reset link
+            {t('auth.enterEmailForReset')}
           </p>
 
           <form onSubmit={handleResetPassword} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -74,7 +76,7 @@ const ForgotPassword = () => {
             </div>
 
             <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-              {isLoading ? "Sending..." : "Send Reset Link"}
+              {isLoading ? t('auth.sending') : t('auth.sendResetLink')}
             </Button>
           </form>
 
@@ -83,7 +85,7 @@ const ForgotPassword = () => {
               onClick={() => navigate("/login")}
               className="text-sm text-primary hover:underline font-medium"
             >
-              Back to login
+              {t('auth.backToLogin')}
             </button>
           </div>
         </Card>

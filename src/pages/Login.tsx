@@ -8,6 +8,7 @@ import NavBar from "@/components/NavBar";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -18,17 +19,16 @@ const loginSchema = z.object({
 const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        // Server-side role validation via database query
         const { data: roleData } = await supabase
           .from('user_roles')
           .select('role')
@@ -49,11 +49,10 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate input with zod schema
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       toast({
-        title: "Validation Error",
+        title: t('common.error'),
         description: result.error.errors[0].message,
         variant: "destructive",
       });
@@ -71,11 +70,10 @@ const Login = () => {
       if (error) throw error;
 
       toast({
-        title: "Welcome back!",
-        description: "You've successfully signed in.",
+        title: t('auth.welcomeBack'),
+        description: t('common.success'),
       });
 
-      // Server-side role validation via database query
       const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
@@ -89,7 +87,7 @@ const Login = () => {
       }
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: error.message || "Failed to sign in",
         variant: "destructive",
       });
@@ -110,14 +108,14 @@ const Login = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-center mb-2">Welcome Back</h1>
+          <h1 className="text-3xl font-bold text-center mb-2">{t('auth.welcomeBack')}</h1>
           <p className="text-center text-muted-foreground mb-8">
-            Sign in to your Meloria account
+            {t('auth.signInToAccount')}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -129,7 +127,7 @@ const Login = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('auth.password')}</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -156,23 +154,23 @@ const Login = () => {
                 onClick={() => navigate("/forgot-password")}
                 className="text-sm text-primary hover:underline font-medium"
               >
-                Forgot password?
+                {t('auth.forgotPassword')}
               </button>
             </div>
 
             <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isLoading ? t('auth.signingIn') : t('auth.signIn')}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
+              {t('auth.dontHaveAccount')}{" "}
               <button
                 onClick={() => navigate("/signup")}
                 className="text-primary hover:underline font-medium"
               >
-                Sign up
+                {t('auth.signup')}
               </button>
             </p>
           </div>
