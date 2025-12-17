@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CompanyStats {
   companyName: string;
@@ -35,17 +36,18 @@ const getBurnoutRiskCategory = (score: number): 'low' | 'moderate' | 'high' => {
   return 'high';
 };
 
-const getRiskLabel = (averageScore: number): string => {
-  if (averageScore <= 44) return 'Low risk level';
-  if (averageScore <= 88) return 'Moderate risk level';
-  return 'High risk level';
-};
-
 const CompanyDashboard = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState<CompanyStats | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const getRiskLabel = (averageScore: number): string => {
+    if (averageScore <= 44) return t('company.lowRiskLevel');
+    if (averageScore <= 88) return t('company.moderateRiskLevel');
+    return t('company.highRiskLevel');
+  };
 
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -77,7 +79,7 @@ const CompanyDashboard = () => {
           .single();
 
         if (!profile?.email) {
-          setError('Unable to find your profile');
+          setError(t('company.unableToFindProfile'));
           setIsLoading(false);
           return;
         }
@@ -90,7 +92,7 @@ const CompanyDashboard = () => {
           .limit(1);
 
         if (membershipError || !membershipData?.length) {
-          setError('You are not assigned to any company group');
+          setError(t('company.noGroupAssigned'));
           setIsLoading(false);
           return;
         }
@@ -111,7 +113,7 @@ const CompanyDashboard = () => {
           .eq('group_id', groupId);
 
         if (membersError || !groupMembers) {
-          setError('Unable to fetch group members');
+          setError(t('company.unableToLoadData'));
           setIsLoading(false);
           return;
         }
@@ -179,7 +181,7 @@ const CompanyDashboard = () => {
           : 0;
 
         setStats({
-          companyName: groupData?.name || 'Your Company',
+          companyName: groupData?.name || t('company.title'),
           totalEmployees,
           burnoutCompleted,
           perceptionCompleted,
@@ -192,18 +194,18 @@ const CompanyDashboard = () => {
         setIsLoading(false);
       } catch (err) {
         console.error('Error fetching company data:', err);
-        setError('An error occurred while loading data');
+        setError(t('company.unableToLoadData'));
         setIsLoading(false);
       }
     };
 
     fetchCompanyData();
-  }, [navigate]);
+  }, [navigate, t]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen gradient-company flex items-center justify-center">
-        <p className="text-white">Loading...</p>
+        <p className="text-white">{t('common.loading')}</p>
       </div>
     );
   }
@@ -215,9 +217,9 @@ const CompanyDashboard = () => {
         <div className="flex items-center justify-center min-h-[60vh]">
           <Card className="p-8 max-w-md text-center">
             <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">No Company Data</h2>
+            <h2 className="text-xl font-semibold mb-2">{t('company.noCompanyData')}</h2>
             <p className="text-muted-foreground">
-              {error || 'Unable to load company analytics. Please contact your administrator.'}
+              {error || t('company.unableToLoadData')}
             </p>
           </Card>
         </div>
@@ -252,7 +254,7 @@ const CompanyDashboard = () => {
             </h1>
           </div>
           <p className="text-lg text-white/80">
-            Monitor organizational wellness and drive data-informed decisions
+            {t('company.subtitle')}
           </p>
         </div>
 
@@ -260,7 +262,7 @@ const CompanyDashboard = () => {
         <div className="grid gap-6 md:grid-cols-4 mb-8">
           <Card className="p-6 animate-slide-up">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium text-muted-foreground">Total Employees</p>
+              <p className="text-sm font-medium text-muted-foreground">{t('company.totalEmployees')}</p>
               <Users className="h-5 w-5 text-primary" />
             </div>
             <p className="text-3xl font-bold text-foreground">{stats.totalEmployees}</p>
@@ -268,17 +270,17 @@ const CompanyDashboard = () => {
 
           <Card className="p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium text-muted-foreground">All Tests Completed</p>
+              <p className="text-sm font-medium text-muted-foreground">{t('company.allTestsCompleted')}</p>
               <CheckCircle2 className="h-5 w-5 text-success" />
             </div>
             <p className="text-3xl font-bold text-foreground">{stats.allTestsCompleted}</p>
             <Progress value={allTestsCompletionRate} className="h-2 mt-3" />
-            <p className="text-xs text-muted-foreground mt-2">{allTestsCompletionRate}% completion rate</p>
+            <p className="text-xs text-muted-foreground mt-2">{allTestsCompletionRate}% {t('company.completionRate')}</p>
           </Card>
 
           <Card className="p-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium text-muted-foreground">Avg Burnout Score</p>
+              <p className="text-sm font-medium text-muted-foreground">{t('company.averageBurnoutScore')}</p>
               <Activity className="h-5 w-5 text-warning" />
             </div>
             <p className="text-3xl font-bold text-foreground">{stats.averageBurnoutScore}/132</p>
@@ -292,12 +294,12 @@ const CompanyDashboard = () => {
 
           <Card className="p-6 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium text-muted-foreground">High Risk</p>
+              <p className="text-sm font-medium text-muted-foreground">{t('company.highRisk')}</p>
               <AlertCircle className="h-5 w-5 text-destructive" />
             </div>
             <p className="text-3xl font-bold text-foreground">{stats.riskCategories.high}</p>
             <p className="text-xs text-muted-foreground mt-2">
-              {stats.riskCategories.high === 1 ? 'Employee needs' : 'Employees need'} attention
+              {stats.riskCategories.high === 1 ? t('company.employeeNeedsAttention') : t('company.employeesNeedAttention')}
             </p>
           </Card>
         </div>
@@ -306,73 +308,73 @@ const CompanyDashboard = () => {
         <div className="grid gap-6 md:grid-cols-2 mb-8">
           {/* Assessment Completion Details */}
           <Card className="p-8">
-            <h2 className="text-2xl font-semibold mb-6">Assessment Completion Details</h2>
+            <h2 className="text-2xl font-semibold mb-6">{t('company.assessmentCompletionDetails')}</h2>
             <div className="space-y-4">
               <div className="p-6 rounded-lg bg-muted/30">
-                <p className="text-sm font-medium text-muted-foreground mb-2">Burnout Test</p>
+                <p className="text-sm font-medium text-muted-foreground mb-2">{t('employee.burnoutTest')}</p>
                 <p className="text-2xl font-bold mb-1">{stats.burnoutCompleted} / {stats.totalEmployees}</p>
                 <Progress value={burnoutCompletionRate} className="h-2" />
-                <p className="text-xs text-muted-foreground mt-2">{burnoutCompletionRate}% completed</p>
+                <p className="text-xs text-muted-foreground mt-2">{burnoutCompletionRate}% {t('employee.completed')}</p>
               </div>
 
               <div className="p-6 rounded-lg bg-muted/30">
-                <p className="text-sm font-medium text-muted-foreground mb-2">Channel Perception Test</p>
+                <p className="text-sm font-medium text-muted-foreground mb-2">{t('employee.channelPerceptionTest')}</p>
                 <p className="text-2xl font-bold mb-1">{stats.perceptionCompleted} / {stats.totalEmployees}</p>
                 <Progress value={perceptionCompletionRate} className="h-2" />
-                <p className="text-xs text-muted-foreground mt-2">{perceptionCompletionRate}% completed</p>
+                <p className="text-xs text-muted-foreground mt-2">{perceptionCompletionRate}% {t('employee.completed')}</p>
               </div>
 
               <div className="p-6 rounded-lg bg-muted/30">
-                <p className="text-sm font-medium text-muted-foreground mb-2">Work Preferences Test</p>
+                <p className="text-sm font-medium text-muted-foreground mb-2">{t('employee.preferencesTest')}</p>
                 <p className="text-2xl font-bold mb-1">{stats.preferenceCompleted} / {stats.totalEmployees}</p>
                 <Progress value={preferenceCompletionRate} className="h-2" />
-                <p className="text-xs text-muted-foreground mt-2">{preferenceCompletionRate}% completed</p>
+                <p className="text-xs text-muted-foreground mt-2">{preferenceCompletionRate}% {t('employee.completed')}</p>
               </div>
             </div>
           </Card>
 
           {/* Suggested Activities */}
           <Card className="p-8">
-            <h2 className="text-2xl font-semibold mb-6">Recommended Team Actions</h2>
+            <h2 className="text-2xl font-semibold mb-6">{t('company.suggestedTeamActivities')}</h2>
             <div className="space-y-4">
               {stats.riskCategories.high > 0 && (
                 <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20">
-                  <h3 className="font-semibold mb-1 text-destructive">Urgent: High-Risk Employees</h3>
+                  <h3 className="font-semibold mb-1 text-destructive">{t('company.urgentHighRisk')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {stats.riskCategories.high} employee{stats.riskCategories.high !== 1 ? 's show' : ' shows'} severe burnout signs. Schedule immediate support check-ins.
+                    {stats.riskCategories.high} {stats.riskCategories.high !== 1 ? t('company.urgentHighRiskDescPlural') : t('company.urgentHighRiskDesc')}
                   </p>
                 </div>
               )}
 
               {stats.averageBurnoutScore > 44 && (
                 <div className="p-4 rounded-lg bg-muted/50">
-                  <h3 className="font-semibold mb-1">Weekly Wellness Check-ins</h3>
+                  <h3 className="font-semibold mb-1">{t('company.weeklyWellnessCheckins')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Based on {stats.averageBurnoutScore > 88 ? 'high' : 'moderate'} burnout levels, schedule brief one-on-ones to discuss workload
+                    {t('company.weeklyWellnessCheckinsDesc')}
                   </p>
                 </div>
               )}
 
               <div className="p-4 rounded-lg bg-muted/50">
-                <h3 className="font-semibold mb-1">Team Building Activities</h3>
+                <h3 className="font-semibold mb-1">{t('company.teamBuildingActivities')}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Foster connection with collaborative activities to reduce isolation
+                  {t('company.teamBuildingActivitiesDesc')}
                 </p>
               </div>
 
               {allTestsCompletionRate < 80 && (
                 <div className="p-4 rounded-lg bg-muted/50">
-                  <h3 className="font-semibold mb-1">Encourage Test Completion</h3>
+                  <h3 className="font-semibold mb-1">{t('company.encourageTestCompletion')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Only {allTestsCompletionRate}% of employees have completed all assessments. Send reminders to get complete wellness insights.
+                    {allTestsCompletionRate}% {t('company.encourageTestCompletionDesc')}
                   </p>
                 </div>
               )}
 
               <div className="p-4 rounded-lg bg-muted/50">
-                <h3 className="font-semibold mb-1">Mental Health Resources</h3>
+                <h3 className="font-semibold mb-1">{t('company.mentalHealthResources')}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Share information about employee assistance programs and wellness resources
+                  {t('company.mentalHealthResourcesDesc')}
                 </p>
               </div>
             </div>
@@ -381,17 +383,17 @@ const CompanyDashboard = () => {
 
         {/* Burnout Risk Distribution */}
         <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Burnout Risk Distribution</h2>
+          <h2 className="text-2xl font-semibold mb-6">{t('company.burnoutRiskDistribution')}</h2>
           <div className="flex justify-between text-[10px] md:text-xl text-muted-foreground mb-4">
-            <span>Level</span>
-            <span>Number of Employees</span>
+            <span>{t('company.level')}</span>
+            <span>{t('company.numberOfEmployees')}</span>
           </div>
           <div className="space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <TrendingDown className="h-5 w-5 text-success" />
-                  <span className="font-medium">Low Risk (0-44)</span>
+                  <span className="font-medium">{t('company.lowRisk')} (0-44)</span>
                 </div>
                 <span className="text-lg font-semibold">{stats.riskCategories.low}</span>
               </div>
@@ -405,7 +407,7 @@ const CompanyDashboard = () => {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <Activity className="h-5 w-5 text-warning" />
-                  <span className="font-medium">Moderate Risk (45-88)</span>
+                  <span className="font-medium">{t('company.moderateRisk')} (45-88)</span>
                 </div>
                 <span className="text-lg font-semibold">{stats.riskCategories.moderate}</span>
               </div>
@@ -419,7 +421,7 @@ const CompanyDashboard = () => {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-destructive" />
-                  <span className="font-medium">High Risk (89-132)</span>
+                  <span className="font-medium">{t('company.highRisk')} (89-132)</span>
                 </div>
                 <span className="text-lg font-semibold">{stats.riskCategories.high}</span>
               </div>
@@ -432,7 +434,7 @@ const CompanyDashboard = () => {
           
           {stats.burnoutCompleted === 0 && (
             <p className="text-center text-muted-foreground mt-6">
-              No burnout test results yet. Encourage employees to complete the assessment.
+              {t('company.noBurnoutResults')}
             </p>
           )}
         </Card>
