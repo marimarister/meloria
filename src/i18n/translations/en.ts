@@ -455,6 +455,17 @@ export const en = {
     noCompanyData: "No Company Data",
     unableToLoadData: "Unable to load company analytics. Please contact your administrator.",
     noBurnoutResults: "No burnout test results yet. Encourage employees to complete the assessment.",
+    // Premium Plans
+    freePlanDescription: "Basic wellness tracking for small teams",
+    freeFeature1: "Up to 10 employees",
+    freeFeature2: "Basic burnout assessment",
+    freeFeature3: "Email support",
+    premiumPlanDescription: "Complete wellness management for organizations",
+    premiumFeature1: "Unlimited employees",
+    premiumFeature2: "All assessment types",
+    premiumFeature3: "Advanced analytics",
+    premiumFeature4: "Priority support",
+    premiumFeature5: "Custom integrations",
   },
 
   // Tests
