@@ -27,6 +27,7 @@ import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { format, addMonths, isBefore } from "date-fns";
+import { TestDueNotification } from "@/components/TestDueNotification";
 
 interface EventInvitation {
   id: string;
@@ -367,6 +368,15 @@ const EmployeeDashboard = () => {
             {t('employee.welcomeSubtitle')}
           </p>
         </div>
+
+        {/* Test Due Notifications */}
+        <TestDueNotification
+          tests={[
+            { completed: testStatus.burnout.completed, lastTaken: testStatus.burnout.lastTaken, name: t('employee.burnoutTest') },
+            { completed: testStatus.perception.completed, lastTaken: testStatus.perception.lastTaken, name: t('employee.channelPerceptionTest') },
+            { completed: testStatus.preference.completed, lastTaken: testStatus.preference.lastTaken, name: t('employee.preferencesTest') },
+          ]}
+        />
 
         {/* Overall Progress */}
         <Card className="p-8 mb-8 animate-slide-up">
