@@ -136,7 +136,7 @@ const EmployeeDashboard = () => {
       if (error) throw error;
       
       setEventInvitations(prev => prev.filter(inv => inv.id !== invitationId));
-      toast.success(t('employeeDashboard.invitationMarkedViewed'));
+      toast.success(t('common.success'));
     } catch (error) {
       console.error("Error marking invitation as viewed:", error);
     }
@@ -232,12 +232,12 @@ const EmployeeDashboard = () => {
   const otherTestsOptional = testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score <= 44;
 
   const getBurnoutLevel = (score: number) => {
-    if (score <= 22) return t('employeeDashboard.burnoutLevels.perfectWellbeing');
-    if (score <= 44) return t('employeeDashboard.burnoutLevels.balanced');
-    if (score <= 66) return t('employeeDashboard.burnoutLevels.mildFatigue');
-    if (score <= 88) return t('employeeDashboard.burnoutLevels.noticeableSymptoms');
-    if (score <= 110) return t('employeeDashboard.burnoutLevels.severeBurnout');
-    return t('employeeDashboard.burnoutLevels.extremeRisk');
+    if (score <= 22) return t('tests.burnout.perfectWellbeing');
+    if (score <= 44) return t('tests.burnout.balancedResilient');
+    if (score <= 66) return t('tests.burnout.mildFatigue');
+    if (score <= 88) return t('tests.burnout.noticeableBurnout');
+    if (score <= 110) return t('tests.burnout.severeBurnout');
+    return t('tests.burnout.extremeBurnout');
   };
 
   const getBurnoutLevelColor = (score: number) => {
@@ -255,10 +255,10 @@ const EmployeeDashboard = () => {
     const data = JSON.parse(perceptionData);
     const scores = data.scores;
     const channels = [
-      { name: t('employeeDashboard.channels.visual'), score: scores.V },
-      { name: t('employeeDashboard.channels.auditory'), score: scores.A },
-      { name: t('employeeDashboard.channels.kinesthetic'), score: scores.K },
-      { name: t('employeeDashboard.channels.digital'), score: scores.D }
+      { name: t('tests.perception.visual'), score: scores.V },
+      { name: t('tests.perception.auditory'), score: scores.A },
+      { name: t('tests.perception.kinesthetic'), score: scores.K },
+      { name: t('tests.perception.digital'), score: scores.D }
     ];
     const dominant = channels.reduce((max, channel) => 
       channel.score > max.score ? channel : max
@@ -267,13 +267,16 @@ const EmployeeDashboard = () => {
   };
 
   const getChannelIcon = (channel: string | null) => {
-    const iconMap: Record<string, any> = {
-      [t('employeeDashboard.channels.visual')]: Eye,
-      [t('employeeDashboard.channels.auditory')]: Volume2,
-      [t('employeeDashboard.channels.kinesthetic')]: Hand,
-      [t('employeeDashboard.channels.digital')]: Monitor
-    };
-    return channel ? iconMap[channel] || Brain : Brain;
+    const visual = t('tests.perception.visual');
+    const auditory = t('tests.perception.auditory');
+    const kinesthetic = t('tests.perception.kinesthetic');
+    const digital = t('tests.perception.digital');
+    
+    if (channel === visual) return Eye;
+    if (channel === auditory) return Volume2;
+    if (channel === kinesthetic) return Hand;
+    if (channel === digital) return Monitor;
+    return Brain;
   };
 
   const getPreferenceArchetypes = () => {
@@ -283,17 +286,17 @@ const EmployeeDashboard = () => {
     const scores = data.scores;
     const archetypes = [];
     
-    if (scores.soloGroup >= 5) archetypes.push(t('employeeDashboard.archetypes.independentWorker'));
-    else archetypes.push(t('employeeDashboard.archetypes.teamPlayer'));
+    if (scores.soloGroup >= 5) archetypes.push(t('tests.preference.independentWorker'));
+    else archetypes.push(t('tests.preference.teamPlayer'));
     
-    if (scores.onlineOffline >= 5) archetypes.push(t('employeeDashboard.archetypes.digitalNavigator'));
-    else archetypes.push(t('employeeDashboard.archetypes.inPersonEngager'));
+    if (scores.onlineOffline >= 5) archetypes.push(t('tests.preference.digitalNavigator'));
+    else archetypes.push(t('tests.preference.inPersonEngager'));
     
-    if (scores.stabilityFlexibility >= 5) archetypes.push(t('employeeDashboard.archetypes.structureSeeker'));
-    else archetypes.push(t('employeeDashboard.archetypes.lifelongLearner'));
+    if (scores.stabilityFlexibility >= 5) archetypes.push(t('tests.preference.structureSeeker'));
+    else archetypes.push(t('tests.preference.lifelongLearner'));
     
-    if (scores.dynamicHarmony >= 5) archetypes.push(t('employeeDashboard.archetypes.adaptiveGoGetter'));
-    else archetypes.push(t('employeeDashboard.archetypes.steadyCollaborator'));
+    if (scores.dynamicHarmony >= 5) archetypes.push(t('tests.preference.adaptiveGoGetter'));
+    else archetypes.push(t('tests.preference.steadyCollaborator'));
     
     return archetypes;
   };
@@ -319,8 +322,8 @@ const EmployeeDashboard = () => {
   // Get activity for a specific date
   const getActivityForDate = (date: Date) => {
     const activities: Record<string, string> = {
-      '2025-12-02': t('employeeDashboard.activities.walk'),
-      '2025-12-05': t('employeeDashboard.activities.meditate')
+      '2025-12-02': t('employee.activities.walk'),
+      '2025-12-05': t('employee.activities.meditate')
     };
     const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     return activities[dateStr] || null;
@@ -328,22 +331,22 @@ const EmployeeDashboard = () => {
 
   const formatMonthYear = () => {
     const monthNames = [
-      t('employeeDashboard.months.january'), t('employeeDashboard.months.february'),
-      t('employeeDashboard.months.march'), t('employeeDashboard.months.april'),
-      t('employeeDashboard.months.may'), t('employeeDashboard.months.june'),
-      t('employeeDashboard.months.july'), t('employeeDashboard.months.august'),
-      t('employeeDashboard.months.september'), t('employeeDashboard.months.october'),
-      t('employeeDashboard.months.november'), t('employeeDashboard.months.december')
+      t('employee.months.january'), t('employee.months.february'),
+      t('employee.months.march'), t('employee.months.april'),
+      t('employee.months.may'), t('employee.months.june'),
+      t('employee.months.july'), t('employee.months.august'),
+      t('employee.months.september'), t('employee.months.october'),
+      t('employee.months.november'), t('employee.months.december')
     ];
     return `${monthNames[currentWeekStart.getMonth()]} ${currentWeekStart.getFullYear()}`;
   };
 
   const getDayName = (date: Date) => {
     const dayNames = [
-      t('employeeDashboard.days.sun'), t('employeeDashboard.days.mon'),
-      t('employeeDashboard.days.tue'), t('employeeDashboard.days.wed'),
-      t('employeeDashboard.days.thu'), t('employeeDashboard.days.fri'),
-      t('employeeDashboard.days.sat')
+      t('employee.days.sun'), t('employee.days.mon'),
+      t('employee.days.tue'), t('employee.days.wed'),
+      t('employee.days.thu'), t('employee.days.fri'),
+      t('employee.days.sat')
     ];
     return dayNames[date.getDay()];
   };
@@ -356,10 +359,10 @@ const EmployeeDashboard = () => {
         {/* Header */}
         <div className="mb-10 animate-fade-in">
           <h1 className="text-4xl font-bold text-foreground mb-2">
-            {t('employeeDashboard.welcomeTitle')}
+            {t('employee.welcomeTitle')}
           </h1>
           <p className="text-lg text-muted-foreground">
-            {t('employeeDashboard.welcomeSubtitle')}
+            {t('employee.welcomeSubtitle')}
           </p>
         </div>
 
@@ -367,7 +370,7 @@ const EmployeeDashboard = () => {
         <Card className="p-8 mb-8 animate-slide-up">
           {overallProgress >= 100 ? (
             <div className="flex flex-col items-center justify-center text-center">
-              <h2 className="text-2xl font-semibold mb-4">{t('employeeDashboard.youreAllSet')}</h2>
+              <h2 className="text-2xl font-semibold mb-4">{t('employee.youreAllSet')}</h2>
               <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
                 <Check className="h-10 w-10 text-green-500" strokeWidth={3} />
               </div>
@@ -376,13 +379,13 @@ const EmployeeDashboard = () => {
             <>
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-2xl font-semibold mb-1">{t('employeeDashboard.yourProgress')}</h2>
+                  <h2 className="text-2xl font-semibold mb-1">{t('employee.yourProgress')}</h2>
                   <p className="text-muted-foreground">
                     {otherTestsOptional 
-                      ? t('employeeDashboard.progressOptionalTests')
+                      ? t('employee.otherTestsOptional')
                       : testStatus.burnout.completed && testStatus.burnout.score !== null && testStatus.burnout.score > 44
-                      ? t('employeeDashboard.progressCompleteAll')
-                      : t('employeeDashboard.progressCompleteBurnout')}
+                      ? t('employee.completeAllAssessments')
+                      : t('employee.completeBurnoutFirst')}
                   </p>
                 </div>
                 <div className="text-4xl font-bold text-primary">{overallProgress}%</div>
@@ -395,7 +398,7 @@ const EmployeeDashboard = () => {
         {/* Summary Cards - Shown when 100% complete */}
         {overallProgress >= 100 && (
           <Card className="p-6 mb-8 animate-slide-up">
-            <h2 className="text-xl font-semibold mb-6 text-center">{t('employeeDashboard.results')}</h2>
+            <h2 className="text-xl font-semibold mb-6 text-center">{t('employee.results')}</h2>
             <div className="grid gap-6 md:grid-cols-3">
               {/* Burnout Test Summary */}
               {testStatus.burnout.completed && testStatus.burnout.score !== null && (() => {
@@ -406,7 +409,7 @@ const EmployeeDashboard = () => {
                       <div className={`w-10 h-10 rounded-full ${colors.icon} flex items-center justify-center`}>
                         <Heart className="h-5 w-5" />
                       </div>
-                      <h3 className={`font-semibold ${colors.text}`}>{t('employeeDashboard.burnoutLevel')}</h3>
+                      <h3 className={`font-semibold ${colors.text}`}>{t('employee.burnoutLevel')}</h3>
                     </div>
                     <p className={`font-medium ${colors.text}`}>{getBurnoutLevel(testStatus.burnout.score)}</p>
                   </Card>
@@ -423,9 +426,9 @@ const EmployeeDashboard = () => {
                       <div className="w-10 h-10 rounded-full bg-purple-200 flex items-center justify-center">
                         <ChannelIcon className="h-5 w-5 text-purple-700" />
                       </div>
-                      <h3 className="font-semibold text-purple-900">{t('employeeDashboard.dominantStyle')}</h3>
+                      <h3 className="font-semibold text-purple-900">{t('employee.dominantStyle')}</h3>
                     </div>
-                    <p className="font-medium text-purple-800">{channel} {t('employeeDashboard.learner')}</p>
+                    <p className="font-medium text-purple-800">{channel} {t('employee.learner')}</p>
                   </Card>
                 );
               })()}
@@ -437,7 +440,7 @@ const EmployeeDashboard = () => {
                     <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center">
                       <Brain className="h-5 w-5 text-blue-700" />
                     </div>
-                    <h3 className="font-semibold text-blue-900">{t('employeeDashboard.yourArchetypes')}</h3>
+                    <h3 className="font-semibold text-blue-900">{t('employee.yourArchetypes')}</h3>
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {getPreferenceArchetypes().map((archetype, idx) => (
@@ -457,7 +460,7 @@ const EmployeeDashboard = () => {
           <Card className="p-6 mb-8 animate-slide-up border-primary/30 bg-primary/5">
             <div className="flex items-center gap-2 mb-4">
               <Bell className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">{t('employeeDashboard.eventInvitations')}</h2>
+              <h2 className="text-xl font-semibold">{t('employee.eventInvitations')}</h2>
               <Badge variant="secondary">{eventInvitations.length}</Badge>
             </div>
             <div className="space-y-3">
@@ -472,7 +475,7 @@ const EmployeeDashboard = () => {
                       <p className="text-sm text-muted-foreground mb-1">{invitation.event.description}</p>
                     )}
                     <p className="text-xs text-muted-foreground">
-                      {t('employeeDashboard.from')}: {invitation.event?.group?.name} • {new Date(invitation.created_at).toLocaleDateString()}
+                      {t('employee.from')}: {invitation.event?.group?.name} • {new Date(invitation.created_at).toLocaleDateString()}
                     </p>
                   </div>
                   <Button
@@ -480,7 +483,7 @@ const EmployeeDashboard = () => {
                     size="sm"
                     onClick={() => markInvitationAsViewed(invitation.id)}
                   >
-                    {t('employeeDashboard.dismiss')}
+                    {t('employee.dismiss')}
                   </Button>
                 </div>
               ))}
@@ -497,8 +500,8 @@ const EmployeeDashboard = () => {
                 <Heart className="h-6 w-6 text-rose-500" />
               </div>
               <div>
-                <h3 className="font-semibold">{t('employeeDashboard.tests.burnout.title')}</h3>
-                <p className="text-sm text-muted-foreground">{t('employeeDashboard.tests.burnout.subtitle')}</p>
+                <h3 className="font-semibold">{t('employee.burnoutTest')}</h3>
+                <p className="text-sm text-muted-foreground">{t('employee.burnoutTestDescription')}</p>
               </div>
             </div>
             
@@ -506,20 +509,20 @@ const EmployeeDashboard = () => {
               <div className="space-y-3">
                 <Badge variant="secondary" className="w-full justify-center py-1">
                   <Check className="h-3 w-3 mr-1" />
-                  {t('employeeDashboard.completed')}
+                  {t('employee.completed')}
                 </Badge>
                 {testStatus.burnout.lastTaken && (
                   <p className="text-xs text-muted-foreground text-center">
-                    {t('employeeDashboard.completedOn')} {new Date(testStatus.burnout.lastTaken).toLocaleDateString()}
+                    {t('employee.completedOn')} {new Date(testStatus.burnout.lastTaken).toLocaleDateString()}
                   </p>
                 )}
                 <Button variant="outline" className="w-full" onClick={() => navigate("/tests/burnout")}>
-                  {t('employeeDashboard.viewResults')}
+                  {t('employee.viewResults')}
                 </Button>
               </div>
             ) : (
               <Button className="w-full" onClick={() => navigate("/tests/burnout")}>
-                {t('employeeDashboard.startTest')}
+                {t('employee.takeTest')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             )}
@@ -532,8 +535,8 @@ const EmployeeDashboard = () => {
                 <Brain className="h-6 w-6 text-purple-500" />
               </div>
               <div>
-                <h3 className="font-semibold">{t('employeeDashboard.tests.perception.title')}</h3>
-                <p className="text-sm text-muted-foreground">{t('employeeDashboard.tests.perception.subtitle')}</p>
+                <h3 className="font-semibold">{t('employee.channelPerceptionTest')}</h3>
+                <p className="text-sm text-muted-foreground">{t('employee.channelPerceptionTestDescription')}</p>
               </div>
             </div>
             
@@ -541,36 +544,36 @@ const EmployeeDashboard = () => {
               <div className="space-y-3">
                 <Badge variant="secondary" className="w-full justify-center py-1">
                   <Check className="h-3 w-3 mr-1" />
-                  {t('employeeDashboard.completed')}
+                  {t('employee.completed')}
                 </Badge>
                 {testStatus.perception.lastTaken && (
                   <p className="text-xs text-muted-foreground text-center">
-                    {t('employeeDashboard.completedOn')} {new Date(testStatus.perception.lastTaken).toLocaleDateString()}
+                    {t('employee.completedOn')} {new Date(testStatus.perception.lastTaken).toLocaleDateString()}
                   </p>
                 )}
                 <Button variant="outline" className="w-full" onClick={() => navigate("/tests/perception")}>
-                  {t('employeeDashboard.viewResults')}
+                  {t('employee.viewResults')}
                 </Button>
               </div>
             ) : !testStatus.burnout.completed ? (
               <div className="space-y-3">
                 <Badge variant="outline" className="w-full justify-center py-1">
                   <Clock className="h-3 w-3 mr-1" />
-                  {t('employeeDashboard.locked')}
+                  {t('employee.locked')}
                 </Badge>
                 <p className="text-xs text-muted-foreground text-center">
-                  {t('employeeDashboard.completeBurnoutFirst')}
+                  {t('employee.completeBurnoutToUnlock')}
                 </p>
               </div>
             ) : (
               <div className="space-y-2">
                 {otherTestsOptional && (
                   <Badge variant="outline" className="w-full justify-center py-1 text-green-600 border-green-300">
-                    {t('employeeDashboard.optional')}
+                    {t('employee.optional')}
                   </Badge>
                 )}
                 <Button className="w-full" onClick={() => navigate("/tests/perception")}>
-                  {t('employeeDashboard.startTest')}
+                  {t('employee.takeTest')}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -584,8 +587,8 @@ const EmployeeDashboard = () => {
                 <ClipboardCheck className="h-6 w-6 text-blue-500" />
               </div>
               <div>
-                <h3 className="font-semibold">{t('employeeDashboard.tests.preference.title')}</h3>
-                <p className="text-sm text-muted-foreground">{t('employeeDashboard.tests.preference.subtitle')}</p>
+                <h3 className="font-semibold">{t('employee.preferencesTest')}</h3>
+                <p className="text-sm text-muted-foreground">{t('employee.preferencesTestDescription')}</p>
               </div>
             </div>
             
@@ -593,36 +596,36 @@ const EmployeeDashboard = () => {
               <div className="space-y-3">
                 <Badge variant="secondary" className="w-full justify-center py-1">
                   <Check className="h-3 w-3 mr-1" />
-                  {t('employeeDashboard.completed')}
+                  {t('employee.completed')}
                 </Badge>
                 {testStatus.preference.lastTaken && (
                   <p className="text-xs text-muted-foreground text-center">
-                    {t('employeeDashboard.completedOn')} {new Date(testStatus.preference.lastTaken).toLocaleDateString()}
+                    {t('employee.completedOn')} {new Date(testStatus.preference.lastTaken).toLocaleDateString()}
                   </p>
                 )}
                 <Button variant="outline" className="w-full" onClick={() => navigate("/tests/preference")}>
-                  {t('employeeDashboard.viewResults')}
+                  {t('employee.viewResults')}
                 </Button>
               </div>
             ) : !testStatus.burnout.completed ? (
               <div className="space-y-3">
                 <Badge variant="outline" className="w-full justify-center py-1">
                   <Clock className="h-3 w-3 mr-1" />
-                  {t('employeeDashboard.locked')}
+                  {t('employee.locked')}
                 </Badge>
                 <p className="text-xs text-muted-foreground text-center">
-                  {t('employeeDashboard.completeBurnoutFirst')}
+                  {t('employee.completeBurnoutToUnlock')}
                 </p>
               </div>
             ) : (
               <div className="space-y-2">
                 {otherTestsOptional && (
                   <Badge variant="outline" className="w-full justify-center py-1 text-green-600 border-green-300">
-                    {t('employeeDashboard.optional')}
+                    {t('employee.optional')}
                   </Badge>
                 )}
                 <Button className="w-full" onClick={() => navigate("/tests/preference")}>
-                  {t('employeeDashboard.startTest')}
+                  {t('employee.takeTest')}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -635,7 +638,7 @@ const EmployeeDashboard = () => {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <Calendar className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">{t('employeeDashboard.suggestedActivities')}</h2>
+              <h2 className="text-xl font-semibold">{t('employee.suggestedWeeklyActivities')}</h2>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="icon" onClick={() => navigateWeek('prev')}>
