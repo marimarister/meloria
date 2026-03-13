@@ -673,45 +673,86 @@ const EmployeeDashboard = () => {
           </Card>
         </div>
 
-        {/* Weekly Activity Calendar */}
+        {/* My Wellness Plan */}
         <Card className="p-6 animate-slide-up" style={{ animationDelay: "0.4s" }}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">{t('employee.suggestedWeeklyActivities')}</h2>
+              <ShoppingBag className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">{t('marketplace.myPlan')}</h2>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="icon" onClick={() => navigateWeek('prev')}>
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="text-sm font-medium min-w-[150px] text-center">{formatMonthYear()}</span>
-              <Button variant="outline" size="icon" onClick={() => navigateWeek('next')}>
-                <ChevronRight className="h-4 w-4" />
+              <Badge variant="outline" className="text-xs">
+                {t('marketplace.period')}: {periodStart}
+              </Badge>
+              <Button variant="outline" size="sm" onClick={() => navigate("/marketplace")}>
+                {t('marketplace.browsePractices')}
               </Button>
             </div>
           </div>
-          
-          <div className="grid grid-cols-7 gap-2">
-            {getWeekDays().map((date, index) => {
-              const activity = getActivityForDate(date);
-              return (
-                <div 
-                  key={index}
-                  className={`p-3 rounded-lg border min-h-[100px] ${
-                    activity ? 'bg-primary/5 border-primary/20' : 'bg-muted/30'
-                  }`}
-                >
-                  <div className="text-center mb-2">
-                    <div className="text-2xl font-bold">{date.getDate()}</div>
-                    <div className="text-xs text-muted-foreground">{getDayName(date)}</div>
+
+          {cartLoading ? (
+            <div className="flex justify-center py-8">
+              <Clock className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : cartItems.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground mb-3">{t('marketplace.emptyCart')}</p>
+              <Button onClick={() => navigate("/marketplace")}>
+                {t('marketplace.exploreMarketplace')}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-3">
+              {['core', 'support', 'optional'].map((slot) => {
+                const item = cartItems.find(i => i.cart_role === slot);
+                return (
+                  <div
+                    key={slot}
+                    className={`rounded-lg border p-4 min-h-[120px] flex flex-col ${
+                      item ? slotColors[slot] : 'bg-muted/30 border-dashed'
+                    }`}
+                  >
+                    <Badge variant="outline" className="self-start text-[10px] mb-2">
+                      {slotLabels[slot]}
+                    </Badge>
+                    {item?.practice ? (
+                      <div className="flex-1 flex flex-col">
+                        <h4 className="font-medium text-sm">{item.practice.title}</h4>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {item.practice.provider}
+                        </p>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                          {item.practice.format && (
+                            <span className="flex items-center gap-0.5">
+                              <MapPin className="h-3 w-3" />
+                              {item.practice.format}
+                            </span>
+                          )}
+                          {item.practice.duration_minutes && (
+                            <span>{item.practice.duration_minutes} {t('marketplace.min')}</span>
+                          )}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="mt-auto self-end text-destructive hover:text-destructive h-7 px-2"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          <Trash2 className="h-3 w-3 mr-1" />
+                          {t('common.delete')}
+                        </Button>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground mt-auto">
+                        {t('marketplace.emptySlot')}
+                      </p>
+                    )}
                   </div>
-                  {activity && (
-                    <p className="text-xs text-center text-primary font-medium">{activity}</p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </Card>
       </div>
     </div>
