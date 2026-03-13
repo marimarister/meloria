@@ -1,11 +1,13 @@
 import { en } from './translations/en';
 import { lv } from './translations/lv';
+import { ru } from './translations/ru';
 
-export type Language = 'en' | 'lv';
+export type Language = 'en' | 'lv' | 'ru';
 
 export const translations = {
   en,
   lv,
+  ru,
 } as const;
 
 export type TranslationKeys = typeof en;
