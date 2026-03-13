@@ -164,8 +164,16 @@ const Practices = () => {
                 <Input value={form.title} onChange={e => updateField('title', e.target.value)} />
               </div>
               <div className="grid gap-2">
+                <Label>Title (LV)</Label>
+                <Input value={form.title_lv || ''} onChange={e => updateField('title_lv', e.target.value || null)} placeholder="Latvian title" />
+              </div>
+              <div className="grid gap-2">
                 <Label>Description</Label>
                 <Textarea value={form.description || ''} onChange={e => updateField('description', e.target.value)} rows={3} />
+              </div>
+              <div className="grid gap-2">
+                <Label>Description (LV)</Label>
+                <Textarea value={form.description_lv || ''} onChange={e => updateField('description_lv', e.target.value || null)} rows={3} placeholder="Latvian description" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
