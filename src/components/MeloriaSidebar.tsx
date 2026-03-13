@@ -6,6 +6,7 @@ import {
   Settings, 
   LogOut,
   Users,
+  BookOpen,
   X
 } from "lucide-react";
 import {
