@@ -1,16 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import NavBar from "@/components/NavBar";
 import { useMarketplace } from "@/hooks/useMarketplace";
 import { useCart } from "@/hooks/useCart";
 import { MarketplaceSectionComponent } from "@/components/marketplace/MarketplaceSection";
-import { CartSlot } from "@/components/marketplace/CartSlot";
+import { MarketplaceFilters, defaultFilters, type MarketplaceFilterState } from "@/components/marketplace/MarketplaceFilters";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ShoppingCart, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SLOT_LIMITS } from "@/lib/marketplace";
+import type { ScoredPractice, MarketplaceSection } from "@/lib/marketplace";
 
 const Marketplace = () => {
   const navigate = useNavigate();
