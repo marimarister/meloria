@@ -22,7 +22,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       try {
         // First check localStorage for immediate display
         const storedLang = localStorage.getItem('preferredLanguage') as Language;
-        if (storedLang && (storedLang === 'en' || storedLang === 'lv')) {
+        if (storedLang && (storedLang === 'en' || storedLang === 'lv' || storedLang === 'ru')) {
           setLanguageState(storedLang);
         }
 
