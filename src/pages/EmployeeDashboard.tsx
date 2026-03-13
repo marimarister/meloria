@@ -468,6 +468,24 @@ const EmployeeDashboard = () => {
           </Card>
         )}
 
+        {/* Marketplace CTA — shown when all 3 tests are complete */}
+        {testStatus.burnout.completed && testStatus.perception.completed && testStatus.preference.completed && (
+          <Card className="p-6 mb-8 animate-slide-up border-primary/30 bg-primary/5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <ShoppingBag className="h-6 w-6 text-primary" />
+                <div>
+                  <h2 className="text-lg font-semibold">{t('marketplace.title')}</h2>
+                  <p className="text-sm text-muted-foreground">{t('marketplace.subtitle')}</p>
+                </div>
+              </div>
+              <Button onClick={() => navigate("/marketplace")}>
+                {t('marketplace.exploreMarketplace')}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </Card>
+
         {/* Event Invitations */}
         {eventInvitations.length > 0 && (
           <Card className="p-6 mb-8 animate-slide-up border-primary/30 bg-primary/5">
