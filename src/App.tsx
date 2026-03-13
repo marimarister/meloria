@@ -25,9 +25,12 @@ import MeloriaSettings from "./pages/meloria-admin/MeloriaSettings";
 import EditQuestionnaire from "./pages/meloria-admin/EditQuestionnaire";
 import ViewDashboard from "./pages/meloria-admin/ViewDashboard";
 import EditPremiumPlan from "./pages/meloria-admin/EditPremiumPlan";
+import Practices from "./pages/meloria-admin/Practices";
 import OurStory from "./pages/OurStory";
 import Catalog from "./pages/Catalog";
 import Contact from "./pages/Contact";
+import Marketplace from "./pages/Marketplace";
+import Cart from "./pages/Cart";
 
 const queryClient = new QueryClient();
 
