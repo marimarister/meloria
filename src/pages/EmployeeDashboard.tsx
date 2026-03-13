@@ -18,7 +18,8 @@ import {
   ChevronRight,
   CalendarCheck,
   Bell,
-  AlertTriangle
+  AlertTriangle,
+  ShoppingBag
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
