@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      cart_items: {
+        Row: {
+          added_at: string | null
+          cart_role: string | null
+          id: string
+          period_start: string
+          practice_id: string
+          user_id: string
+        }
+        Insert: {
+          added_at?: string | null
+          cart_role?: string | null
+          id?: string
+          period_start: string
+          practice_id: string
+          user_id: string
+        }
+        Update: {
+          added_at?: string | null
+          cart_role?: string | null
+          id?: string
+          period_start?: string
+          practice_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       company_groups: {
         Row: {
           created_at: string | null
@@ -172,6 +207,81 @@ export type Database = {
           created_at?: string | null
           id?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      practices: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          fit_a: number | null
+          fit_d: number | null
+          fit_k: number | null
+          fit_v: number | null
+          format: string | null
+          id: string
+          image_url: string | null
+          intensity: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          price_credits: number | null
+          provider: string | null
+          social_fit_group: number | null
+          social_fit_solo: number | null
+          targets_dp: number | null
+          targets_ee: number | null
+          targets_pa: number | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          fit_a?: number | null
+          fit_d?: number | null
+          fit_k?: number | null
+          fit_v?: number | null
+          format?: string | null
+          id?: string
+          image_url?: string | null
+          intensity?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          price_credits?: number | null
+          provider?: string | null
+          social_fit_group?: number | null
+          social_fit_solo?: number | null
+          targets_dp?: number | null
+          targets_ee?: number | null
+          targets_pa?: number | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          fit_a?: number | null
+          fit_d?: number | null
+          fit_k?: number | null
+          fit_v?: number | null
+          format?: string | null
+          id?: string
+          image_url?: string | null
+          intensity?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          price_credits?: number | null
+          provider?: string | null
+          social_fit_group?: number | null
+          social_fit_solo?: number | null
+          targets_dp?: number | null
+          targets_ee?: number | null
+          targets_pa?: number | null
+          title?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
