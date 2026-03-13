@@ -6,7 +6,6 @@ import {
   ClipboardCheck, 
   Brain, 
   Heart, 
-  Calendar,
   ArrowRight,
   Clock,
   Check,
@@ -14,12 +13,12 @@ import {
   Volume2,
   Hand,
   Monitor,
-  ChevronLeft,
-  ChevronRight,
   CalendarCheck,
   Bell,
   AlertTriangle,
-  ShoppingBag
+  ShoppingBag,
+  MapPin,
+  Trash2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -29,6 +28,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { format, addMonths, isBefore } from "date-fns";
 import { TestDueNotification } from "@/components/TestDueNotification";
+import { useCart } from "@/hooks/useCart";
 
 interface EventInvitation {
   id: string;
