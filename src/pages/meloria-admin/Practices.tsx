@@ -59,6 +59,8 @@ const emptyForm: Omit<Practice, 'id'> = {
   is_active: true,
   is_featured: false,
   image_url: null,
+  title_lv: null,
+  description_lv: null,
 };
 
 const Practices = () => {
