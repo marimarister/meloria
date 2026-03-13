@@ -35,6 +35,8 @@ interface Practice {
   is_active: boolean;
   is_featured: boolean;
   image_url: string | null;
+  title_lv: string | null;
+  description_lv: string | null;
 }
 
 const emptyForm: Omit<Practice, 'id'> = {
