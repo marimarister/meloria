@@ -485,6 +485,7 @@ const EmployeeDashboard = () => {
               </Button>
             </div>
           </Card>
+        )}
 
         {/* Event Invitations */}
         {eventInvitations.length > 0 && (
