@@ -13,9 +13,14 @@ interface CartSlotProps {
 }
 
 export function CartSlot({ role, items, onRemove }: CartSlotProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const limit = SLOT_LIMITS[role] || 1;
   const filled = items.length;
+
+  const getTitle = (item: CartItem) => {
+    if (language === 'lv' && item.practice?.title_lv) return item.practice.title_lv;
+    return item.practice?.title;
+  };
 
   return (
     <Card className="p-5">
@@ -35,7 +40,7 @@ export function CartSlot({ role, items, onRemove }: CartSlotProps) {
           {items.map((item) => (
             <div key={item.id} className="flex items-start justify-between gap-2 p-3 rounded-lg bg-muted/40">
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm leading-tight">{item.practice?.title}</p>
+                <p className="font-medium text-sm leading-tight">{getTitle(item)}</p>
                 {item.practice?.provider && (
                   <p className="text-xs text-muted-foreground">{item.practice.provider}</p>
                 )}

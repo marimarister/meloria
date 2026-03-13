@@ -35,6 +35,8 @@ interface Practice {
   is_active: boolean;
   is_featured: boolean;
   image_url: string | null;
+  title_lv: string | null;
+  description_lv: string | null;
 }
 
 const emptyForm: Omit<Practice, 'id'> = {
@@ -57,6 +59,8 @@ const emptyForm: Omit<Practice, 'id'> = {
   is_active: true,
   is_featured: false,
   image_url: null,
+  title_lv: null,
+  description_lv: null,
 };
 
 const Practices = () => {
@@ -104,6 +108,8 @@ const Practices = () => {
       is_active: p.is_active,
       is_featured: p.is_featured,
       image_url: p.image_url,
+      title_lv: p.title_lv || null,
+      description_lv: p.description_lv || null,
     });
     setDialogOpen(true);
   };
@@ -158,8 +164,16 @@ const Practices = () => {
                 <Input value={form.title} onChange={e => updateField('title', e.target.value)} />
               </div>
               <div className="grid gap-2">
+                <Label>Title (LV)</Label>
+                <Input value={form.title_lv || ''} onChange={e => updateField('title_lv', e.target.value || null)} placeholder="Latvian title" />
+              </div>
+              <div className="grid gap-2">
                 <Label>Description</Label>
                 <Textarea value={form.description || ''} onChange={e => updateField('description', e.target.value)} rows={3} />
+              </div>
+              <div className="grid gap-2">
+                <Label>Description (LV)</Label>
+                <Textarea value={form.description_lv || ''} onChange={e => updateField('description_lv', e.target.value || null)} rows={3} placeholder="Latvian description" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">

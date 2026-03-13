@@ -48,7 +48,7 @@ interface EventInvitation {
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [testStatus, setTestStatus] = useState({
     burnout: { completed: false, lastTaken: null as string | null, score: null as number | null },
@@ -718,7 +718,7 @@ const EmployeeDashboard = () => {
                     </Badge>
                     {item?.practice ? (
                       <div className="flex-1 flex flex-col">
-                        <h4 className="font-medium text-sm">{item.practice.title}</h4>
+                        <h4 className="font-medium text-sm">{(language === 'lv' && item.practice.title_lv) ? item.practice.title_lv : item.practice.title}</h4>
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {item.practice.provider}
                         </p>

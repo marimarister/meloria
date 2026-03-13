@@ -35,8 +35,8 @@ const Marketplace = () => {
     const matchesFilter = (p: ScoredPractice) => {
       if (filters.search) {
         const q = filters.search.toLowerCase();
-        const inTitle = p.title.toLowerCase().includes(q);
-        const inDesc = p.description?.toLowerCase().includes(q);
+        const inTitle = p.title.toLowerCase().includes(q) || p.title_lv?.toLowerCase().includes(q);
+        const inDesc = p.description?.toLowerCase().includes(q) || p.description_lv?.toLowerCase().includes(q);
         const inProvider = p.provider?.toLowerCase().includes(q);
         if (!inTitle && !inDesc && !inProvider) return false;
       }
