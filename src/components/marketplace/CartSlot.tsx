@@ -19,6 +19,7 @@ export function CartSlot({ role, items, onRemove }: CartSlotProps) {
 
   const getTitle = (item: CartItem) => {
     if (language === 'lv' && item.practice?.title_lv) return item.practice.title_lv;
+    if (language === 'ru' && item.practice?.title_ru) return item.practice.title_ru;
     return item.practice?.title;
   };
 

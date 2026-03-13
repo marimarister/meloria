@@ -718,7 +718,7 @@ const EmployeeDashboard = () => {
                     </Badge>
                     {item?.practice ? (
                       <div className="flex-1 flex flex-col">
-                        <h4 className="font-medium text-sm">{(language === 'lv' && item.practice.title_lv) ? item.practice.title_lv : item.practice.title}</h4>
+                        <h4 className="font-medium text-sm">{(language === 'lv' && item.practice.title_lv) ? item.practice.title_lv : (language === 'ru' && item.practice.title_ru) ? item.practice.title_ru : item.practice.title}</h4>
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {item.practice.provider}
                         </p>

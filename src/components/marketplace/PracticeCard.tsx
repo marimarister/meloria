@@ -25,8 +25,8 @@ const reasonIcons: Record<string, typeof Zap> = {
 export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: PracticeCardProps) {
   const { t, language } = useLanguage();
 
-  const title = (language === 'lv' && practice.title_lv) ? practice.title_lv : practice.title;
-  const description = (language === 'lv' && practice.description_lv) ? practice.description_lv : practice.description;
+  const title = (language === 'lv' && practice.title_lv) ? practice.title_lv : (language === 'ru' && practice.title_ru) ? practice.title_ru : practice.title;
+  const description = (language === 'lv' && practice.description_lv) ? practice.description_lv : (language === 'ru' && practice.description_ru) ? practice.description_ru : practice.description;
 
   const formatLabel = practice.format
     ? practice.format.charAt(0).toUpperCase() + practice.format.slice(1)
