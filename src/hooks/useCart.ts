@@ -13,6 +13,7 @@ export interface CartItem {
   practice?: {
     id: string;
     title: string;
+    title_lv: string | null;
     provider: string | null;
     format: string | null;
     duration_minutes: number | null;
