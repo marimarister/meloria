@@ -56,9 +56,7 @@ const EmployeeDashboard = () => {
     preference: { completed: false, lastTaken: null as string | null }
   });
   const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>([]);
-  
-  // Calendar state - starting at December 1-7, 2025
-  const [currentWeekStart, setCurrentWeekStart] = useState(new Date(2025, 11, 1)); // December 1, 2025
+  const { items: cartItems, isLoading: cartLoading, periodStart, removeFromCart } = useCart();
 
   // Check authentication on mount
   useEffect(() => {
