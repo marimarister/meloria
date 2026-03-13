@@ -785,6 +785,14 @@ export const lv = {
     deletePlan: "Dzēst plānu",
     noPlansFound: "Plāni nav atrasti",
     
+    // Practices
+    practicesTitle: "Prakšu katalogs",
+    practicesDescription: "Pārvaldiet tirgus prakšu katalogu",
+    practices: "Prakses",
+    addPractice: "Pievienot praksi",
+    editPractice: "Rediģēt praksi",
+    noPractices: "Vēl nav prakšu. Izveidojiet pirmo!",
+    
     // Settings
     settingsTitle: "Iestatījumi",
     personalInfo: "Personīgā informācija",

@@ -785,6 +785,14 @@ export const en = {
     deletePlan: "Delete Plan",
     noPlansFound: "No plans found",
     
+    // Practices
+    practicesTitle: "Practices Catalog",
+    practicesDescription: "Manage the marketplace practice catalog",
+    practices: "Practices",
+    addPractice: "Add Practice",
+    editPractice: "Edit Practice",
+    noPractices: "No practices yet. Create your first one!",
+    
     // Settings
     settingsTitle: "Settings",
     personalInfo: "Personal Information",

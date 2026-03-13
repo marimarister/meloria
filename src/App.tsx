@@ -66,6 +66,7 @@ const App = () => (
             <Route path="view-dashboard/:memberId/:dashboardType" element={<ViewDashboard />} />
             <Route path="premium-plans" element={<PremiumPlans />} />
             <Route path="premium-plans/:planType" element={<EditPremiumPlan />} />
+            <Route path="practices" element={<Practices />} />
             <Route path="settings" element={<MeloriaSettings />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
