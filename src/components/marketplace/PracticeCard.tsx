@@ -73,8 +73,8 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
       </div>
 
       {/* Description */}
-      {practice.description && (
-        <p className="text-sm text-muted-foreground line-clamp-2">{practice.description}</p>
+      {description && (
+        <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
       )}
 
       {/* Reasons */}
