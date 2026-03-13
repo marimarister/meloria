@@ -23,7 +23,10 @@ const reasonIcons: Record<string, typeof Zap> = {
 };
 
 export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: PracticeCardProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const title = (language === 'lv' && practice.title_lv) ? practice.title_lv : practice.title;
+  const description = (language === 'lv' && practice.description_lv) ? practice.description_lv : practice.description;
 
   const formatLabel = practice.format
     ? practice.format.charAt(0).toUpperCase() + practice.format.slice(1)
@@ -34,7 +37,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-base leading-tight line-clamp-2">{practice.title}</h3>
+          <h3 className="font-semibold text-base leading-tight line-clamp-2">{title}</h3>
           {practice.provider && (
             <p className="text-xs text-muted-foreground mt-0.5">{practice.provider}</p>
           )}
