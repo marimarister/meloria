@@ -64,6 +64,11 @@ export function MeloriaSidebar() {
       icon: CreditCard 
     },
     { 
+      title: t('meloria.practices'), 
+      url: "/meloria-admin/practices", 
+      icon: BookOpen 
+    },
+    { 
       title: t('meloria.settings'), 
       url: "/meloria-admin/settings", 
       icon: Settings 
