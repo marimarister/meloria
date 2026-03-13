@@ -14,6 +14,7 @@ export interface CartItem {
     id: string;
     title: string;
     title_lv: string | null;
+    title_ru: string | null;
     provider: string | null;
     format: string | null;
     duration_minutes: number | null;
