@@ -1,16 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import NavBar from "@/components/NavBar";
 import { useMarketplace } from "@/hooks/useMarketplace";
 import { useCart } from "@/hooks/useCart";
 import { MarketplaceSectionComponent } from "@/components/marketplace/MarketplaceSection";
-import { CartSlot } from "@/components/marketplace/CartSlot";
+import { MarketplaceFilters, defaultFilters, type MarketplaceFilterState } from "@/components/marketplace/MarketplaceFilters";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ShoppingCart, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SLOT_LIMITS } from "@/lib/marketplace";
+import type { ScoredPractice, MarketplaceSection } from "@/lib/marketplace";
 
 const Marketplace = () => {
   const navigate = useNavigate();
@@ -24,9 +25,34 @@ const Marketplace = () => {
     }
   }, [isGated, mpLoading, navigate]);
 
+  const [filters, setFilters] = useState<MarketplaceFilterState>(defaultFilters);
+
   const cartPracticeIds = items.map(i => i.practice_id);
   const disabledSlots = Object.keys(SLOT_LIMITS).filter(role => isSlotFull(role));
   const totalCartItems = items.length;
+
+  const filteredSections = useMemo(() => {
+    const matchesFilter = (p: ScoredPractice) => {
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        const inTitle = p.title.toLowerCase().includes(q);
+        const inDesc = p.description?.toLowerCase().includes(q);
+        const inProvider = p.provider?.toLowerCase().includes(q);
+        if (!inTitle && !inDesc && !inProvider) return false;
+      }
+      if (filters.format !== "all" && p.format !== filters.format) return false;
+      if (filters.intensity !== "all" && p.intensity !== filters.intensity) return false;
+      if (p.price_credits > filters.maxPrice) return false;
+      return true;
+    };
+
+    return sections
+      .map((s): MarketplaceSection => ({
+        key: s.key,
+        practices: s.practices.filter(matchesFilter),
+      }))
+      .filter((s) => s.practices.length > 0);
+  }, [sections, filters]);
 
   if (mpLoading || cartLoading) {
     return (
@@ -83,15 +109,18 @@ const Marketplace = () => {
           </div>
         </div>
 
+        {/* Filters */}
+        <MarketplaceFilters filters={filters} onChange={setFilters} />
+
         {/* Empty state */}
-        {sections.length === 0 && (
+        {filteredSections.length === 0 && (
           <Card className="p-12 text-center">
             <p className="text-lg text-muted-foreground">{t('marketplace.noPractices')}</p>
           </Card>
         )}
 
         {/* Sections */}
-        {sections.map((section) => (
+        {filteredSections.map((section) => (
           <MarketplaceSectionComponent
             key={section.key}
             sectionKey={section.key}
