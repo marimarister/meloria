@@ -48,7 +48,7 @@ interface EventInvitation {
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [testStatus, setTestStatus] = useState({
     burnout: { completed: false, lastTaken: null as string | null, score: null as number | null },
