@@ -25,9 +25,34 @@ const Marketplace = () => {
     }
   }, [isGated, mpLoading, navigate]);
 
+  const [filters, setFilters] = useState<MarketplaceFilterState>(defaultFilters);
+
   const cartPracticeIds = items.map(i => i.practice_id);
   const disabledSlots = Object.keys(SLOT_LIMITS).filter(role => isSlotFull(role));
   const totalCartItems = items.length;
+
+  const filteredSections = useMemo(() => {
+    const matchesFilter = (p: ScoredPractice) => {
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        const inTitle = p.title.toLowerCase().includes(q);
+        const inDesc = p.description?.toLowerCase().includes(q);
+        const inProvider = p.provider?.toLowerCase().includes(q);
+        if (!inTitle && !inDesc && !inProvider) return false;
+      }
+      if (filters.format !== "all" && p.format !== filters.format) return false;
+      if (filters.intensity !== "all" && p.intensity !== filters.intensity) return false;
+      if (p.price_credits > filters.maxPrice) return false;
+      return true;
+    };
+
+    return sections
+      .map((s): MarketplaceSection => ({
+        key: s.key,
+        practices: s.practices.filter(matchesFilter),
+      }))
+      .filter((s) => s.practices.length > 0);
+  }, [sections, filters]);
 
   if (mpLoading || cartLoading) {
     return (
