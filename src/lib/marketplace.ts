@@ -27,7 +27,9 @@ export interface PreferenceScores {
 export interface Practice {
   id: string;
   title: string;
+  title_lv: string | null;
   description: string | null;
+  description_lv: string | null;
   provider: string | null;
   price_credits: number;
   duration_minutes: number | null;
