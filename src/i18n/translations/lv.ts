@@ -22,6 +22,7 @@ export const lv = {
   language: {
     en: "Angļu",
     lv: "Latviešu",
+    ru: "Krievu",
   },
 
   // Index page

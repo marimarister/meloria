@@ -22,7 +22,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       try {
         // First check localStorage for immediate display
         const storedLang = localStorage.getItem('preferredLanguage') as Language;
-        if (storedLang && (storedLang === 'en' || storedLang === 'lv')) {
+        if (storedLang && (storedLang === 'en' || storedLang === 'lv' || storedLang === 'ru')) {
           setLanguageState(storedLang);
         }
 
@@ -38,7 +38,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             .eq('id', session.user.id)
             .single();
           
-          if (profile?.preferred_language && (profile.preferred_language === 'en' || profile.preferred_language === 'lv')) {
+          if (profile?.preferred_language && (profile.preferred_language === 'en' || profile.preferred_language === 'lv' || profile.preferred_language === 'ru')) {
             setLanguageState(profile.preferred_language as Language);
             localStorage.setItem('preferredLanguage', profile.preferred_language);
           }
@@ -65,7 +65,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             .eq('id', session.user.id)
             .single();
           
-          if (profile?.preferred_language && (profile.preferred_language === 'en' || profile.preferred_language === 'lv')) {
+          if (profile?.preferred_language && (profile.preferred_language === 'en' || profile.preferred_language === 'lv' || profile.preferred_language === 'ru')) {
             setLanguageState(profile.preferred_language as Language);
             localStorage.setItem('preferredLanguage', profile.preferred_language);
           }

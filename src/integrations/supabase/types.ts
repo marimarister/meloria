@@ -215,6 +215,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           description_lv: string | null
+          description_ru: string | null
           duration_minutes: number | null
           fit_a: number | null
           fit_d: number | null
@@ -235,12 +236,14 @@ export type Database = {
           targets_pa: number | null
           title: string
           title_lv: string | null
+          title_ru: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
           description?: string | null
           description_lv?: string | null
+          description_ru?: string | null
           duration_minutes?: number | null
           fit_a?: number | null
           fit_d?: number | null
@@ -261,12 +264,14 @@ export type Database = {
           targets_pa?: number | null
           title: string
           title_lv?: string | null
+          title_ru?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
           description?: string | null
           description_lv?: string | null
+          description_ru?: string | null
           duration_minutes?: number | null
           fit_a?: number | null
           fit_d?: number | null
@@ -287,6 +292,7 @@ export type Database = {
           targets_pa?: number | null
           title?: string
           title_lv?: string | null
+          title_ru?: string | null
           updated_at?: string | null
         }
         Relationships: []

@@ -14,6 +14,7 @@ export interface CartItem {
     id: string;
     title: string;
     title_lv: string | null;
+    title_ru: string | null;
     provider: string | null;
     format: string | null;
     duration_minutes: number | null;
@@ -43,7 +44,7 @@ export function useCart() {
       (data as any[] || []).map(async (item: any) => {
         const { data: practice } = await supabase
           .from("practices" as any)
-          .select("id, title, title_lv, provider, format, duration_minutes, price_credits")
+          .select("id, title, title_lv, title_ru, provider, format, duration_minutes, price_credits")
           .eq("id", item.practice_id)
           .single();
         return { ...item, practice } as CartItem;
