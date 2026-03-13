@@ -303,54 +303,16 @@ const EmployeeDashboard = () => {
     return archetypes;
   };
 
-  // Calendar navigation
-  const navigateWeek = (direction: 'prev' | 'next') => {
-    const newDate = new Date(currentWeekStart);
-    newDate.setDate(currentWeekStart.getDate() + (direction === 'next' ? 7 : -7));
-    setCurrentWeekStart(newDate);
+  const slotLabels: Record<string, string> = {
+    core: t('marketplace.slot.core'),
+    support: t('marketplace.slot.support'),
+    optional: t('marketplace.slot.optional'),
   };
 
-  // Generate week days
-  const getWeekDays = () => {
-    const days = [];
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(currentWeekStart);
-      date.setDate(currentWeekStart.getDate() + i);
-      days.push(date);
-    }
-    return days;
-  };
-
-  // Get activity for a specific date
-  const getActivityForDate = (date: Date) => {
-    const activities: Record<string, string> = {
-      '2025-12-02': t('employee.activities.walk'),
-      '2025-12-05': t('employee.activities.meditate')
-    };
-    const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    return activities[dateStr] || null;
-  };
-
-  const formatMonthYear = () => {
-    const monthNames = [
-      t('employee.months.january'), t('employee.months.february'),
-      t('employee.months.march'), t('employee.months.april'),
-      t('employee.months.may'), t('employee.months.june'),
-      t('employee.months.july'), t('employee.months.august'),
-      t('employee.months.september'), t('employee.months.october'),
-      t('employee.months.november'), t('employee.months.december')
-    ];
-    return `${monthNames[currentWeekStart.getMonth()]} ${currentWeekStart.getFullYear()}`;
-  };
-
-  const getDayName = (date: Date) => {
-    const dayNames = [
-      t('employee.days.sun'), t('employee.days.mon'),
-      t('employee.days.tue'), t('employee.days.wed'),
-      t('employee.days.thu'), t('employee.days.fri'),
-      t('employee.days.sat')
-    ];
-    return dayNames[date.getDay()];
+  const slotColors: Record<string, string> = {
+    core: 'bg-primary/10 border-primary/30 text-primary',
+    support: 'bg-accent/50 border-accent text-accent-foreground',
+    optional: 'bg-muted border-border text-muted-foreground',
   };
 
   return (
