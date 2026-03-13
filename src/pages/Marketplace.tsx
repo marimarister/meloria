@@ -109,15 +109,18 @@ const Marketplace = () => {
           </div>
         </div>
 
+        {/* Filters */}
+        <MarketplaceFilters filters={filters} onChange={setFilters} />
+
         {/* Empty state */}
-        {sections.length === 0 && (
+        {filteredSections.length === 0 && (
           <Card className="p-12 text-center">
             <p className="text-lg text-muted-foreground">{t('marketplace.noPractices')}</p>
           </Card>
         )}
 
         {/* Sections */}
-        {sections.map((section) => (
+        {filteredSections.map((section) => (
           <MarketplaceSectionComponent
             key={section.key}
             sectionKey={section.key}
