@@ -108,6 +108,8 @@ const Practices = () => {
       is_active: p.is_active,
       is_featured: p.is_featured,
       image_url: p.image_url,
+      title_lv: p.title_lv || null,
+      description_lv: p.description_lv || null,
     });
     setDialogOpen(true);
   };
