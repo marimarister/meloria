@@ -25,9 +25,12 @@ import MeloriaSettings from "./pages/meloria-admin/MeloriaSettings";
 import EditQuestionnaire from "./pages/meloria-admin/EditQuestionnaire";
 import ViewDashboard from "./pages/meloria-admin/ViewDashboard";
 import EditPremiumPlan from "./pages/meloria-admin/EditPremiumPlan";
+import Practices from "./pages/meloria-admin/Practices";
 import OurStory from "./pages/OurStory";
 import Catalog from "./pages/Catalog";
 import Contact from "./pages/Contact";
+import Marketplace from "./pages/Marketplace";
+import Cart from "./pages/Cart";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +50,8 @@ const App = () => (
           <Route path="/test/burnout" element={<BurnoutTest />} />
           <Route path="/test/perception" element={<ChannelPerceptionTest />} />
           <Route path="/test/preference" element={<PreferenceTest />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/marketplace/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -61,6 +66,7 @@ const App = () => (
             <Route path="view-dashboard/:memberId/:dashboardType" element={<ViewDashboard />} />
             <Route path="premium-plans" element={<PremiumPlans />} />
             <Route path="premium-plans/:planType" element={<EditPremiumPlan />} />
+            <Route path="practices" element={<Practices />} />
             <Route path="settings" element={<MeloriaSettings />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

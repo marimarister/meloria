@@ -785,6 +785,14 @@ export const en = {
     deletePlan: "Delete Plan",
     noPlansFound: "No plans found",
     
+    // Practices
+    practicesTitle: "Practices Catalog",
+    practicesDescription: "Manage the marketplace practice catalog",
+    practices: "Practices",
+    addPractice: "Add Practice",
+    editPractice: "Edit Practice",
+    noPractices: "No practices yet. Create your first one!",
+    
     // Settings
     settingsTitle: "Settings",
     personalInfo: "Personal Information",
@@ -859,5 +867,48 @@ export const en = {
     friday: "Fri",
     saturday: "Sat",
     sunday: "Sun",
+  },
+
+  // Marketplace
+  marketplace: {
+    title: "Practice Marketplace",
+    subtitle: "Personalized wellness practices matched to your assessment results",
+    backToDashboard: "Back to Dashboard",
+    backToMarketplace: "Back to Marketplace",
+    myPlan: "My Wellness Plan",
+    period: "Period",
+    periodLabel: "Current period",
+    noPractices: "No practices available yet. Check back soon!",
+    min: "min",
+    credits: "credits",
+    free: "Free",
+    inCart: "In your plan",
+    slotFull: "This slot is already filled for the current period",
+    emptySlot: "No practice selected — browse the marketplace to add one",
+    emptyCart: "Your wellness plan is empty. Browse practices to get started!",
+    browsePractices: "Browse Practices",
+    exploreMarketplace: "Explore Marketplace",
+    slot: {
+      core: "Core",
+      support: "Support",
+      optional: "Optional",
+    },
+    sections: {
+      recommendedForYou: "Recommended for You",
+      quickRelief: "Quick Relief",
+      focusClarity: "Focus & Clarity",
+      connectionSupport: "Connection & Support",
+      matchesYourStyle: "Matches Your Style",
+    },
+    reasons: {
+      burnoutMatch: "Matches your burnout profile",
+      helpsExhaustion: "Helps with exhaustion",
+      helpsConnection: "Supports connection",
+      helpsAccomplishment: "Boosts accomplishment",
+      matchesLearningStyle: "Fits your learning style",
+      matchesPreferences: "Matches your preferences",
+      flexibleFormat: "Flexible format",
+      featured: "Featured",
+    },
   },
 };

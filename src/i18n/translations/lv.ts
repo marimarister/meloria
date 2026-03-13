@@ -785,6 +785,14 @@ export const lv = {
     deletePlan: "Dzēst plānu",
     noPlansFound: "Plāni nav atrasti",
     
+    // Practices
+    practicesTitle: "Prakšu katalogs",
+    practicesDescription: "Pārvaldiet tirgus prakšu katalogu",
+    practices: "Prakses",
+    addPractice: "Pievienot praksi",
+    editPractice: "Rediģēt praksi",
+    noPractices: "Vēl nav prakšu. Izveidojiet pirmo!",
+    
     // Settings
     settingsTitle: "Iestatījumi",
     personalInfo: "Personīgā informācija",
@@ -859,5 +867,48 @@ export const lv = {
     friday: "Pk",
     saturday: "S",
     sunday: "Sv",
+  },
+
+  // Marketplace
+  marketplace: {
+    title: "Prakšu tirgus",
+    subtitle: "Personalizētas labsajūtas prakses, kas atbilst jūsu novērtējuma rezultātiem",
+    backToDashboard: "Atpakaļ uz paneli",
+    backToMarketplace: "Atpakaļ uz tirgu",
+    myPlan: "Mans labsajūtas plāns",
+    period: "Periods",
+    periodLabel: "Pašreizējais periods",
+    noPractices: "Pagaidām nav pieejamu prakšu. Pārbaudiet drīzumā!",
+    min: "min",
+    credits: "kredīti",
+    free: "Bezmaksas",
+    inCart: "Jūsu plānā",
+    slotFull: "Šis slots jau ir aizpildīts pašreizējam periodam",
+    emptySlot: "Nav izvēlēta prakse — pārlūkojiet tirgu, lai pievienotu",
+    emptyCart: "Jūsu labsajūtas plāns ir tukšs. Pārlūkojiet prakses, lai sāktu!",
+    browsePractices: "Pārlūkot prakses",
+    exploreMarketplace: "Izpētīt tirgu",
+    slot: {
+      core: "Pamata",
+      support: "Atbalsta",
+      optional: "Izvēles",
+    },
+    sections: {
+      recommendedForYou: "Ieteicams jums",
+      quickRelief: "Ātra atvieglošana",
+      focusClarity: "Fokuss un skaidrība",
+      connectionSupport: "Saikne un atbalsts",
+      matchesYourStyle: "Atbilst jūsu stilam",
+    },
+    reasons: {
+      burnoutMatch: "Atbilst jūsu izdegšanas profilam",
+      helpsExhaustion: "Palīdz ar izsīkumu",
+      helpsConnection: "Atbalsta savienojumu",
+      helpsAccomplishment: "Veicina sasniegumu sajūtu",
+      matchesLearningStyle: "Atbilst jūsu mācīšanās stilam",
+      matchesPreferences: "Atbilst jūsu preferencēm",
+      flexibleFormat: "Elastīgs formāts",
+      featured: "Ieteicams",
+    },
   },
 };

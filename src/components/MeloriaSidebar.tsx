@@ -6,6 +6,7 @@ import {
   Settings, 
   LogOut,
   Users,
+  BookOpen,
   X
 } from "lucide-react";
 import {
@@ -61,6 +62,11 @@ export function MeloriaSidebar() {
       title: t('meloria.premiumPlans'), 
       url: "/meloria-admin/premium-plans", 
       icon: CreditCard 
+    },
+    { 
+      title: t('meloria.practices'), 
+      url: "/meloria-admin/practices", 
+      icon: BookOpen 
     },
     { 
       title: t('meloria.settings'), 
