@@ -962,6 +962,8 @@ export const en = {
       intensive: "Intensive",
       maxPrice: "Max price",
       any: "Any",
+      category: "Category",
+      allCategories: "All categories",
       clear: "Clear filters",
     },
     reasons: {

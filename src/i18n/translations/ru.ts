@@ -937,6 +937,8 @@ export const ru = {
       intensive: "Интенсивная",
       maxPrice: "Макс. цена",
       any: "Любая",
+      category: "Категория",
+      allCategories: "Все категории",
       clear: "Сбросить фильтры",
     },
     reasons: {
