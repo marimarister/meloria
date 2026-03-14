@@ -120,9 +120,11 @@ const PreferenceTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "burnout")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (!burnoutData) {
+        if (!burnoutData || isBefore(addMonths(new Date(burnoutData.completed_at), 1), new Date())) {
           localStorage.removeItem('burnoutTest');
           navigate('/employee');
           return;
@@ -133,9 +135,11 @@ const PreferenceTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "preference")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (preferenceData) {
+        if (preferenceData && !isBefore(addMonths(new Date(preferenceData.completed_at), 1), new Date())) {
           setSavedResults({
             scores: preferenceData.scores,
             completedAt: preferenceData.completed_at,
