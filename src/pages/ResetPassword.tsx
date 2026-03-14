@@ -99,6 +99,8 @@ const ResetPassword = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setPasswordFocused(true)}
+                  onBlur={() => setPasswordFocused(false)}
                   required
                   className="pr-10"
                 />
@@ -109,16 +111,17 @@ const ResetPassword = () => {
                 >
                   {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
+                <PasswordSuggestion
+                  show={passwordFocused && !password}
+                  onAccept={(pw) => {
+                    setPassword(pw);
+                    setConfirmPassword(pw);
+                    setShowPassword(true);
+                    setShowConfirmPassword(true);
+                  }}
+                />
               </div>
-              <PasswordStrengthIndicator
-                password={password}
-                onSuggest={(pw) => {
-                  setPassword(pw);
-                  setConfirmPassword(pw);
-                  setShowPassword(true);
-                  setShowConfirmPassword(true);
-                }}
-              />
+              <PasswordStrengthIndicator password={password} />
             </div>
 
             <div className="space-y-2">
