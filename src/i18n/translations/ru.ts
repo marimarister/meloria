@@ -867,7 +867,7 @@ export const ru = {
     slot: {
       core: "Основная",
       support: "Поддержка",
-      optional: "Дополнительная",
+      optional: "Доп.",
     },
     sections: {
       recommendedForYou: "Рекомендовано для вас",
