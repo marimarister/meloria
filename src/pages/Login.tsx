@@ -69,6 +69,17 @@ const Login = () => {
 
       if (error) throw error;
 
+      // Check if email is confirmed
+      if (!data.user?.email_confirmed_at) {
+        await supabase.auth.signOut();
+        toast({
+          title: t('auth.verifyEmail'),
+          description: `${t('auth.pleaseConfirmEmail')} ${data.user?.email}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
         title: t('auth.welcomeBack'),
         description: t('common.success'),
