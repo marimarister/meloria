@@ -966,5 +966,6 @@ export const en = {
       featured: "Featured",
     },
     availableTimes: "Available times",
+    selectTimeFirst: "Please select a date/time above first",
   },
 };
