@@ -198,13 +198,15 @@ const EmployeeDashboard = () => {
             completed: !!isCurrentPerception,
             expired: !!latestPerception && !isCurrentPerception,
             lastTaken: latestPerception ? latestPerception.completed_at : null,
-            hasResults: !!latestPerception
+            hasResults: !!latestPerception,
+            scores: latestPerception ? (latestPerception.scores as Record<string, number>) : null
           },
           preference: {
             completed: !!isCurrentPreference,
             expired: !!latestPreference && !isCurrentPreference,
             lastTaken: latestPreference ? latestPreference.completed_at : null,
-            hasResults: !!latestPreference
+            hasResults: !!latestPreference,
+            scores: latestPreference ? (latestPreference.scores as Record<string, number>) : null
           }
         });
       } else {
