@@ -273,7 +273,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
             />
 
             {/* Glass overlay at bottom */}
-            <div className="absolute inset-x-0 bottom-0 backdrop-blur-md bg-background/60 border-t border-white/20 p-5 pb-6 flex flex-col gap-2.5">
+            <div className="absolute inset-x-0 bottom-0 backdrop-blur-sm bg-background/40 border-t border-white/15 p-5 pb-6 flex flex-col gap-2.5">
               <h3 className="font-semibold text-base leading-tight text-foreground">{title}</h3>
 
               {description && (
