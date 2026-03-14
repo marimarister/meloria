@@ -130,6 +130,7 @@ const CompanyDashboard = () => {
           .in('email', memberEmails);
 
         const memberUserIds = memberProfiles?.map(p => p.id) || [];
+        setMemberUserIds(memberUserIds);
 
         // Get all test results for these users
         const { data: testResults } = await supabase
