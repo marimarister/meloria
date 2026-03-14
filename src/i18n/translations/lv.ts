@@ -319,6 +319,7 @@ export const lv = {
     backToLogin: "Atpakaļ uz pieteikšanos",
     verifyEmail: "Apstipriniet savu e-pastu",
     verifyEmailDescription: "Lūdzu, pārbaudiet savu e-pastu un noklikšķiniet uz verifikācijas saites, lai pabeigtu reģistrāciju.",
+    pleaseConfirmEmail: "Lūdzu, apstipriniet savu e-pasta adresi:",
     imAnEmployee: "Esmu darbinieks",
     imInCompany: "Esmu uzņēmumā",
     selectRole: "Izvēlieties savu lomu",

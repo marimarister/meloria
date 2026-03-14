@@ -14,11 +14,18 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { z } from "zod";
 
+const strongPasswordSchema = z.string()
+  .min(8, "Password must be at least 8 characters")
+  .refine((pw) => /[A-Z]/.test(pw), "Password must contain an uppercase letter")
+  .refine((pw) => /[a-z]/.test(pw), "Password must contain a lowercase letter")
+  .refine((pw) => /[0-9]/.test(pw), "Password must contain a number")
+  .refine((pw) => /[^A-Za-z0-9]/.test(pw), "Password must contain a special character");
+
 const signupSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   surname: z.string().trim().min(1, "Surname is required").max(100, "Surname must be less than 100 characters"),
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: strongPasswordSchema,
   confirmPassword: z.string(),
   agreedToTerms: z.literal(true, {
     errorMap: () => ({ message: "You must agree to the Terms & Conditions and Privacy Policy" }),

@@ -319,6 +319,7 @@ export const en = {
     backToLogin: "Back to Login",
     verifyEmail: "Verify Your Email",
     verifyEmailDescription: "Please check your email and click the verification link to complete your registration.",
+    pleaseConfirmEmail: "Please confirm your email address at",
     imAnEmployee: "I'm an Employee",
     imInCompany: "I'm in Company",
     selectRole: "Select Your Role",
