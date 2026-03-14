@@ -939,8 +939,6 @@ export const lv = {
       support: "Papildinoša prakse, kas pastiprina jūsu pamata aktivitāti, mērķējot uz citu labsajūtas aspektu.",
       optional: "Papildu prakse, ko varat izpētīt, balstoties uz personīgām interesēm vai ziņkāri. Pilnībā elastīga.",
     },
-      optional: "Izvēles",
-    },
     sections: {
       recommendedForYou: "Ieteicams jums",
       quickRelief: "Ātra atvieglošana",
