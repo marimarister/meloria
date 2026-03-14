@@ -19,7 +19,10 @@ import {
   AlertTriangle,
   ShoppingBag,
   MapPin,
-  Trash2
+  Trash2,
+  TrendingUp,
+  TrendingDown,
+  History
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
