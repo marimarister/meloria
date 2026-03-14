@@ -199,6 +199,47 @@ export function BurnoutHistory({ memberUserIds }: BurnoutHistoryProps) {
 
   const scoreDiff = monthData && prevMonthData ? monthData.avgScore - prevMonthData.avgScore : null;
 
+  // Compute trend data for all available months
+  const trendData = useMemo(() => {
+    return availableMonths.map((m) => {
+      const [y, mo] = m.split("-");
+      const monthDate = new Date(parseInt(y), parseInt(mo) - 1, 1);
+      const monthResults = allResults.filter((r) => {
+        const d = new Date(r.completed_at);
+        return d.getFullYear() === monthDate.getFullYear() && d.getMonth() === monthDate.getMonth();
+      });
+
+      const latestPerUser: Record<string, any> = {};
+      monthResults.forEach((r) => {
+        if (!latestPerUser[r.user_id] || new Date(r.completed_at) > new Date(latestPerUser[r.user_id].completed_at)) {
+          latestPerUser[r.user_id] = r;
+        }
+      });
+
+      const entries = Object.values(latestPerUser);
+      let totalScore = 0;
+      entries.forEach((r: any) => {
+        const scores = r.scores;
+        totalScore += (scores?.emotionalExhaustion || 0) + (scores?.depersonalization || 0) + (scores?.personalAccomplishment || 0);
+      });
+
+      const label = monthDate.toLocaleDateString(undefined, { year: "2-digit", month: "short" });
+      return {
+        month: m,
+        label,
+        avgScore: entries.length > 0 ? Math.round(totalScore / entries.length) : 0,
+        employees: entries.length,
+      };
+    });
+  }, [allResults, availableMonths]);
+
+  const trendChartConfig: ChartConfig = {
+    avgScore: {
+      label: t("company.averageBurnoutScore"),
+      color: "hsl(var(--primary))",
+    },
+  };
+
   if (isLoading) return null;
 
   return (
