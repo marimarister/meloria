@@ -33,6 +33,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { format, addMonths, isBefore } from "date-fns";
 import { TestDueNotification } from "@/components/TestDueNotification";
 import { useCart } from "@/hooks/useCart";
+import { EmployeeBurnoutTrend } from "@/components/EmployeeBurnoutTrend";
 
 interface EventInvitation {
   id: string;
