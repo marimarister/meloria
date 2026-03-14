@@ -1,12 +1,38 @@
-import { Check, X } from "lucide-react";
+import { Check, X, Wand2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
+import { Button } from "@/components/ui/button";
 
 interface PasswordStrengthIndicatorProps {
   password: string;
+  onSuggest?: (password: string) => void;
 }
 
-const PasswordStrengthIndicator = ({ password }: PasswordStrengthIndicatorProps) => {
+function generateStrongPassword(): string {
+  const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const lower = "abcdefghjkmnpqrstuvwxyz";
+  const digits = "23456789";
+  const special = "!@#$%&*?";
+
+  const pick = (chars: string) => chars[Math.floor(Math.random() * chars.length)];
+
+  // Guarantee at least one of each category
+  const mandatory = [pick(upper), pick(lower), pick(digits), pick(special)];
+
+  const all = upper + lower + digits + special;
+  const rest = Array.from({ length: 12 }, () => pick(all));
+
+  // Shuffle
+  const combined = [...mandatory, ...rest];
+  for (let i = combined.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [combined[i], combined[j]] = [combined[j], combined[i]];
+  }
+
+  return combined.join("");
+}
+
+const PasswordStrengthIndicator = ({ password, onSuggest }: PasswordStrengthIndicatorProps) => {
   const { t } = useLanguage();
 
   const checks = useMemo(() => [
@@ -28,49 +54,71 @@ const PasswordStrengthIndicator = ({ password }: PasswordStrengthIndicatorProps)
     strong: "bg-green-500",
   };
 
-  if (!password) return null;
+  const handleSuggest = useCallback(() => {
+    if (onSuggest) {
+      onSuggest(generateStrongPassword());
+    }
+  }, [onSuggest]);
 
   return (
     <div className="space-y-2 mt-2">
-      {/* Strength bar */}
-      <div className="flex items-center gap-2">
-        <div className="flex-1 flex gap-1">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className={`h-1.5 flex-1 rounded-full transition-colors ${
-                i <= Math.ceil((passedCount / 5) * 4)
-                  ? strengthColors[strength]
-                  : "bg-muted"
-              }`}
-            />
-          ))}
-        </div>
-        <span className={`text-xs font-medium ${
-          strength === "weak" ? "text-destructive" :
-          strength === "fair" ? "text-amber-600" :
-          strength === "good" ? "text-blue-600" :
-          "text-green-600"
-        }`}>
-          {strengthLabel}
-        </span>
-      </div>
+      {/* Suggest button */}
+      {onSuggest && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleSuggest}
+          className="h-7 text-xs gap-1.5"
+        >
+          <Wand2 className="h-3 w-3" />
+          {t('auth.suggestPassword')}
+        </Button>
+      )}
 
-      {/* Checklist */}
-      <ul className="space-y-1">
-        {checks.map((check) => (
-          <li key={check.key} className="flex items-center gap-1.5 text-xs">
-            {check.pass ? (
-              <Check className="h-3 w-3 text-green-600 shrink-0" />
-            ) : (
-              <X className="h-3 w-3 text-muted-foreground shrink-0" />
-            )}
-            <span className={check.pass ? "text-green-700" : "text-muted-foreground"}>
-              {check.label}
+      {password && (
+        <>
+          {/* Strength bar */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 flex gap-1">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 flex-1 rounded-full transition-colors ${
+                    i <= Math.ceil((passedCount / 5) * 4)
+                      ? strengthColors[strength]
+                      : "bg-muted"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className={`text-xs font-medium ${
+              strength === "weak" ? "text-destructive" :
+              strength === "fair" ? "text-amber-600" :
+              strength === "good" ? "text-blue-600" :
+              "text-green-600"
+            }`}>
+              {strengthLabel}
             </span>
-          </li>
-        ))}
-      </ul>
+          </div>
+
+          {/* Checklist */}
+          <ul className="space-y-1">
+            {checks.map((check) => (
+              <li key={check.key} className="flex items-center gap-1.5 text-xs">
+                {check.pass ? (
+                  <Check className="h-3 w-3 text-green-600 shrink-0" />
+                ) : (
+                  <X className="h-3 w-3 text-muted-foreground shrink-0" />
+                )}
+                <span className={check.pass ? "text-green-700" : "text-muted-foreground"}>
+                  {check.label}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 };

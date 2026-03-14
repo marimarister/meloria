@@ -224,7 +224,15 @@ const Signup = () => {
                   {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
               </div>
-              <PasswordStrengthIndicator password={password} />
+              <PasswordStrengthIndicator
+                password={password}
+                onSuggest={(pw) => {
+                  setPassword(pw);
+                  setConfirmPassword(pw);
+                  setShowPassword(true);
+                  setShowConfirmPassword(true);
+                }}
+              />
             </div>
 
             <div className="space-y-2">
