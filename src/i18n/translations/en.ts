@@ -373,6 +373,10 @@ export const en = {
     completedOn: "Completed on",
     nextTestDue: "Next test due",
     testOverdue: "Test overdue - please retake",
+    testExpired: "Results expired",
+    testExpiredDescription: "Your previous results have expired. Please retake the test to update your assessment.",
+    retakeTest: "Retake Test",
+    lastCompleted: "Last completed",
     notifications: {
       overdueTitle: "Tests Overdue",
       dueSoonTitle: "Tests Due Soon",

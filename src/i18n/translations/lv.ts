@@ -373,6 +373,10 @@ export const lv = {
     completedOn: "Pabeigts",
     nextTestDue: "Nākamais tests",
     testOverdue: "Tests nokavēts - lūdzu atkārtojiet",
+    testExpired: "Rezultāti beigušies",
+    testExpiredDescription: "Jūsu iepriekšējie rezultāti ir beigušies. Lūdzu, atkārtojiet testu, lai atjauninātu novērtējumu.",
+    retakeTest: "Atkārtot testu",
+    lastCompleted: "Pēdējo reizi pabeigts",
     notifications: {
       overdueTitle: "Nokavēti testi",
       dueSoonTitle: "Drīz jāveic testi",

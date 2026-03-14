@@ -181,15 +181,18 @@ const EmployeeDashboard = () => {
         setTestStatus({
           burnout: {
             completed: !!isCurrentBurnout,
+            expired: !!latestBurnout && !isCurrentBurnout,
             lastTaken: latestBurnout ? latestBurnout.completed_at : null,
             score: isCurrentBurnout ? (latestBurnout.scores as any).total : null
           },
           perception: {
             completed: !!isCurrentPerception,
+            expired: !!latestPerception && !isCurrentPerception,
             lastTaken: latestPerception ? latestPerception.completed_at : null
           },
           preference: {
             completed: !!isCurrentPreference,
+            expired: !!latestPreference && !isCurrentPreference,
             lastTaken: latestPreference ? latestPreference.completed_at : null
           }
         });

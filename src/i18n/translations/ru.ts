@@ -370,6 +370,10 @@ export const ru = {
     completedOn: "Завершено",
     nextTestDue: "Следующий тест",
     testOverdue: "Тест просрочен — пожалуйста, пройдите повторно",
+    testExpired: "Результаты истекли",
+    testExpiredDescription: "Ваши предыдущие результаты истекли. Пожалуйста, пройдите тест повторно для обновления оценки.",
+    retakeTest: "Пройти повторно",
+    lastCompleted: "Последний раз пройден",
     notifications: {
       overdueTitle: "Просроченные тесты",
       dueSoonTitle: "Тесты скоро",
