@@ -52,9 +52,9 @@ const EmployeeDashboard = () => {
   const { t, language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [testStatus, setTestStatus] = useState({
-    burnout: { completed: false, lastTaken: null as string | null, score: null as number | null },
-    perception: { completed: false, lastTaken: null as string | null },
-    preference: { completed: false, lastTaken: null as string | null }
+    burnout: { completed: false, expired: false, lastTaken: null as string | null, score: null as number | null },
+    perception: { completed: false, expired: false, lastTaken: null as string | null },
+    preference: { completed: false, expired: false, lastTaken: null as string | null }
   });
   const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>([]);
   const { items: cartItems, isLoading: cartLoading, periodStart, removeFromCart } = useCart();
