@@ -217,17 +217,20 @@ const EmployeeDashboard = () => {
             completed: !!localBurnout,
             expired: false,
             lastTaken: localBurnout ? JSON.parse(localBurnout).completedAt : null,
-            score: localBurnout ? JSON.parse(localBurnout).scores.total : null
+            score: localBurnout ? JSON.parse(localBurnout).scores.total : null,
+            previousScore: null
           },
           perception: {
             completed: !!localPerception,
             expired: false,
-            lastTaken: localPerception ? JSON.parse(localPerception).completedAt : null
+            lastTaken: localPerception ? JSON.parse(localPerception).completedAt : null,
+            hasResults: !!localPerception
           },
           preference: {
             completed: !!localPreference,
             expired: false,
-            lastTaken: localPreference ? JSON.parse(localPreference).completedAt : null
+            lastTaken: localPreference ? JSON.parse(localPreference).completedAt : null,
+            hasResults: !!localPreference
           }
         });
       }
