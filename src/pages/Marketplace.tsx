@@ -109,6 +109,34 @@ const Marketplace = () => {
           </div>
         </div>
 
+        {/* Slot explanation */}
+        <Card className="p-5 mb-6 animate-fade-in">
+          <h3 className="font-semibold text-sm mb-3">{t('marketplace.slotExplanation.title')}</h3>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="flex gap-2.5">
+              <Star className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium">{t('marketplace.slot.core')}</p>
+                <p className="text-xs text-muted-foreground">{t('marketplace.slotExplanation.core')}</p>
+              </div>
+            </div>
+            <div className="flex gap-2.5">
+              <Shield className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium">{t('marketplace.slot.support')}</p>
+                <p className="text-xs text-muted-foreground">{t('marketplace.slotExplanation.support')}</p>
+              </div>
+            </div>
+            <div className="flex gap-2.5">
+              <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium">{t('marketplace.slot.optional')}</p>
+                <p className="text-xs text-muted-foreground">{t('marketplace.slotExplanation.optional')}</p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
         {/* Filters */}
         <MarketplaceFilters filters={filters} onChange={setFilters} />
 
