@@ -111,7 +111,9 @@ const Marketplace = () => {
 
         {/* Slot explanation */}
         <Card className="p-5 mb-6 animate-fade-in">
-          <h3 className="font-semibold text-sm mb-3">{t('marketplace.slotExplanation.title')}</h3>
+          <h3 className="font-semibold text-sm mb-2">{t('marketplace.slotExplanation.title')}</h3>
+          <p className="text-sm text-muted-foreground mb-3">{t('marketplace.slotExplanation.intro')}</p>
+          <p className="text-sm font-medium mb-3">{t('marketplace.slotExplanation.instruction')}</p>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="flex gap-2.5">
               <Star className="h-4 w-4 text-primary shrink-0 mt-0.5" />
