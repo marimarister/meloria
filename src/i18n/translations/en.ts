@@ -544,7 +544,7 @@ export const en = {
     
     // Burnout test specific
     burnout: {
-      title: "Burnout Assessment",
+      title: "Burnout & Emotional Resilience Test",
       subtitle: "Maslach Burnout Inventory",
       instructions: "Please indicate how often you experience each of the following feelings.",
       
