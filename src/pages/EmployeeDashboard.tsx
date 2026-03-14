@@ -227,13 +227,15 @@ const EmployeeDashboard = () => {
             completed: !!localPerception,
             expired: false,
             lastTaken: localPerception ? JSON.parse(localPerception).completedAt : null,
-            hasResults: !!localPerception
+            hasResults: !!localPerception,
+            scores: localPerception ? JSON.parse(localPerception).scores : null
           },
           preference: {
             completed: !!localPreference,
             expired: false,
             lastTaken: localPreference ? JSON.parse(localPreference).completedAt : null,
-            hasResults: !!localPreference
+            hasResults: !!localPreference,
+            scores: localPreference ? JSON.parse(localPreference).scores : null
           }
         });
       }
