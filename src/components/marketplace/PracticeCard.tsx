@@ -111,7 +111,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
       >
         {/* ═══ FRONT — Original card style ═══ */}
         <div className="h-full" style={{ backfaceVisibility: "hidden" }}>
-          <Card className="h-full p-5 flex flex-col gap-2 justify-between hover:shadow-lg transition-shadow animate-fade-in">
+          <Card className="h-full p-5 flex flex-col gap-2 hover:shadow-lg transition-shadow animate-fade-in">
             {/* Header */}
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
@@ -164,7 +164,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
             {/* Sample date/time slots */}
             {!inCart && (
-              <div className="space-y-1.5" onClick={(e) => e.stopPropagation()}>
+            <div className="space-y-1.5 mt-auto" onClick={(e) => e.stopPropagation()}>
                 <p className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
                   <CalendarPlus className="h-3 w-3" />
                   {t('marketplace.availableTimes')}
@@ -192,7 +192,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
             )}
 
             {/* Add to cart */}
-            <div className="flex flex-wrap gap-1.5 mt-auto pt-1" onClick={(e) => e.stopPropagation()}>
+            <div className="flex flex-wrap gap-1.5 pt-1" onClick={(e) => e.stopPropagation()}>
               {inCart ? (
                 <Badge className="w-full justify-center py-1.5 bg-primary/10 text-primary border-primary/20" variant="outline">
                   {t('marketplace.inCart')}
