@@ -109,5 +109,6 @@ export function useCart() {
     await load();
   };
 
-  return { items, isLoading, periodStart, slotCounts, isSlotFull, addToCart, removeFromCart };
+  const periodLabel = getPeriodLabel();
+  return { items, isLoading, periodStart, periodLabel, slotCounts, isSlotFull, addToCart, removeFromCart };
 }

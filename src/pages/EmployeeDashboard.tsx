@@ -815,7 +815,7 @@ const EmployeeDashboard = () => {
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="text-xs">
-                {t('marketplace.period')}: {periodStart}
+                {t('marketplace.period')}: {periodLabel}
               </Badge>
               <Button variant="outline" size="sm" onClick={() => navigate("/marketplace")}>
                 {t('marketplace.browsePractices')}
