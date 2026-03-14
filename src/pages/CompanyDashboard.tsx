@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { BurnoutHistory } from "@/components/BurnoutHistory";
 
 interface CompanyStats {
   companyName: string;
