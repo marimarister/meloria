@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Clock, MapPin, Star, Plus, Zap, Heart, Brain, Users, CalendarPlus } from "lucide-react";
+import { Clock, MapPin, Star, Plus, Zap, Heart, Brain, Users, CalendarPlus, Lock } from "lucide-react";
 import type { ScoredPractice } from "@/lib/marketplace";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -176,12 +176,20 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
                   <span className="flex-1 min-w-[80px]">
                     <Button
                       size="sm"
-                      variant={role === 'core' ? 'default' : 'outline'}
-                      className="w-full text-[11px] px-2 truncate"
+                      variant="outline"
+                      className={`w-full text-[11px] px-2 truncate ${
+                        disabled
+                          ? 'bg-green-500/10 text-green-700 border-green-300 cursor-not-allowed hover:bg-green-500/10'
+                          : 'hover:bg-green-500 hover:text-white hover:border-green-500'
+                      }`}
                       disabled={disabled}
                       onClick={() => onAdd(practice.id, role, scheduledDate.toISOString())}
                     >
-                      <Plus className="h-3 w-3 mr-0.5 shrink-0" />
+                      {disabled ? (
+                        <Lock className="h-3 w-3 mr-0.5 shrink-0" />
+                      ) : (
+                        <Plus className="h-3 w-3 mr-0.5 shrink-0" />
+                      )}
                       <span className="truncate">{t(`marketplace.slot.${role}`)}</span>
                     </Button>
                   </span>
