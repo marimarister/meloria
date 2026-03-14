@@ -485,7 +485,7 @@ const ChannelPerceptionTest = () => {
                           htmlFor={`q${question.id}-${option.label}`}
                           className="flex-1 cursor-pointer text-sm"
                         >
-                          {option.label}) {option.text}
+                          {option.text}
                         </Label>
                       </div>
                     ))}
