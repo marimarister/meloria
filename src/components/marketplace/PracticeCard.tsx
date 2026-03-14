@@ -217,8 +217,8 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
                             variant="outline"
                             className={`w-full text-[11px] px-2 truncate ${
                               disabled
-                                ? 'bg-green-500/10 text-green-700 border-green-300 cursor-not-allowed hover:bg-green-500/10'
-                                : 'hover:bg-green-500 hover:text-white hover:border-green-500'
+                                ? 'bg-primary/10 text-primary/60 border-primary/20 cursor-not-allowed hover:bg-primary/10'
+                                : 'hover:bg-primary hover:text-primary-foreground hover:border-primary'
                             }`}
                             disabled={disabled}
                             onClick={(e) => {
