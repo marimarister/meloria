@@ -10,7 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const Cart = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { items, isLoading, periodStart, removeFromCart } = useCart();
+  const { items, isLoading, periodLabel, removeFromCart } = useCart();
 
   const coreItems = items.filter(i => i.cart_role === 'core');
   const supportItems = items.filter(i => i.cart_role === 'support');
