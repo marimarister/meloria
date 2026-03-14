@@ -154,12 +154,6 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
                   {practice.intensity}
                 </Badge>
               )}
-              {practice.price_credits > 0 && (
-                <span className="font-medium text-foreground">{practice.price_credits} {t('marketplace.credits')}</span>
-              )}
-              {practice.price_credits === 0 && (
-                <span className="text-primary font-medium">{t('marketplace.free')}</span>
-              )}
             </div>
 
             {/* Description */}

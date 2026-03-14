@@ -42,7 +42,7 @@ const Marketplace = () => {
       }
       if (filters.format !== "all" && p.format !== filters.format) return false;
       if (filters.intensity !== "all" && p.intensity !== filters.intensity) return false;
-      if (p.price_credits > filters.maxPrice) return false;
+      
       return true;
     };
 
