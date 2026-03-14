@@ -367,6 +367,8 @@ export const ru = {
     otherTestsOptional: "Отличные новости! По результатам вашего теста на выгорание, остальные тесты необязательны.",
     results: "Результаты",
     burnoutLevel: "Уровень выгорания",
+    burnoutTrend: "Ваша тенденция выгорания",
+    burnoutScore: "Балл",
     dominantStyle: "Доминирующий стиль",
     yourArchetypes: "Ваши архетипы",
     eventInvitations: "Приглашения на события",

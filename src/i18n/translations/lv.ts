@@ -370,6 +370,8 @@ export const lv = {
     otherTestsOptional: "Lieliskas ziņas! Pamatojoties uz jūsu izdegšanas rezultātu, pārējie testi nav obligāti.",
     results: "Rezultāti",
     burnoutLevel: "Izdegšanas līmenis",
+    burnoutTrend: "Jūsu izdegšanas tendence",
+    burnoutScore: "Rezultāts",
     dominantStyle: "Dominējošais stils",
     yourArchetypes: "Jūsu arhetipi",
     eventInvitations: "Pasākumu ielūgumi",

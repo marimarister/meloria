@@ -33,6 +33,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { format, addMonths, isBefore } from "date-fns";
 import { TestDueNotification } from "@/components/TestDueNotification";
 import { useCart } from "@/hooks/useCart";
+import { EmployeeBurnoutTrend } from "@/components/EmployeeBurnoutTrend";
 
 interface EventInvitation {
   id: string;
@@ -490,6 +491,9 @@ const EmployeeDashboard = () => {
           </Card>
         )}
 
+        {/* Burnout Trend Chart */}
+        <EmployeeBurnoutTrend />
+
         {/* Marketplace CTA — shown when all 3 tests are complete */}
         {testStatus.burnout.completed && testStatus.perception.completed && testStatus.preference.completed && (
           <Card className="p-6 mb-8 animate-slide-up border-primary/30 bg-primary/5">
@@ -650,7 +654,7 @@ const EmployeeDashboard = () => {
                       const nextDue = addMonths(new Date(testStatus.perception.lastTaken), 1);
                       const isOverdue = isBefore(nextDue, new Date());
                       return isOverdue ? (
-                        <p className="text-xs text-destructive flex items-center justify-center gap-1">
+                        <p className="text-xs text-amber-600 flex items-center justify-center gap-1">
                           <AlertTriangle className="h-3 w-3" />
                           {t('employee.testOverdue')}
                         </p>
@@ -735,7 +739,7 @@ const EmployeeDashboard = () => {
                       const nextDue = addMonths(new Date(testStatus.preference.lastTaken), 1);
                       const isOverdue = isBefore(nextDue, new Date());
                       return isOverdue ? (
-                        <p className="text-xs text-destructive flex items-center justify-center gap-1">
+                        <p className="text-xs text-amber-600 flex items-center justify-center gap-1">
                           <AlertTriangle className="h-3 w-3" />
                           {t('employee.testOverdue')}
                         </p>

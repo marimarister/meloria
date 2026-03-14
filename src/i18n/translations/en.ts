@@ -370,6 +370,8 @@ export const en = {
     otherTestsOptional: "Great news! Based on your burnout score, the other tests are optional.",
     results: "Results",
     burnoutLevel: "Burnout Level",
+    burnoutTrend: "Your Burnout Trend",
+    burnoutScore: "Score",
     dominantStyle: "Dominant Style",
     yourArchetypes: "Your Archetypes",
     eventInvitations: "Event Invitations",
