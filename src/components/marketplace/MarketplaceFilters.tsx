@@ -77,6 +77,21 @@ export function MarketplaceFilters({ filters, onChange }: MarketplaceFiltersProp
         </SelectContent>
       </Select>
 
+      {/* Category */}
+      <Select value={filters.category} onValueChange={(v) => update({ category: v })}>
+        <SelectTrigger className="w-full sm:w-[150px]">
+          <SelectValue placeholder={t('marketplace.filters.category')} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">{t('marketplace.filters.allCategories')}</SelectItem>
+          {ALL_CATEGORIES.map((cat) => (
+            <SelectItem key={cat} value={cat}>
+              {t(`marketplace.categories.${cat}`)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
       {hasActiveFilters && (
         <Button variant="ghost" size="sm" onClick={() => onChange(defaultFilters)} className="gap-1 text-xs">
           <X className="h-3 w-3" /> {t('marketplace.filters.clear')}

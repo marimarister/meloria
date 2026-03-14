@@ -43,6 +43,7 @@ const Marketplace = () => {
       }
       if (filters.format !== "all" && p.format !== filters.format) return false;
       if (filters.intensity !== "all" && p.intensity !== filters.intensity) return false;
+      if (filters.category !== "all" && !getCategoryTags(p).includes(filters.category)) return false;
       
       return true;
     };
