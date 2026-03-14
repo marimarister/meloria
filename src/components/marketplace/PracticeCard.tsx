@@ -263,30 +263,29 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
             transform: "rotateY(180deg)",
           }}
         >
-          <Card className="h-full border border-border/50 overflow-hidden flex flex-col">
-            {/* Image */}
-            <div className="max-h-[200px] overflow-hidden">
-              <img
-                src={imageUrl}
-                alt={title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
+          <Card className="h-full border border-border/50 overflow-hidden relative">
+            {/* Full-bleed image */}
+            <img
+              src={imageUrl}
+              alt={title}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+            />
 
-            <div className="p-5 pb-8 flex flex-col gap-3 flex-1">
-              <h3 className="font-semibold text-base leading-tight">{title}</h3>
+            {/* Glass overlay at bottom */}
+            <div className="absolute inset-x-0 bottom-0 backdrop-blur-md bg-background/60 border-t border-white/20 p-5 pb-6 flex flex-col gap-2.5">
+              <h3 className="font-semibold text-base leading-tight text-foreground">{title}</h3>
 
               {description && (
-                <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">{description}</p>
               )}
 
               {practice.reasons.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-1">
+                <div className="flex flex-wrap gap-1.5">
                   {practice.reasons.map((reason) => {
                     const Icon = reasonIcons[reason] || Star;
                     return (
-                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-primary/5 border-primary/20 text-primary">
+                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-background/50 border-foreground/20 text-foreground/90 backdrop-blur-sm">
                         <Icon className="h-2.5 w-2.5" />
                         {t(`marketplace.reasons.${reason}`)}
                       </Badge>
@@ -297,7 +296,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
               <button
                 onClick={handleFlip}
-                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-auto pt-4"
+                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-2"
               >
                 <RotateCw className="w-3 h-3" />
                 {t('catalog.flipBack')}
