@@ -152,61 +152,44 @@ const EmployeeDashboard = () => {
       
       if (user) {
         // User is logged in - database is the source of truth
+        // Fetch all results ordered by completion date to get the latest per type
         const { data: testResults } = await supabase
           .from("test_results")
           .select("*")
-          .eq("user_id", user.id);
+          .eq("user_id", user.id)
+          .order("completed_at", { ascending: false });
         
-        let burnoutData = testResults?.find(r => r.test_type === 'burnout') || null;
-        let perceptionData = testResults?.find(r => r.test_type === 'perception') || null;
-        let preferenceData = testResults?.find(r => r.test_type === 'preference') || null;
+        // Get the latest result for each test type
+        const latestBurnout = testResults?.find(r => r.test_type === 'burnout') || null;
+        const latestPerception = testResults?.find(r => r.test_type === 'perception') || null;
+        const latestPreference = testResults?.find(r => r.test_type === 'preference') || null;
 
-        // Auto-clear overdue tests so user can retake them
+        // Check if the latest result is overdue (older than 1 month)
+        // If overdue, treat the test as not completed so user can retake it
+        // Historical results are preserved in the database for admins/HR
         const now = new Date();
-        const overdueIds: string[] = [];
+        const isCurrentBurnout = latestBurnout && !isBefore(addMonths(new Date(latestBurnout.completed_at), 1), now);
+        const isCurrentPerception = latestPerception && !isBefore(addMonths(new Date(latestPerception.completed_at), 1), now);
+        const isCurrentPreference = latestPreference && !isBefore(addMonths(new Date(latestPreference.completed_at), 1), now);
 
-        if (burnoutData && isBefore(addMonths(new Date(burnoutData.completed_at), 1), now)) {
-          overdueIds.push(burnoutData.id);
-          localStorage.removeItem('burnoutTest');
-          burnoutData = null;
-        }
-        if (perceptionData && isBefore(addMonths(new Date(perceptionData.completed_at), 1), now)) {
-          overdueIds.push(perceptionData.id);
-          localStorage.removeItem('channelPerceptionTest');
-          perceptionData = null;
-        }
-        if (preferenceData && isBefore(addMonths(new Date(preferenceData.completed_at), 1), now)) {
-          overdueIds.push(preferenceData.id);
-          localStorage.removeItem('preferenceTest');
-          preferenceData = null;
-        }
-
-        // Delete overdue results from database
-        if (overdueIds.length > 0) {
-          await supabase
-            .from("test_results")
-            .delete()
-            .in("id", overdueIds);
-        }
-        
-        // Clear localStorage if database doesn't have the data (admin may have reset)
-        if (!burnoutData) localStorage.removeItem('burnoutTest');
-        if (!perceptionData) localStorage.removeItem('channelPerceptionTest');
-        if (!preferenceData) localStorage.removeItem('preferenceTest');
+        // Clear localStorage for overdue/missing tests
+        if (!isCurrentBurnout) localStorage.removeItem('burnoutTest');
+        if (!isCurrentPerception) localStorage.removeItem('channelPerceptionTest');
+        if (!isCurrentPreference) localStorage.removeItem('preferenceTest');
 
         setTestStatus({
           burnout: {
-            completed: !!burnoutData,
-            lastTaken: burnoutData ? burnoutData.completed_at : null,
-            score: burnoutData ? (burnoutData.scores as any).total : null
+            completed: !!isCurrentBurnout,
+            lastTaken: latestBurnout ? latestBurnout.completed_at : null,
+            score: isCurrentBurnout ? (latestBurnout.scores as any).total : null
           },
           perception: {
-            completed: !!perceptionData,
-            lastTaken: perceptionData ? perceptionData.completed_at : null
+            completed: !!isCurrentPerception,
+            lastTaken: latestPerception ? latestPerception.completed_at : null
           },
           preference: {
-            completed: !!preferenceData,
-            lastTaken: preferenceData ? preferenceData.completed_at : null
+            completed: !!isCurrentPreference,
+            lastTaken: latestPreference ? latestPreference.completed_at : null
           }
         });
       } else {
