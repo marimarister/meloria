@@ -320,10 +320,12 @@ const EmployeeDashboard = () => {
   };
 
   const getPreferenceArchetypes = () => {
+    // Try localStorage first, then fall back to DB scores
     const preferenceData = localStorage.getItem('preferenceTest');
-    if (!preferenceData) return [];
-    const data = JSON.parse(preferenceData);
-    const scores = data.scores;
+    const scores = preferenceData
+      ? JSON.parse(preferenceData).scores
+      : testStatus.preference.scores;
+    if (!scores) return [];
     const archetypes = [];
     
     if (scores.soloGroup >= 5) archetypes.push(t('tests.preference.independentWorker'));
