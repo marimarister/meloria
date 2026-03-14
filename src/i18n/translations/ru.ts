@@ -316,6 +316,7 @@ export const ru = {
     backToLogin: "Вернуться к входу",
     verifyEmail: "Подтвердите почту",
     verifyEmailDescription: "Проверьте вашу почту и перейдите по ссылке для завершения регистрации.",
+    pleaseConfirmEmail: "Пожалуйста, подтвердите ваш адрес электронной почты:",
     imAnEmployee: "Я сотрудник",
     imInCompany: "Я в компании",
     selectRole: "Выберите вашу роль",
