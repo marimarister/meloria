@@ -54,6 +54,31 @@ const fallbackImages: Record<string, string> = {
   default: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=400&h=300&fit=crop",
 };
 
+/** Derive category tags from practice attributes */
+function getCategoryTags(practice: ScoredPractice): string[] {
+  const tags: string[] = [];
+  if (Number(practice.fit_k) >= 0.5) tags.push('physical');
+  if (Number(practice.social_fit_group) >= 0.5) tags.push('social');
+  if (Number(practice.targets_ee) >= 0.5 && practice.intensity !== 'intensive') tags.push('relaxation');
+  if (Number(practice.fit_v) >= 0.5) tags.push('creative');
+  if (Number(practice.fit_d) >= 0.5) tags.push('mental');
+  if (Number(practice.fit_a) >= 0.5) tags.push('auditory');
+  if (Number(practice.targets_dp) >= 0.5) tags.push('emotional');
+  if (Number(practice.targets_pa) >= 0.5) tags.push('focus');
+  return tags.slice(0, 4); // max 4 tags
+}
+
+const tagColors: Record<string, string> = {
+  physical: 'bg-orange-100 text-orange-700 border-orange-200',
+  social: 'bg-blue-100 text-blue-700 border-blue-200',
+  relaxation: 'bg-teal-100 text-teal-700 border-teal-200',
+  creative: 'bg-pink-100 text-pink-700 border-pink-200',
+  mental: 'bg-purple-100 text-purple-700 border-purple-200',
+  auditory: 'bg-green-100 text-green-700 border-green-200',
+  emotional: 'bg-rose-100 text-rose-700 border-rose-200',
+  focus: 'bg-amber-100 text-amber-700 border-amber-200',
+};
+
 export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: PracticeCardProps) {
   const { t, language } = useLanguage();
   const [isFlipped, setIsFlipped] = useState(false);
@@ -64,6 +89,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
   const formatLabel = practice.format ? practice.format.charAt(0).toUpperCase() + practice.format.slice(1) : '';
   const sampleSlots = useMemo(() => generateSampleSlots(practice.duration_minutes), [practice.duration_minutes]);
   const imageUrl = practice.image_url || fallbackImages[practice.format || 'default'] || fallbackImages.default;
+  const categoryTags = useMemo(() => getCategoryTags(practice), [practice]);
 
   const handleFlip = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -95,6 +121,21 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
                 )}
               </div>
             </div>
+
+            {/* Category tags */}
+            {categoryTags.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {categoryTags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="outline"
+                    className={`text-[10px] px-1.5 py-0 border ${tagColors[tag] || 'bg-muted text-muted-foreground'}`}
+                  >
+                    {t(`marketplace.categories.${tag}`)}
+                  </Badge>
+                ))}
+              </div>
+            )}
 
             {/* Meta row */}
             <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
@@ -234,7 +275,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
           </Card>
         </div>
 
-        {/* ═══ BACK — Photo + full description ═══ */}
+        {/* ═══ BACK — Photo + brief description only ═══ */}
         <div
           className="absolute inset-0"
           style={{
@@ -244,7 +285,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
         >
           <Card className="h-full border border-border/50 overflow-hidden flex flex-col">
             {/* Image */}
-            <div className="h-40 shrink-0 overflow-hidden">
+            <div className="flex-1 min-h-[180px] overflow-hidden">
               <img
                 src={imageUrl}
                 alt={title}
@@ -253,52 +294,16 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
               />
             </div>
 
-            <div className="p-4 flex flex-col gap-2 flex-1 overflow-y-auto">
+            <div className="p-4 flex flex-col gap-2">
               <h3 className="font-semibold text-base leading-tight">{title}</h3>
 
-              {/* Meta */}
-              <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                {practice.format && (
-                  <span className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3" /> {formatLabel}
-                  </span>
-                )}
-                {practice.duration_minutes && (
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" /> {practice.duration_minutes} {t('marketplace.min')}
-                  </span>
-                )}
-                {practice.intensity && (
-                  <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                    {practice.intensity}
-                  </Badge>
-                )}
-              </div>
-
-              {/* Full description */}
               {description && (
                 <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
               )}
 
-              {/* Reasons */}
-              {practice.reasons.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {practice.reasons.map((reason) => {
-                    const Icon = reasonIcons[reason] || Star;
-                    return (
-                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-primary/5 border-primary/20 text-primary">
-                        <Icon className="h-2.5 w-2.5" />
-                        {t(`marketplace.reasons.${reason}`)}
-                      </Badge>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Flip back */}
               <button
                 onClick={handleFlip}
-                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-auto pt-2"
+                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-1"
               >
                 <RotateCw className="w-3 h-3" />
                 {t('catalog.flipBack')}
