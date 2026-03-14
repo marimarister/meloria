@@ -98,20 +98,20 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
   return (
     <div
-      className="cursor-pointer"
+      className="cursor-pointer h-[420px]"
       style={{ perspective: "1000px" }}
       onClick={() => setIsFlipped(!isFlipped)}
     >
       <div
-        className="relative w-full transition-transform duration-500"
+        className="relative w-full h-full transition-transform duration-500"
         style={{
           transformStyle: "preserve-3d",
           transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
         }}
       >
         {/* ═══ FRONT — Original card style ═══ */}
-        <div style={{ backfaceVisibility: "hidden" }}>
-          <Card className="p-5 flex flex-col gap-3 hover:shadow-lg transition-shadow animate-fade-in">
+        <div className="h-full" style={{ backfaceVisibility: "hidden" }}>
+          <Card className="h-full p-5 flex flex-col gap-3 hover:shadow-lg transition-shadow animate-fade-in">
             {/* Header */}
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
