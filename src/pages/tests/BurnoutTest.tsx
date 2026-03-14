@@ -98,9 +98,12 @@ const BurnoutTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "burnout")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (data) {
+        // Only show results if the latest result is still current (not overdue)
+        if (data && !isBefore(addMonths(new Date(data.completed_at), 1), new Date())) {
           setSavedResults({
             scores: data.scores,
             completedAt: data.completed_at,
