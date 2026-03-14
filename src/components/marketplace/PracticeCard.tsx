@@ -277,7 +277,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
               <h3 className="font-semibold text-base leading-tight text-foreground">{title}</h3>
 
               {description && (
-                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">{description}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3 min-h-[3.75rem]">{description}</p>
               )}
 
               {practice.reasons.length > 0 && (
