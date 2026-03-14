@@ -17,7 +17,7 @@ const Marketplace = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { sections, isLoading: mpLoading, isGated, error } = useMarketplace();
-  const { items, isLoading: cartLoading, slotCounts, isSlotFull, addToCart, removeFromCart, periodStart } = useCart();
+  const { items, isLoading: cartLoading, slotCounts, isSlotFull, addToCart, removeFromCart, periodLabel } = useCart();
 
   useEffect(() => {
     if (isGated && !mpLoading) {
