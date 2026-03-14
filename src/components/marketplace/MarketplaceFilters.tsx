@@ -4,10 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+export const ALL_CATEGORIES = ['physical', 'social', 'relaxation', 'creative', 'mental', 'auditory', 'emotional', 'focus'] as const;
+export type Category = typeof ALL_CATEGORIES[number];
+
 export interface MarketplaceFilterState {
   search: string;
   format: string;
   intensity: string;
+  category: string;
 }
 
 interface MarketplaceFiltersProps {
@@ -19,6 +23,7 @@ export const defaultFilters: MarketplaceFilterState = {
   search: "",
   format: "all",
   intensity: "all",
+  category: "all",
 };
 
 export function MarketplaceFilters({ filters, onChange }: MarketplaceFiltersProps) {
