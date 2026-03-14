@@ -57,8 +57,8 @@ const EmployeeDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [testStatus, setTestStatus] = useState({
     burnout: { completed: false, expired: false, lastTaken: null as string | null, score: null as number | null, previousScore: null as number | null },
-    perception: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false },
-    preference: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false }
+    perception: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false, scores: null as Record<string, number> | null },
+    preference: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false, scores: null as Record<string, number> | null }
   });
   const [showPreviousResults, setShowPreviousResults] = useState(false);
   const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>([]);
@@ -198,13 +198,15 @@ const EmployeeDashboard = () => {
             completed: !!isCurrentPerception,
             expired: !!latestPerception && !isCurrentPerception,
             lastTaken: latestPerception ? latestPerception.completed_at : null,
-            hasResults: !!latestPerception
+            hasResults: !!latestPerception,
+            scores: latestPerception ? (latestPerception.scores as Record<string, number>) : null
           },
           preference: {
             completed: !!isCurrentPreference,
             expired: !!latestPreference && !isCurrentPreference,
             lastTaken: latestPreference ? latestPreference.completed_at : null,
-            hasResults: !!latestPreference
+            hasResults: !!latestPreference,
+            scores: latestPreference ? (latestPreference.scores as Record<string, number>) : null
           }
         });
       } else {
@@ -225,13 +227,15 @@ const EmployeeDashboard = () => {
             completed: !!localPerception,
             expired: false,
             lastTaken: localPerception ? JSON.parse(localPerception).completedAt : null,
-            hasResults: !!localPerception
+            hasResults: !!localPerception,
+            scores: localPerception ? JSON.parse(localPerception).scores : null
           },
           preference: {
             completed: !!localPreference,
             expired: false,
             lastTaken: localPreference ? JSON.parse(localPreference).completedAt : null,
-            hasResults: !!localPreference
+            hasResults: !!localPreference,
+            scores: localPreference ? JSON.parse(localPreference).scores : null
           }
         });
       }
@@ -284,10 +288,12 @@ const EmployeeDashboard = () => {
   };
 
   const getDominantChannel = () => {
+    // Try localStorage first, then fall back to DB scores
     const perceptionData = localStorage.getItem('channelPerceptionTest');
-    if (!perceptionData) return null;
-    const data = JSON.parse(perceptionData);
-    const scores = data.scores;
+    const scores = perceptionData
+      ? JSON.parse(perceptionData).scores
+      : testStatus.perception.scores;
+    if (!scores) return null;
     const channels = [
       { name: t('tests.perception.visual'), score: scores.V },
       { name: t('tests.perception.auditory'), score: scores.A },
@@ -314,10 +320,12 @@ const EmployeeDashboard = () => {
   };
 
   const getPreferenceArchetypes = () => {
+    // Try localStorage first, then fall back to DB scores
     const preferenceData = localStorage.getItem('preferenceTest');
-    if (!preferenceData) return [];
-    const data = JSON.parse(preferenceData);
-    const scores = data.scores;
+    const scores = preferenceData
+      ? JSON.parse(preferenceData).scores
+      : testStatus.preference.scores;
+    if (!scores) return [];
     const archetypes = [];
     
     if (scores.soloGroup >= 5) archetypes.push(t('tests.preference.independentWorker'));
