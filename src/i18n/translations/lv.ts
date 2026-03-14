@@ -931,7 +931,13 @@ export const lv = {
     slot: {
       core: "Pamata",
       support: "Atbalsta",
-      optional: "Izvēles",
+      optional: "Papildu",
+    },
+    slotExplanation: {
+      title: "Kā veidot savu labsajūtas plānu",
+      core: "Jūsu galvenā prakse — tā, kas visvairāk atbilst jūsu novērtējuma rezultātiem. Tas ir jūsu ikmēneša labsajūtas plāna pamats.",
+      support: "Papildinoša prakse, kas pastiprina jūsu pamata aktivitāti, mērķējot uz citu labsajūtas aspektu.",
+      optional: "Papildu prakse, ko varat izpētīt, balstoties uz personīgām interesēm vai ziņkāri. Pilnībā elastīga.",
     },
     sections: {
       recommendedForYou: "Ieteicams jums",

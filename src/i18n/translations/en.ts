@@ -933,6 +933,12 @@ export const en = {
       support: "Support",
       optional: "Optional",
     },
+    slotExplanation: {
+      title: "How to build your wellness plan",
+      core: "Your primary practice — the one most aligned with your assessment results. This is the foundation of your monthly wellness plan.",
+      support: "A complementary practice that reinforces your core activity, targeting a different aspect of your wellbeing.",
+      optional: "An additional practice you can explore based on personal interest or curiosity. Fully flexible.",
+    },
     sections: {
       recommendedForYou: "Recommended for You",
       quickRelief: "Quick Relief",
