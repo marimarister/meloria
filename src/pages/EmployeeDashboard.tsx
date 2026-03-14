@@ -491,6 +491,9 @@ const EmployeeDashboard = () => {
           </Card>
         )}
 
+        {/* Burnout Trend Chart */}
+        <EmployeeBurnoutTrend />
+
         {/* Marketplace CTA — shown when all 3 tests are complete */}
         {testStatus.burnout.completed && testStatus.perception.completed && testStatus.preference.completed && (
           <Card className="p-6 mb-8 animate-slide-up border-primary/30 bg-primary/5">
