@@ -1,8 +1,9 @@
+import { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Clock, MapPin, Star, Plus, Zap, Heart, Brain, Users } from "lucide-react";
+import { Clock, MapPin, Star, Plus, Zap, Heart, Brain, Users, CalendarPlus } from "lucide-react";
 import type { ScoredPractice } from "@/lib/marketplace";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -22,8 +23,41 @@ const reasonIcons: Record<string, typeof Zap> = {
   matchesPreferences: Star,
 };
 
+/** Generate a few upcoming sample time slots based on practice duration */
+function generateSampleSlots(durationMinutes: number | null): { label: string; dayOffset: number; hour: number }[] {
+  const now = new Date();
+  const currentDay = now.getDay(); // 0=Sun
+  const slots: { label: string; dayOffset: number; hour: number }[] = [];
+
+  // Generate 3 upcoming weekday slots at different times
+  const times = [
+    { hour: 10, period: "10:00" },
+    { hour: 14, period: "14:00" },
+    { hour: 18, period: "18:00" },
+  ];
+
+  let daysAdded = 0;
+  for (let offset = 1; daysAdded < 3 && offset < 10; offset++) {
+    const futureDate = new Date(now);
+    futureDate.setDate(now.getDate() + offset);
+    const dayOfWeek = futureDate.getDay();
+    if (dayOfWeek === 0 || dayOfWeek === 6) continue; // skip weekends
+
+    const time = times[daysAdded % times.length];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const label = `${dayNames[dayOfWeek]}, ${monthNames[futureDate.getMonth()]} ${futureDate.getDate()} · ${time.period}`;
+    slots.push({ label, dayOffset: offset, hour: time.hour });
+    daysAdded++;
+  }
+
+  return slots;
+}
+
 export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: PracticeCardProps) {
   const { t, language } = useLanguage();
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
 
   const title = (language === 'lv' && practice.title_lv) ? practice.title_lv : (language === 'ru' && practice.title_ru) ? practice.title_ru : practice.title;
   const description = (language === 'lv' && practice.description_lv) ? practice.description_lv : (language === 'ru' && practice.description_ru) ? practice.description_ru : practice.description;
@@ -31,6 +65,8 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
   const formatLabel = practice.format
     ? practice.format.charAt(0).toUpperCase() + practice.format.slice(1)
     : '';
+
+  const sampleSlots = useMemo(() => generateSampleSlots(practice.duration_minutes), [practice.duration_minutes]);
 
   return (
     <Card className="p-5 flex flex-col gap-3 hover:shadow-lg transition-shadow animate-fade-in">
@@ -42,9 +78,6 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
             <p className="text-xs text-muted-foreground mt-0.5">{practice.provider}</p>
           )}
         </div>
-        <Badge variant="secondary" className="shrink-0 font-mono text-xs">
-          {(practice.compositeScore * 100).toFixed(0)}%
-        </Badge>
       </div>
 
       {/* Meta row */}
@@ -89,6 +122,32 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
               </Badge>
             );
           })}
+        </div>
+      )}
+
+      {/* Sample date/time slots */}
+      {!inCart && (
+        <div className="space-y-1.5">
+          <p className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+            <CalendarPlus className="h-3 w-3" />
+            {t('marketplace.availableTimes')}
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {sampleSlots.map((slot, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setSelectedSlot(selectedSlot === idx ? null : idx)}
+                className={`text-[10px] px-2 py-1 rounded-md border transition-colors ${
+                  selectedSlot === idx
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-muted/50 text-muted-foreground border-border hover:bg-accent hover:text-accent-foreground'
+                }`}
+              >
+                {slot.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 

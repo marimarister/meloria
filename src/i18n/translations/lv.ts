@@ -945,5 +945,6 @@ export const lv = {
       flexibleFormat: "Elastīgs formāts",
       featured: "Ieteicams",
     },
+    availableTimes: "Pieejamie laiki",
   },
 };

@@ -920,5 +920,6 @@ export const ru = {
       flexibleFormat: "Гибкий формат",
       featured: "Рекомендовано",
     },
+    availableTimes: "Доступное время",
   },
 };
