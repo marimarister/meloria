@@ -296,7 +296,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
               <button
                 onClick={handleFlip}
-                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-2"
+                className="text-xs text-foreground font-medium flex items-center gap-1 hover:underline transition-colors mt-2"
               >
                 <RotateCw className="w-3 h-3" />
                 {t('catalog.flipBack')}
