@@ -288,10 +288,12 @@ const EmployeeDashboard = () => {
   };
 
   const getDominantChannel = () => {
+    // Try localStorage first, then fall back to DB scores
     const perceptionData = localStorage.getItem('channelPerceptionTest');
-    if (!perceptionData) return null;
-    const data = JSON.parse(perceptionData);
-    const scores = data.scores;
+    const scores = perceptionData
+      ? JSON.parse(perceptionData).scores
+      : testStatus.perception.scores;
+    if (!scores) return null;
     const channels = [
       { name: t('tests.perception.visual'), score: scores.V },
       { name: t('tests.perception.auditory'), score: scores.A },
