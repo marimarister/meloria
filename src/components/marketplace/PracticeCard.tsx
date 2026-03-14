@@ -98,7 +98,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
   return (
     <div
-      className="cursor-pointer h-[420px]"
+      className="cursor-pointer h-[380px]"
       style={{ perspective: "1000px" }}
       onClick={() => setIsFlipped(!isFlipped)}
     >
