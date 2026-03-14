@@ -285,7 +285,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
                   {practice.reasons.map((reason) => {
                     const Icon = reasonIcons[reason] || Star;
                     return (
-                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-background/50 border-foreground/20 text-foreground/90 backdrop-blur-sm">
+                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-background/30 border-foreground/15 text-foreground/90 backdrop-blur-sm">
                         <Icon className="h-2.5 w-2.5" />
                         {t(`marketplace.reasons.${reason}`)}
                       </Badge>
