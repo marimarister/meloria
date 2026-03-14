@@ -158,7 +158,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
             {/* Description */}
             {description && (
-              <p className="text-sm text-muted-foreground line-clamp-2 flex-1">{description}</p>
+              <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
             )}
 
 
