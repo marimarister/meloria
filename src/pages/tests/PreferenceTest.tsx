@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { addMonths, isBefore } from "date-fns";
 
 interface Question {
   id: number;
@@ -119,9 +120,11 @@ const PreferenceTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "burnout")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (!burnoutData) {
+        if (!burnoutData || isBefore(addMonths(new Date(burnoutData.completed_at), 1), new Date())) {
           localStorage.removeItem('burnoutTest');
           navigate('/employee');
           return;
@@ -132,9 +135,11 @@ const PreferenceTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "preference")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (preferenceData) {
+        if (preferenceData && !isBefore(addMonths(new Date(preferenceData.completed_at), 1), new Date())) {
           setSavedResults({
             scores: preferenceData.scores,
             completedAt: preferenceData.completed_at,
@@ -198,12 +203,12 @@ const PreferenceTest = () => {
     
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      await supabase.from("test_results").upsert({
+      await supabase.from("test_results").insert({
         user_id: user.id,
         test_type: "preference",
         scores: scores,
         completed_at: completedAt
-      }, { onConflict: 'user_id,test_type' });
+      });
     }
     
     setSavedResults(results);

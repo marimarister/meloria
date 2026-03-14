@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { addMonths, isBefore } from "date-fns";
 
 type ChannelType = 'V' | 'A' | 'K' | 'D';
 
@@ -220,9 +221,12 @@ const ChannelPerceptionTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "burnout")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (!burnoutData) {
+        // Burnout must be current (not overdue) to unlock this test
+        if (!burnoutData || isBefore(addMonths(new Date(burnoutData.completed_at), 1), new Date())) {
           localStorage.removeItem('burnoutTest');
           navigate('/employee');
           return;
@@ -233,9 +237,12 @@ const ChannelPerceptionTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "perception")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (perceptionData) {
+        // Only show results if current (not overdue)
+        if (perceptionData && !isBefore(addMonths(new Date(perceptionData.completed_at), 1), new Date())) {
           setSavedResults({
             scores: perceptionData.scores,
             completedAt: perceptionData.completed_at,
@@ -280,12 +287,12 @@ const ChannelPerceptionTest = () => {
     
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      await supabase.from("test_results").upsert({
+      await supabase.from("test_results").insert({
         user_id: user.id,
         test_type: "perception",
         scores: scores,
         completed_at: completedAt
-      }, { onConflict: 'user_id,test_type' });
+      });
     }
     
     setSavedResults(results);

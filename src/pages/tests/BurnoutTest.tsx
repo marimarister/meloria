@@ -9,6 +9,7 @@ import { Heart, CheckCircle } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { addMonths, isBefore } from "date-fns";
 
 const BurnoutTest = () => {
   const navigate = useNavigate();
@@ -97,9 +98,12 @@ const BurnoutTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "burnout")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (data) {
+        // Only show results if the latest result is still current (not overdue)
+        if (data && !isBefore(addMonths(new Date(data.completed_at), 1), new Date())) {
           setSavedResults({
             scores: data.scores,
             completedAt: data.completed_at,
@@ -146,12 +150,12 @@ const BurnoutTest = () => {
     
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      await supabase.from("test_results").upsert({
+      await supabase.from("test_results").insert({
         user_id: user.id,
         test_type: "burnout",
         scores: scores,
         completed_at: completedAt
-      }, { onConflict: 'user_id,test_type' });
+      });
     }
     
     setSavedResults(results);
