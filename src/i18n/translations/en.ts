@@ -935,6 +935,8 @@ export const en = {
     },
     slotExplanation: {
       title: "How to build your wellness plan",
+      intro: "The practices below are personalized based on your assessment results — your burnout profile, learning style, and work preferences. Each practice is scored and ranked to match your unique needs.",
+      instruction: "Choose one practice for each category to complete your monthly wellness plan:",
       core: "Your primary practice — the one most aligned with your assessment results. This is the foundation of your monthly wellness plan.",
       support: "A complementary practice that reinforces your core activity, targeting a different aspect of your wellbeing.",
       optional: "An additional practice you can explore based on personal interest or curiosity. Fully flexible.",
