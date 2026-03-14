@@ -508,6 +508,13 @@ export const lv = {
     premiumFeature3: "Paplašināta analītika",
     premiumFeature4: "Prioritārs atbalsts",
     premiumFeature5: "Pielāgotas integrācijas",
+    burnoutHistory: "Izdegšanas vēsture",
+    noDataForMonth: "Šajā mēnesī nav pieejami izdegšanas testa dati.",
+    pointsLower: "punkti zemāk nekā iepriekšējā mēnesī",
+    pointsHigher: "punkti augstāk nekā iepriekšējā mēnesī",
+    noChangeFromPrev: "Nav izmaiņu salīdzinot ar iepriekšējo mēnesi",
+    testsThisMonth: "Testi šomēnes",
+    employeesAssessed: "novērtēti darbinieki",
   },
 
   // Tests

@@ -503,6 +503,13 @@ export const ru = {
     premiumFeature3: "Расширенная аналитика",
     premiumFeature4: "Приоритетная поддержка",
     premiumFeature5: "Пользовательские интеграции",
+    burnoutHistory: "История выгорания",
+    noDataForMonth: "Нет данных о тестах на выгорание за этот месяц.",
+    pointsLower: "баллов ниже, чем в прошлом месяце",
+    pointsHigher: "баллов выше, чем в прошлом месяце",
+    noChangeFromPrev: "Без изменений по сравнению с прошлым месяцем",
+    testsThisMonth: "Тесты за месяц",
+    employeesAssessed: "сотрудников оценено",
   },
 
   // Tests

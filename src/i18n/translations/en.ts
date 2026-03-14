@@ -508,6 +508,13 @@ export const en = {
     premiumFeature3: "Advanced analytics",
     premiumFeature4: "Priority support",
     premiumFeature5: "Custom integrations",
+    burnoutHistory: "Burnout History",
+    noDataForMonth: "No burnout test data available for this month.",
+    pointsLower: "points lower than previous month",
+    pointsHigher: "points higher than previous month",
+    noChangeFromPrev: "No change from previous month",
+    testsThisMonth: "Tests This Month",
+    employeesAssessed: "employees assessed",
   },
 
   // Tests

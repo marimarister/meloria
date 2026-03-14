@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { BurnoutHistory } from "@/components/BurnoutHistory";
 
 interface CompanyStats {
   companyName: string;
@@ -41,6 +42,7 @@ const CompanyDashboard = () => {
   const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState<CompanyStats | null>(null);
+  const [memberUserIds, setMemberUserIds] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const getRiskLabel = (averageScore: number): string => {
@@ -128,6 +130,7 @@ const CompanyDashboard = () => {
           .in('email', memberEmails);
 
         const memberUserIds = memberProfiles?.map(p => p.id) || [];
+        setMemberUserIds(memberUserIds);
 
         // Get all test results for these users
         const { data: testResults } = await supabase
@@ -438,6 +441,9 @@ const CompanyDashboard = () => {
             </p>
           )}
         </Card>
+
+        {/* Burnout History by Month */}
+        <BurnoutHistory memberUserIds={memberUserIds} />
       </div>
     </div>
   );
