@@ -510,6 +510,7 @@ export const ru = {
     noChangeFromPrev: "Без изменений по сравнению с прошлым месяцем",
     testsThisMonth: "Тесты за месяц",
     employeesAssessed: "сотрудников оценено",
+    burnoutTrend: "Тенденция уровня выгорания",
   },
 
   // Tests

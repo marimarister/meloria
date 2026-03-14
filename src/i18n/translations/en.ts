@@ -515,6 +515,7 @@ export const en = {
     noChangeFromPrev: "No change from previous month",
     testsThisMonth: "Tests This Month",
     employeesAssessed: "employees assessed",
+    burnoutTrend: "Burnout Score Trend",
   },
 
   // Tests
