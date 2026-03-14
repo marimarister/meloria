@@ -735,7 +735,7 @@ const EmployeeDashboard = () => {
                       const nextDue = addMonths(new Date(testStatus.preference.lastTaken), 1);
                       const isOverdue = isBefore(nextDue, new Date());
                       return isOverdue ? (
-                        <p className="text-xs text-destructive flex items-center justify-center gap-1">
+                        <p className="text-xs text-amber-600 flex items-center justify-center gap-1">
                           <AlertTriangle className="h-3 w-3" />
                           {t('employee.testOverdue')}
                         </p>

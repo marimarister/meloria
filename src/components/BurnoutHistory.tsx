@@ -419,7 +419,7 @@ export function BurnoutHistory({ memberUserIds }: BurnoutHistoryProps) {
       )}
 
       {/* Trend Chart */}
-      {trendData.length >= 2 && (
+      {trendData.some(d => d.avgScore !== null) && (
         <div className="mt-6 pt-6 border-t border-border">
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 className="h-5 w-5 text-primary" />
