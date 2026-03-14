@@ -19,7 +19,10 @@ import {
   AlertTriangle,
   ShoppingBag,
   MapPin,
-  Trash2
+  Trash2,
+  TrendingUp,
+  TrendingDown,
+  History
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -52,10 +55,11 @@ const EmployeeDashboard = () => {
   const { t, language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [testStatus, setTestStatus] = useState({
-    burnout: { completed: false, expired: false, lastTaken: null as string | null, score: null as number | null },
-    perception: { completed: false, expired: false, lastTaken: null as string | null },
-    preference: { completed: false, expired: false, lastTaken: null as string | null }
+    burnout: { completed: false, expired: false, lastTaken: null as string | null, score: null as number | null, previousScore: null as number | null },
+    perception: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false },
+    preference: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false }
   });
+  const [showPreviousResults, setShowPreviousResults] = useState(false);
   const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>([]);
   const { items: cartItems, isLoading: cartLoading, periodStart, removeFromCart } = useCart();
 
@@ -164,36 +168,42 @@ const EmployeeDashboard = () => {
         const latestBurnout = testResults?.find(r => r.test_type === 'burnout') || null;
         const latestPerception = testResults?.find(r => r.test_type === 'perception') || null;
         const latestPreference = testResults?.find(r => r.test_type === 'preference') || null;
+        
+        // Get second-latest burnout for improvement rate
+        const allBurnoutResults = testResults?.filter(r => r.test_type === 'burnout') || [];
+        const previousBurnout = allBurnoutResults.length > 1 ? allBurnoutResults[1] : null;
 
-        // Check if the latest result is overdue (older than 1 month)
-        // If overdue, treat the test as not completed so user can retake it
-        // Historical results are preserved in the database for admins/HR
         const now = new Date();
         const isCurrentBurnout = latestBurnout && !isBefore(addMonths(new Date(latestBurnout.completed_at), 1), now);
         const isCurrentPerception = latestPerception && !isBefore(addMonths(new Date(latestPerception.completed_at), 1), now);
         const isCurrentPreference = latestPreference && !isBefore(addMonths(new Date(latestPreference.completed_at), 1), now);
 
-        // Clear localStorage for overdue/missing tests
+        // Only clear localStorage for burnout when expired — keep perception/preference
         if (!isCurrentBurnout) localStorage.removeItem('burnoutTest');
-        if (!isCurrentPerception) localStorage.removeItem('channelPerceptionTest');
-        if (!isCurrentPreference) localStorage.removeItem('preferenceTest');
+        // For perception/preference: keep localStorage even if expired so results stay visible
+        // Only clear if there's no data at all
+        if (!latestPerception) localStorage.removeItem('channelPerceptionTest');
+        if (!latestPreference) localStorage.removeItem('preferenceTest');
 
         setTestStatus({
           burnout: {
             completed: !!isCurrentBurnout,
             expired: !!latestBurnout && !isCurrentBurnout,
             lastTaken: latestBurnout ? latestBurnout.completed_at : null,
-            score: isCurrentBurnout ? (latestBurnout.scores as any).total : null
+            score: isCurrentBurnout ? (latestBurnout.scores as any).total : (latestBurnout ? (latestBurnout.scores as any).total : null),
+            previousScore: previousBurnout ? (previousBurnout.scores as any).total : null
           },
           perception: {
             completed: !!isCurrentPerception,
             expired: !!latestPerception && !isCurrentPerception,
-            lastTaken: latestPerception ? latestPerception.completed_at : null
+            lastTaken: latestPerception ? latestPerception.completed_at : null,
+            hasResults: !!latestPerception
           },
           preference: {
             completed: !!isCurrentPreference,
             expired: !!latestPreference && !isCurrentPreference,
-            lastTaken: latestPreference ? latestPreference.completed_at : null
+            lastTaken: latestPreference ? latestPreference.completed_at : null,
+            hasResults: !!latestPreference
           }
         });
       } else {
@@ -207,17 +217,20 @@ const EmployeeDashboard = () => {
             completed: !!localBurnout,
             expired: false,
             lastTaken: localBurnout ? JSON.parse(localBurnout).completedAt : null,
-            score: localBurnout ? JSON.parse(localBurnout).scores.total : null
+            score: localBurnout ? JSON.parse(localBurnout).scores.total : null,
+            previousScore: null
           },
           perception: {
             completed: !!localPerception,
             expired: false,
-            lastTaken: localPerception ? JSON.parse(localPerception).completedAt : null
+            lastTaken: localPerception ? JSON.parse(localPerception).completedAt : null,
+            hasResults: !!localPerception
           },
           preference: {
             completed: !!localPreference,
             expired: false,
-            lastTaken: localPreference ? JSON.parse(localPreference).completedAt : null
+            lastTaken: localPreference ? JSON.parse(localPreference).completedAt : null,
+            hasResults: !!localPreference
           }
         });
       }
@@ -386,16 +399,24 @@ const EmployeeDashboard = () => {
           )}
         </Card>
 
-        {/* Summary Cards - Shown when 100% complete */}
-        {overallProgress >= 100 && (
+        {/* Summary Cards - Shown when 100% complete OR when there are results to display */}
+        {(overallProgress >= 100 || testStatus.perception.hasResults || testStatus.preference.hasResults || (testStatus.burnout.expired && testStatus.burnout.score !== null)) && (
           <Card className="p-6 mb-8 animate-slide-up">
             <h2 className="text-xl font-semibold mb-6 text-center">{t('employee.results')}</h2>
             <div className="grid gap-6 md:grid-cols-3">
               {/* Burnout Test Summary */}
-              {testStatus.burnout.completed && testStatus.burnout.score !== null && (() => {
+              {(testStatus.burnout.completed || (testStatus.burnout.expired && showPreviousResults)) && testStatus.burnout.score !== null && (() => {
                 const colors = getBurnoutLevelColor(testStatus.burnout.score);
+                const improvement = testStatus.burnout.previousScore !== null
+                  ? testStatus.burnout.previousScore - testStatus.burnout.score
+                  : null;
                 return (
-                  <Card className={`p-6 ${colors.bg} ${colors.border}`}>
+                  <Card className={`p-6 ${colors.bg} ${colors.border} relative`}>
+                    {testStatus.burnout.expired && (
+                      <Badge variant="outline" className="absolute top-2 right-2 text-[10px] bg-amber-100 text-amber-700 border-amber-300">
+                        {t('employee.previousResults')}
+                      </Badge>
+                    )}
                     <div className="flex items-center gap-3 mb-3">
                       <div className={`w-10 h-10 rounded-full ${colors.icon} flex items-center justify-center`}>
                         <Heart className="h-5 w-5" />
@@ -403,16 +424,34 @@ const EmployeeDashboard = () => {
                       <h3 className={`font-semibold ${colors.text}`}>{t('employee.burnoutLevel')}</h3>
                     </div>
                     <p className={`font-medium ${colors.text}`}>{getBurnoutLevel(testStatus.burnout.score)}</p>
+                    {improvement !== null && (
+                      <div className={`flex items-center gap-1 mt-2 text-xs font-medium ${
+                        improvement > 0 ? 'text-green-700' : improvement < 0 ? 'text-red-700' : 'text-muted-foreground'
+                      }`}>
+                        {improvement > 0 ? (
+                          <><TrendingDown className="h-3 w-3" /> {t('employee.improved')} {improvement} {t('employee.points')}</>
+                        ) : improvement < 0 ? (
+                          <><TrendingUp className="h-3 w-3" /> {t('employee.increased')} {Math.abs(improvement)} {t('employee.points')}</>
+                        ) : (
+                          <>{t('employee.noChange')}</>
+                        )}
+                      </div>
+                    )}
                   </Card>
                 );
               })()}
 
-              {/* Channel Perception Summary */}
-              {testStatus.perception.completed && (() => {
+              {/* Channel Perception Summary — show even when expired if results exist */}
+              {(testStatus.perception.completed || testStatus.perception.hasResults) && (() => {
                 const channel = getDominantChannel();
                 const ChannelIcon = getChannelIcon(channel);
                 return (
-                  <Card className="p-6 bg-purple-50 border-purple-200">
+                  <Card className="p-6 bg-purple-50 border-purple-200 relative">
+                    {testStatus.perception.expired && (
+                      <Badge variant="outline" className="absolute top-2 right-2 text-[10px] bg-amber-100 text-amber-700 border-amber-300">
+                        {t('employee.optionalUpdate')}
+                      </Badge>
+                    )}
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-full bg-purple-200 flex items-center justify-center">
                         <ChannelIcon className="h-5 w-5 text-purple-700" />
@@ -424,9 +463,14 @@ const EmployeeDashboard = () => {
                 );
               })()}
 
-              {/* Preference Test Summary */}
-              {testStatus.preference.completed && (
-                <Card className="p-6 bg-blue-100 border-blue-200">
+              {/* Preference Test Summary — show even when expired if results exist */}
+              {(testStatus.preference.completed || testStatus.preference.hasResults) && (
+                <Card className="p-6 bg-blue-100 border-blue-200 relative">
+                  {testStatus.preference.expired && (
+                    <Badge variant="outline" className="absolute top-2 right-2 text-[10px] bg-amber-100 text-amber-700 border-amber-300">
+                      {t('employee.optionalUpdate')}
+                    </Badge>
+                  )}
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center">
                       <Brain className="h-5 w-5 text-blue-700" />
@@ -558,6 +602,14 @@ const EmployeeDashboard = () => {
                   </p>
                 )}
                 <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowPreviousResults(!showPreviousResults)}
+                >
+                  <History className="mr-2 h-4 w-4" />
+                  {showPreviousResults ? t('employee.hidePreviousResults') : t('employee.viewPreviousResults')}
+                </Button>
                 <Button className="w-full" variant="destructive" onClick={() => navigate("/test/burnout")}>
                   <RefreshCw className="mr-2 h-4 w-4" />
                   {t('employee.retakeTest')}
@@ -616,19 +668,19 @@ const EmployeeDashboard = () => {
               </div>
             ) : testStatus.perception.expired ? (
               <div className="space-y-3">
-                <Badge variant="destructive" className="w-full justify-center py-1">
-                  <AlertTriangle className="h-3 w-3 mr-1" />
-                  {t('employee.testExpired')}
+                <Badge variant="outline" className="w-full justify-center py-1 text-amber-600 border-amber-300">
+                  <Clock className="h-3 w-3 mr-1" />
+                  {t('employee.optionalUpdate')}
                 </Badge>
                 {testStatus.perception.lastTaken && (
                   <p className="text-xs text-muted-foreground text-center">
                     {t('employee.lastCompleted')} {format(new Date(testStatus.perception.lastTaken), 'PPP')}
                   </p>
                 )}
-                <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
-                <Button className="w-full" variant="destructive" onClick={() => navigate("/test/perception")}>
+                <p className="text-xs text-muted-foreground text-center">{t('employee.optionalRetakeDescription')}</p>
+                <Button className="w-full" variant="outline" onClick={() => navigate("/test/perception")}>
                   <RefreshCw className="mr-2 h-4 w-4" />
-                  {t('employee.retakeTest')}
+                  {t('employee.updateResults')}
                 </Button>
               </div>
             ) : !testStatus.burnout.completed && !testStatus.burnout.expired ? (
@@ -701,19 +753,19 @@ const EmployeeDashboard = () => {
               </div>
             ) : testStatus.preference.expired ? (
               <div className="space-y-3">
-                <Badge variant="destructive" className="w-full justify-center py-1">
-                  <AlertTriangle className="h-3 w-3 mr-1" />
-                  {t('employee.testExpired')}
+                <Badge variant="outline" className="w-full justify-center py-1 text-amber-600 border-amber-300">
+                  <Clock className="h-3 w-3 mr-1" />
+                  {t('employee.optionalUpdate')}
                 </Badge>
                 {testStatus.preference.lastTaken && (
                   <p className="text-xs text-muted-foreground text-center">
                     {t('employee.lastCompleted')} {format(new Date(testStatus.preference.lastTaken), 'PPP')}
                   </p>
                 )}
-                <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
-                <Button className="w-full" variant="destructive" onClick={() => navigate("/test/preference")}>
+                <p className="text-xs text-muted-foreground text-center">{t('employee.optionalRetakeDescription')}</p>
+                <Button className="w-full" variant="outline" onClick={() => navigate("/test/preference")}>
                   <RefreshCw className="mr-2 h-4 w-4" />
-                  {t('employee.retakeTest')}
+                  {t('employee.updateResults')}
                 </Button>
               </div>
             ) : !testStatus.burnout.completed && !testStatus.burnout.expired ? (
