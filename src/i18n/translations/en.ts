@@ -945,5 +945,6 @@ export const en = {
       flexibleFormat: "Flexible format",
       featured: "Featured",
     },
+    availableTimes: "Available times",
   },
 };
