@@ -10,6 +10,7 @@ export interface CartItem {
   cart_role: string;
   period_start: string;
   added_at: string;
+  scheduled_at: string | null;
   practice?: {
     id: string;
     title: string;
