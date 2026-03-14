@@ -157,9 +157,37 @@ const EmployeeDashboard = () => {
           .select("*")
           .eq("user_id", user.id);
         
-        const burnoutData = testResults?.find(r => r.test_type === 'burnout');
-        const perceptionData = testResults?.find(r => r.test_type === 'perception');
-        const preferenceData = testResults?.find(r => r.test_type === 'preference');
+        let burnoutData = testResults?.find(r => r.test_type === 'burnout') || null;
+        let perceptionData = testResults?.find(r => r.test_type === 'perception') || null;
+        let preferenceData = testResults?.find(r => r.test_type === 'preference') || null;
+
+        // Auto-clear overdue tests so user can retake them
+        const now = new Date();
+        const overdueIds: string[] = [];
+
+        if (burnoutData && isBefore(addMonths(new Date(burnoutData.completed_at), 1), now)) {
+          overdueIds.push(burnoutData.id);
+          localStorage.removeItem('burnoutTest');
+          burnoutData = null;
+        }
+        if (perceptionData && isBefore(addMonths(new Date(perceptionData.completed_at), 1), now)) {
+          overdueIds.push(perceptionData.id);
+          localStorage.removeItem('channelPerceptionTest');
+          perceptionData = null;
+        }
+        if (preferenceData && isBefore(addMonths(new Date(preferenceData.completed_at), 1), now)) {
+          overdueIds.push(preferenceData.id);
+          localStorage.removeItem('preferenceTest');
+          preferenceData = null;
+        }
+
+        // Delete overdue results from database
+        if (overdueIds.length > 0) {
+          await supabase
+            .from("test_results")
+            .delete()
+            .in("id", overdueIds);
+        }
         
         // Clear localStorage if database doesn't have the data (admin may have reset)
         if (!burnoutData) localStorage.removeItem('burnoutTest');
