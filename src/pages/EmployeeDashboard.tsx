@@ -546,6 +546,23 @@ const EmployeeDashboard = () => {
                   {t('employee.viewResults')}
                 </Button>
               </div>
+            ) : testStatus.burnout.expired ? (
+              <div className="space-y-3">
+                <Badge variant="destructive" className="w-full justify-center py-1">
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  {t('employee.testExpired')}
+                </Badge>
+                {testStatus.burnout.lastTaken && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    {t('employee.lastCompleted')} {format(new Date(testStatus.burnout.lastTaken), 'PPP')}
+                  </p>
+                )}
+                <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
+                <Button className="w-full" variant="destructive" onClick={() => navigate("/test/burnout")}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  {t('employee.retakeTest')}
+                </Button>
+              </div>
             ) : (
               <Button className="w-full" onClick={() => navigate("/test/burnout")}>
                 {t('employee.takeTest')}
