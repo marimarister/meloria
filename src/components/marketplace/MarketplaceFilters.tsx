@@ -35,7 +35,8 @@ export function MarketplaceFilters({ filters, onChange }: MarketplaceFiltersProp
   const hasActiveFilters =
     filters.search !== "" ||
     filters.format !== "all" ||
-    filters.intensity !== "all";
+    filters.intensity !== "all" ||
+    filters.category !== "all";
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-6 p-4 rounded-lg border bg-card animate-fade-in items-center">
