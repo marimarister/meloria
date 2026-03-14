@@ -274,7 +274,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
               />
             </div>
 
-            <div className="p-4 flex flex-col gap-2">
+            <div className="p-4 pb-6 flex flex-col gap-2">
               <h3 className="font-semibold text-base leading-tight">{title}</h3>
 
               {description && (
@@ -297,7 +297,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
               <button
                 onClick={handleFlip}
-                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-1"
+                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-3"
               >
                 <RotateCw className="w-3 h-3" />
                 {t('catalog.flipBack')}
