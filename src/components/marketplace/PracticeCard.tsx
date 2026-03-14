@@ -93,7 +93,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
       )}
 
       {/* Add to cart */}
-      <div className="flex gap-2 mt-auto pt-1">
+      <div className="flex flex-wrap gap-1.5 mt-auto pt-1">
         {inCart ? (
           <Badge className="w-full justify-center py-1.5 bg-primary/10 text-primary border-primary/20" variant="outline">
             {t('marketplace.inCart')}
@@ -104,16 +104,16 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
             return (
               <Tooltip key={role}>
                 <TooltipTrigger asChild>
-                  <span className="flex-1">
+                  <span className="flex-1 min-w-[80px]">
                     <Button
                       size="sm"
                       variant={role === 'core' ? 'default' : 'outline'}
-                      className="w-full text-xs"
+                      className="w-full text-[11px] px-2 truncate"
                       disabled={disabled}
                       onClick={() => onAdd(practice.id, role)}
                     >
-                      <Plus className="h-3 w-3 mr-1" />
-                      {t(`marketplace.slot.${role}`)}
+                      <Plus className="h-3 w-3 mr-0.5 shrink-0" />
+                      <span className="truncate">{t(`marketplace.slot.${role}`)}</span>
                     </Button>
                   </span>
                 </TooltipTrigger>
