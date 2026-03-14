@@ -343,6 +343,19 @@ export const lv = {
     sendResetLink: "Nosūtīt atjaunošanas saiti",
     atLeastChars: "Vismaz 6 rakstzīmes",
     reenterPassword: "Ievadiet paroli vēlreiz",
+    passwordRules: {
+      length: "Vismaz 8 rakstzīmes",
+      uppercase: "Viens lielais burts",
+      lowercase: "Viens mazais burts",
+      number: "Viens cipars",
+      special: "Viena speciālā rakstzīme (!@#$...)",
+    },
+    passwordStrength: {
+      weak: "Vāja",
+      fair: "Vidēja",
+      good: "Laba",
+      strong: "Stipra",
+    },
   },
 
   // Employee Dashboard

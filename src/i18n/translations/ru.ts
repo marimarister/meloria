@@ -340,6 +340,19 @@ export const ru = {
     sendResetLink: "Отправить ссылку для сброса",
     atLeastChars: "Минимум 6 символов",
     reenterPassword: "Повторите пароль",
+    passwordRules: {
+      length: "Минимум 8 символов",
+      uppercase: "Одна заглавная буква",
+      lowercase: "Одна строчная буква",
+      number: "Одна цифра",
+      special: "Один специальный символ (!@#$...)",
+    },
+    passwordStrength: {
+      weak: "Слабый",
+      fair: "Средний",
+      good: "Хороший",
+      strong: "Надёжный",
+    },
   },
 
   // Employee Dashboard

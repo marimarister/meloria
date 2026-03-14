@@ -343,6 +343,19 @@ export const en = {
     sendResetLink: "Send Reset Link",
     atLeastChars: "At least 6 characters",
     reenterPassword: "Re-enter your password",
+    passwordRules: {
+      length: "At least 8 characters",
+      uppercase: "One uppercase letter",
+      lowercase: "One lowercase letter",
+      number: "One number",
+      special: "One special character (!@#$...)",
+    },
+    passwordStrength: {
+      weak: "Weak",
+      fair: "Fair",
+      good: "Good",
+      strong: "Strong",
+    },
   },
 
   // Employee Dashboard
