@@ -21,6 +21,7 @@ const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
