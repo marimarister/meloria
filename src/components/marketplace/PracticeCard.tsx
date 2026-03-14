@@ -273,19 +273,19 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
             />
 
             {/* Glass overlay at bottom */}
-            <div className="absolute inset-x-0 bottom-0 backdrop-blur-sm bg-background/40 border-t border-white/15 p-5 pb-6 flex flex-col gap-2.5">
-              <h3 className="font-semibold text-base leading-tight text-foreground">{title}</h3>
+            <div className="absolute inset-x-0 bottom-0 h-[220px] backdrop-blur-sm bg-background/40 border-t border-white/15 p-5 pb-6 flex flex-col gap-2.5">
+              <h3 className="font-semibold text-base leading-tight text-foreground line-clamp-1">{title}</h3>
 
-              {description && (
-                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3 min-h-[3.75rem]">{description}</p>
-              )}
+              <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3 min-h-[3.75rem]">
+                {description || '\u00A0'}
+              </p>
 
               {practice.reasons.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1.5 flex-1">
                   {practice.reasons.map((reason) => {
                     const Icon = reasonIcons[reason] || Star;
                     return (
-                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-background/30 border-foreground/15 text-foreground/90 backdrop-blur-sm">
+                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 h-fit bg-background/30 border-foreground/15 text-foreground/90 backdrop-blur-sm">
                         <Icon className="h-2.5 w-2.5" />
                         {t(`marketplace.reasons.${reason}`)}
                       </Badge>
@@ -296,7 +296,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
               <button
                 onClick={handleFlip}
-                className="text-xs text-foreground font-medium flex items-center gap-1 hover:underline transition-colors mt-2"
+                className="text-xs text-foreground font-medium flex items-center gap-1 hover:underline transition-colors mt-auto"
               >
                 <RotateCw className="w-3 h-3" />
                 {t('catalog.flipBack')}
