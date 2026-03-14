@@ -161,20 +161,6 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
               <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
             )}
 
-            {/* Reasons */}
-            {practice.reasons.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {practice.reasons.map((reason) => {
-                  const Icon = reasonIcons[reason] || Star;
-                  return (
-                    <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-primary/5 border-primary/20 text-primary">
-                      <Icon className="h-2.5 w-2.5" />
-                      {t(`marketplace.reasons.${reason}`)}
-                    </Badge>
-                  );
-                })}
-              </div>
-            )}
 
             {/* Sample date/time slots */}
             {!inCart && (
@@ -293,6 +279,20 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
               {description && (
                 <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+              )}
+
+              {practice.reasons.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {practice.reasons.map((reason) => {
+                    const Icon = reasonIcons[reason] || Star;
+                    return (
+                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-primary/5 border-primary/20 text-primary">
+                        <Icon className="h-2.5 w-2.5" />
+                        {t(`marketplace.reasons.${reason}`)}
+                      </Badge>
+                    );
+                  })}
+                </div>
               )}
 
               <button
