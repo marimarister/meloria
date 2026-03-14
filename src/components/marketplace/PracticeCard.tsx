@@ -98,20 +98,20 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
   return (
     <div
-      className="cursor-pointer"
+      className="cursor-pointer h-[420px]"
       style={{ perspective: "1000px" }}
       onClick={() => setIsFlipped(!isFlipped)}
     >
       <div
-        className="relative w-full transition-transform duration-500"
+        className="relative w-full h-full transition-transform duration-500"
         style={{
           transformStyle: "preserve-3d",
           transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
         }}
       >
         {/* ═══ FRONT — Original card style ═══ */}
-        <div style={{ backfaceVisibility: "hidden" }}>
-          <Card className="p-5 flex flex-col gap-3 hover:shadow-lg transition-shadow animate-fade-in">
+        <div className="h-full" style={{ backfaceVisibility: "hidden" }}>
+          <Card className="h-full p-5 flex flex-col gap-3 hover:shadow-lg transition-shadow animate-fade-in">
             {/* Header */}
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
@@ -158,7 +158,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
             {/* Description */}
             {description && (
-              <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
+              <p className="text-sm text-muted-foreground line-clamp-2 flex-1">{description}</p>
             )}
 
 
@@ -273,7 +273,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
             />
 
             {/* Glass overlay at bottom */}
-            <div className="absolute inset-x-0 bottom-0 backdrop-blur-md bg-background/60 border-t border-white/20 p-5 pb-6 flex flex-col gap-2.5">
+            <div className="absolute inset-x-0 bottom-0 backdrop-blur-sm bg-background/40 border-t border-white/15 p-5 pb-6 flex flex-col gap-2.5">
               <h3 className="font-semibold text-base leading-tight text-foreground">{title}</h3>
 
               {description && (
@@ -285,7 +285,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
                   {practice.reasons.map((reason) => {
                     const Icon = reasonIcons[reason] || Star;
                     return (
-                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-background/50 border-foreground/20 text-foreground/90 backdrop-blur-sm">
+                      <Badge key={reason} variant="outline" className="text-[10px] gap-1 px-1.5 py-0 bg-background/30 border-foreground/15 text-foreground/90 backdrop-blur-sm">
                         <Icon className="h-2.5 w-2.5" />
                         {t(`marketplace.reasons.${reason}`)}
                       </Badge>
