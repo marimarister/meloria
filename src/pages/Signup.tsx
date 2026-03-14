@@ -44,6 +44,7 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const handleRegister = async (role: "employee" | "hr") => {
     const validationResult = signupSchema.safeParse({
