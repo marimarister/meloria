@@ -544,7 +544,7 @@ export const lv = {
     
     // Burnout test specific
     burnout: {
-      title: "Izdegšanas novērtējums",
+      title: "Izdegšanas un emocionālās noturības tests",
       subtitle: "Maslach izdegšanas aptauja",
       instructions: "Lūdzu, norādiet, cik bieži jūs piedzīvojat katru no šīm sajūtām.",
       
