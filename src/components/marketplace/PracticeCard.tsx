@@ -111,7 +111,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
       >
         {/* ═══ FRONT — Original card style ═══ */}
         <div className="h-full" style={{ backfaceVisibility: "hidden" }}>
-          <Card className="h-full p-5 flex flex-col gap-2 justify-between hover:shadow-lg transition-shadow animate-fade-in">
+          <Card className="h-full p-5 flex flex-col gap-2 hover:shadow-lg transition-shadow animate-fade-in">
             {/* Header */}
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
