@@ -935,6 +935,8 @@ export const lv = {
     },
     slotExplanation: {
       title: "Kā veidot savu labsajūtas plānu",
+      intro: "Zemāk redzamās prakses ir personalizētas, balstoties uz jūsu novērtējuma rezultātiem — izdegšanas profilu, mācīšanās stilu un darba preferencēm. Katra prakse ir novērtēta un sarindota atbilstoši jūsu vajadzībām.",
+      instruction: "Izvēlieties vienu praksi katrai kategorijai, lai izveidotu savu ikmēneša labsajūtas plānu:",
       core: "Jūsu galvenā prakse — tā, kas visvairāk atbilst jūsu novērtējuma rezultātiem. Tas ir jūsu ikmēneša labsajūtas plāna pamats.",
       support: "Papildinoša prakse, kas pastiprina jūsu pamata aktivitāti, mērķējot uz citu labsajūtas aspektu.",
       optional: "Papildu prakse, ko varat izpētīt, balstoties uz personīgām interesēm vai ziņkāri. Pilnībā elastīga.",
