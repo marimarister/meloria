@@ -192,7 +192,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
             )}
 
             {/* Add to cart */}
-            <div className="flex flex-wrap gap-1.5 mt-auto pt-1" onClick={(e) => e.stopPropagation()}>
+            <div className="flex flex-wrap gap-1.5 pt-1" onClick={(e) => e.stopPropagation()}>
               {inCart ? (
                 <Badge className="w-full justify-center py-1.5 bg-primary/10 text-primary border-primary/20" variant="outline">
                   {t('marketplace.inCart')}
