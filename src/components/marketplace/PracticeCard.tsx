@@ -111,7 +111,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
       >
         {/* ═══ FRONT — Original card style ═══ */}
         <div className="h-full" style={{ backfaceVisibility: "hidden" }}>
-          <Card className="h-full p-5 flex flex-col gap-3 hover:shadow-lg transition-shadow animate-fade-in">
+          <Card className="h-full p-5 flex flex-col gap-2 justify-between hover:shadow-lg transition-shadow animate-fade-in">
             {/* Header */}
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
@@ -158,7 +158,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
             {/* Description */}
             {description && (
-              <p className="text-sm text-muted-foreground line-clamp-2 flex-1">{description}</p>
+              <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
             )}
 
 
@@ -277,7 +277,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
               <h3 className="font-semibold text-base leading-tight text-foreground">{title}</h3>
 
               {description && (
-                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">{description}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3 min-h-[3.75rem]">{description}</p>
               )}
 
               {practice.reasons.length > 0 && (
@@ -296,7 +296,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
               <button
                 onClick={handleFlip}
-                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-2"
+                className="text-xs text-foreground font-medium flex items-center gap-1 hover:underline transition-colors mt-2"
               >
                 <RotateCw className="w-3 h-3" />
                 {t('catalog.flipBack')}
