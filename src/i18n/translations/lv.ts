@@ -356,6 +356,7 @@ export const lv = {
       good: "Laba",
       strong: "Stipra",
     },
+    suggestPassword: "Ieteikt drošu paroli",
   },
 
   // Employee Dashboard
