@@ -15,7 +15,7 @@ import type { ScoredPractice, MarketplaceSection } from "@/lib/marketplace";
 
 const Marketplace = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { sections, isLoading: mpLoading, isGated, error } = useMarketplace();
   const { items, isLoading: cartLoading, slotCounts, isSlotFull, addToCart, removeFromCart, periodLabel } = useCart();
 
