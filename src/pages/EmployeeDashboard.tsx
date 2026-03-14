@@ -399,16 +399,24 @@ const EmployeeDashboard = () => {
           )}
         </Card>
 
-        {/* Summary Cards - Shown when 100% complete */}
-        {overallProgress >= 100 && (
+        {/* Summary Cards - Shown when 100% complete OR when there are results to display */}
+        {(overallProgress >= 100 || testStatus.perception.hasResults || testStatus.preference.hasResults || (testStatus.burnout.expired && testStatus.burnout.score !== null)) && (
           <Card className="p-6 mb-8 animate-slide-up">
             <h2 className="text-xl font-semibold mb-6 text-center">{t('employee.results')}</h2>
             <div className="grid gap-6 md:grid-cols-3">
               {/* Burnout Test Summary */}
-              {testStatus.burnout.completed && testStatus.burnout.score !== null && (() => {
+              {(testStatus.burnout.completed || (testStatus.burnout.expired && showPreviousResults)) && testStatus.burnout.score !== null && (() => {
                 const colors = getBurnoutLevelColor(testStatus.burnout.score);
+                const improvement = testStatus.burnout.previousScore !== null
+                  ? testStatus.burnout.previousScore - testStatus.burnout.score
+                  : null;
                 return (
-                  <Card className={`p-6 ${colors.bg} ${colors.border}`}>
+                  <Card className={`p-6 ${colors.bg} ${colors.border} relative`}>
+                    {testStatus.burnout.expired && (
+                      <Badge variant="outline" className="absolute top-2 right-2 text-[10px] bg-amber-100 text-amber-700 border-amber-300">
+                        {t('employee.previousResults')}
+                      </Badge>
+                    )}
                     <div className="flex items-center gap-3 mb-3">
                       <div className={`w-10 h-10 rounded-full ${colors.icon} flex items-center justify-center`}>
                         <Heart className="h-5 w-5" />
@@ -416,16 +424,34 @@ const EmployeeDashboard = () => {
                       <h3 className={`font-semibold ${colors.text}`}>{t('employee.burnoutLevel')}</h3>
                     </div>
                     <p className={`font-medium ${colors.text}`}>{getBurnoutLevel(testStatus.burnout.score)}</p>
+                    {improvement !== null && (
+                      <div className={`flex items-center gap-1 mt-2 text-xs font-medium ${
+                        improvement > 0 ? 'text-green-700' : improvement < 0 ? 'text-red-700' : 'text-muted-foreground'
+                      }`}>
+                        {improvement > 0 ? (
+                          <><TrendingDown className="h-3 w-3" /> {t('employee.improved')} {improvement} {t('employee.points')}</>
+                        ) : improvement < 0 ? (
+                          <><TrendingUp className="h-3 w-3" /> {t('employee.increased')} {Math.abs(improvement)} {t('employee.points')}</>
+                        ) : (
+                          <>{t('employee.noChange')}</>
+                        )}
+                      </div>
+                    )}
                   </Card>
                 );
               })()}
 
-              {/* Channel Perception Summary */}
-              {testStatus.perception.completed && (() => {
+              {/* Channel Perception Summary — show even when expired if results exist */}
+              {(testStatus.perception.completed || testStatus.perception.hasResults) && (() => {
                 const channel = getDominantChannel();
                 const ChannelIcon = getChannelIcon(channel);
                 return (
-                  <Card className="p-6 bg-purple-50 border-purple-200">
+                  <Card className="p-6 bg-purple-50 border-purple-200 relative">
+                    {testStatus.perception.expired && (
+                      <Badge variant="outline" className="absolute top-2 right-2 text-[10px] bg-amber-100 text-amber-700 border-amber-300">
+                        {t('employee.optionalUpdate')}
+                      </Badge>
+                    )}
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-full bg-purple-200 flex items-center justify-center">
                         <ChannelIcon className="h-5 w-5 text-purple-700" />
@@ -437,9 +463,14 @@ const EmployeeDashboard = () => {
                 );
               })()}
 
-              {/* Preference Test Summary */}
-              {testStatus.preference.completed && (
-                <Card className="p-6 bg-blue-100 border-blue-200">
+              {/* Preference Test Summary — show even when expired if results exist */}
+              {(testStatus.preference.completed || testStatus.preference.hasResults) && (
+                <Card className="p-6 bg-blue-100 border-blue-200 relative">
+                  {testStatus.preference.expired && (
+                    <Badge variant="outline" className="absolute top-2 right-2 text-[10px] bg-amber-100 text-amber-700 border-amber-300">
+                      {t('employee.optionalUpdate')}
+                    </Badge>
+                  )}
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center">
                       <Brain className="h-5 w-5 text-blue-700" />
