@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Clock, MapPin, Star, Plus, Zap, Heart, Brain, Users, CalendarPlus } from "lucide-react";
+import { Clock, MapPin, Star, Plus, Zap, Heart, Brain, Users, CalendarPlus, Lock } from "lucide-react";
 import type { ScoredPractice } from "@/lib/marketplace";
 import { useLanguage } from "@/contexts/LanguageContext";
 
