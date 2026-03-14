@@ -8,7 +8,7 @@ import { MarketplaceFilters, defaultFilters, type MarketplaceFilterState } from 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { ShoppingCart, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Loader2, AlertTriangle, Star, Shield, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SLOT_LIMITS } from "@/lib/marketplace";
 import type { ScoredPractice, MarketplaceSection } from "@/lib/marketplace";
