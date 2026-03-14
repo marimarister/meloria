@@ -8,6 +8,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
 import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
+import PasswordSuggestion from "@/components/PasswordSuggestion";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
