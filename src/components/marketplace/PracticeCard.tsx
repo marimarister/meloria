@@ -265,7 +265,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
         >
           <Card className="h-full border border-border/50 overflow-hidden flex flex-col">
             {/* Image */}
-            <div className="flex-1 min-h-[180px] overflow-hidden">
+            <div className="max-h-[200px] overflow-hidden">
               <img
                 src={imageUrl}
                 alt={title}
@@ -274,7 +274,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
               />
             </div>
 
-            <div className="p-4 pb-6 flex flex-col gap-2">
+            <div className="p-5 pb-8 flex flex-col gap-3 flex-1">
               <h3 className="font-semibold text-base leading-tight">{title}</h3>
 
               {description && (
@@ -282,7 +282,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
               )}
 
               {practice.reasons.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-1">
+                <div className="flex flex-wrap gap-1.5 mt-1">
                   {practice.reasons.map((reason) => {
                     const Icon = reasonIcons[reason] || Star;
                     return (
@@ -297,7 +297,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
               <button
                 onClick={handleFlip}
-                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-3"
+                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline transition-colors mt-auto pt-4"
               >
                 <RotateCw className="w-3 h-3" />
                 {t('catalog.flipBack')}
