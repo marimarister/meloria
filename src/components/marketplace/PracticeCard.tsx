@@ -55,7 +55,7 @@ const fallbackImages: Record<string, string> = {
 };
 
 /** Derive category tags from practice attributes */
-function getCategoryTags(practice: ScoredPractice): string[] {
+export function getCategoryTags(practice: ScoredPractice): string[] {
   const tags: string[] = [];
   if (Number(practice.fit_k) >= 0.5) tags.push('physical');
   if (Number(practice.social_fit_group) >= 0.5) tags.push('social');

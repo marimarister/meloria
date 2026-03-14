@@ -4,10 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+export const ALL_CATEGORIES = ['physical', 'social', 'relaxation', 'creative', 'mental', 'auditory', 'emotional', 'focus'] as const;
+export type Category = typeof ALL_CATEGORIES[number];
+
 export interface MarketplaceFilterState {
   search: string;
   format: string;
   intensity: string;
+  category: string;
 }
 
 interface MarketplaceFiltersProps {
@@ -19,6 +23,7 @@ export const defaultFilters: MarketplaceFilterState = {
   search: "",
   format: "all",
   intensity: "all",
+  category: "all",
 };
 
 export function MarketplaceFilters({ filters, onChange }: MarketplaceFiltersProps) {
@@ -30,7 +35,8 @@ export function MarketplaceFilters({ filters, onChange }: MarketplaceFiltersProp
   const hasActiveFilters =
     filters.search !== "" ||
     filters.format !== "all" ||
-    filters.intensity !== "all";
+    filters.intensity !== "all" ||
+    filters.category !== "all";
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-6 p-4 rounded-lg border bg-card animate-fade-in items-center">
@@ -68,6 +74,21 @@ export function MarketplaceFilters({ filters, onChange }: MarketplaceFiltersProp
           <SelectItem value="soft">{t('marketplace.filters.soft')}</SelectItem>
           <SelectItem value="medium">{t('marketplace.filters.medium')}</SelectItem>
           <SelectItem value="intensive">{t('marketplace.filters.intensive')}</SelectItem>
+        </SelectContent>
+      </Select>
+
+      {/* Category */}
+      <Select value={filters.category} onValueChange={(v) => update({ category: v })}>
+        <SelectTrigger className="w-full sm:w-[150px]">
+          <SelectValue placeholder={t('marketplace.filters.category')} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">{t('marketplace.filters.allCategories')}</SelectItem>
+          {ALL_CATEGORIES.map((cat) => (
+            <SelectItem key={cat} value={cat}>
+              {t(`marketplace.categories.${cat}`)}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 

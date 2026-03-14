@@ -962,6 +962,8 @@ export const lv = {
       intensive: "Intensīva",
       maxPrice: "Maks. cena",
       any: "Jebkura",
+      category: "Kategorija",
+      allCategories: "Visas kategorijas",
       clear: "Notīrīt filtrus",
     },
     reasons: {
