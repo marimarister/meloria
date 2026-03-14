@@ -168,36 +168,42 @@ const EmployeeDashboard = () => {
         const latestBurnout = testResults?.find(r => r.test_type === 'burnout') || null;
         const latestPerception = testResults?.find(r => r.test_type === 'perception') || null;
         const latestPreference = testResults?.find(r => r.test_type === 'preference') || null;
+        
+        // Get second-latest burnout for improvement rate
+        const allBurnoutResults = testResults?.filter(r => r.test_type === 'burnout') || [];
+        const previousBurnout = allBurnoutResults.length > 1 ? allBurnoutResults[1] : null;
 
-        // Check if the latest result is overdue (older than 1 month)
-        // If overdue, treat the test as not completed so user can retake it
-        // Historical results are preserved in the database for admins/HR
         const now = new Date();
         const isCurrentBurnout = latestBurnout && !isBefore(addMonths(new Date(latestBurnout.completed_at), 1), now);
         const isCurrentPerception = latestPerception && !isBefore(addMonths(new Date(latestPerception.completed_at), 1), now);
         const isCurrentPreference = latestPreference && !isBefore(addMonths(new Date(latestPreference.completed_at), 1), now);
 
-        // Clear localStorage for overdue/missing tests
+        // Only clear localStorage for burnout when expired — keep perception/preference
         if (!isCurrentBurnout) localStorage.removeItem('burnoutTest');
-        if (!isCurrentPerception) localStorage.removeItem('channelPerceptionTest');
-        if (!isCurrentPreference) localStorage.removeItem('preferenceTest');
+        // For perception/preference: keep localStorage even if expired so results stay visible
+        // Only clear if there's no data at all
+        if (!latestPerception) localStorage.removeItem('channelPerceptionTest');
+        if (!latestPreference) localStorage.removeItem('preferenceTest');
 
         setTestStatus({
           burnout: {
             completed: !!isCurrentBurnout,
             expired: !!latestBurnout && !isCurrentBurnout,
             lastTaken: latestBurnout ? latestBurnout.completed_at : null,
-            score: isCurrentBurnout ? (latestBurnout.scores as any).total : null
+            score: isCurrentBurnout ? (latestBurnout.scores as any).total : (latestBurnout ? (latestBurnout.scores as any).total : null),
+            previousScore: previousBurnout ? (previousBurnout.scores as any).total : null
           },
           perception: {
             completed: !!isCurrentPerception,
             expired: !!latestPerception && !isCurrentPerception,
-            lastTaken: latestPerception ? latestPerception.completed_at : null
+            lastTaken: latestPerception ? latestPerception.completed_at : null,
+            hasResults: !!latestPerception
           },
           preference: {
             completed: !!isCurrentPreference,
             expired: !!latestPreference && !isCurrentPreference,
-            lastTaken: latestPreference ? latestPreference.completed_at : null
+            lastTaken: latestPreference ? latestPreference.completed_at : null,
+            hasResults: !!latestPreference
           }
         });
       } else {
