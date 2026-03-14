@@ -280,12 +280,12 @@ const ChannelPerceptionTest = () => {
     
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      await supabase.from("test_results").upsert({
+      await supabase.from("test_results").insert({
         user_id: user.id,
         test_type: "perception",
         scores: scores,
         completed_at: completedAt
-      }, { onConflict: 'user_id,test_type' });
+      });
     }
     
     setSavedResults(results);
