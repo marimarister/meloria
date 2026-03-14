@@ -10,7 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const Cart = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { items, isLoading, periodStart, removeFromCart } = useCart();
+  const { items, isLoading, periodLabel, removeFromCart } = useCart();
 
   const coreItems = items.filter(i => i.cart_role === 'core');
   const supportItems = items.filter(i => i.cart_role === 'support');
@@ -30,7 +30,7 @@ const Cart = () => {
             <div>
               <h1 className="text-3xl font-bold">{t('marketplace.myPlan')}</h1>
               <p className="text-muted-foreground text-sm">
-                {t('marketplace.periodLabel')}: <Badge variant="outline" className="text-xs ml-1">{periodStart}</Badge>
+                {t('marketplace.periodLabel')}: <Badge variant="outline" className="text-xs ml-1">{periodLabel}</Badge>
               </p>
             </div>
           </div>

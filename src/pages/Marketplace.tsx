@@ -17,7 +17,7 @@ const Marketplace = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { sections, isLoading: mpLoading, isGated, error } = useMarketplace();
-  const { items, isLoading: cartLoading, slotCounts, isSlotFull, addToCart, removeFromCart, periodStart } = useCart();
+  const { items, isLoading: cartLoading, slotCounts, isSlotFull, addToCart, removeFromCart, periodLabel } = useCart();
 
   useEffect(() => {
     if (isGated && !mpLoading) {
@@ -95,7 +95,7 @@ const Marketplace = () => {
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs">
-              {t('marketplace.period')}: {periodStart}
+              {t('marketplace.period')}: {periodLabel}
             </Badge>
             <Button variant="outline" onClick={() => navigate("/marketplace/cart")} className="gap-2">
               <ShoppingCart className="h-4 w-4" />

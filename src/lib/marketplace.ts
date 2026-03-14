@@ -298,23 +298,19 @@ export function groupPractices(
 
 // ── Cart period helpers ────────────────────────────────────────────
 
-/** Get ISO Monday of the current 2-week period window */
+/** Get first day of the current month as ISO date string */
 export function getCurrentPeriodStart(): string {
   const now = new Date();
-  const day = now.getDay();
-  const diff = (day === 0 ? -6 : 1) - day; // Monday
-  const monday = new Date(now);
-  monday.setDate(now.getDate() + diff);
-  monday.setHours(0, 0, 0, 0);
+  return new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+}
 
-  // Align to 2-week blocks from a fixed epoch (Jan 1, 2024 was a Monday)
-  const epoch = new Date(2024, 0, 1);
-  const weeksSinceEpoch = Math.floor((monday.getTime() - epoch.getTime()) / (7 * 24 * 60 * 60 * 1000));
-  const periodWeeks = Math.floor(weeksSinceEpoch / 2) * 2;
-  const periodStart = new Date(epoch);
-  periodStart.setDate(epoch.getDate() + periodWeeks * 7);
-
-  return periodStart.toISOString().split('T')[0];
+/** Get formatted period label, e.g. "March 1, 2026 - March 31, 2026" */
+export function getPeriodLabel(): string {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), 1);
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const fmt = (d: Date) => d.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+  return `${fmt(start)} - ${fmt(end)}`;
 }
 
 export const SLOT_LIMITS: Record<string, number> = {
