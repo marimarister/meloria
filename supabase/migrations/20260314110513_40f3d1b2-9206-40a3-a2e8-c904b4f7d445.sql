@@ -1,0 +1,1 @@
+ALTER TABLE public.test_results DROP CONSTRAINT test_results_user_id_test_type_key;
