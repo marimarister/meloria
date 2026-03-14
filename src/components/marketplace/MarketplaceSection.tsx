@@ -5,7 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 interface MarketplaceSectionProps {
   sectionKey: string;
   practices: ScoredPractice[];
-  onAdd: (practiceId: string, role: string) => void;
+  onAdd: (practiceId: string, role: string, scheduledAt: string) => void;
   disabledSlots: string[];
   cartPracticeIds: string[];
 }
