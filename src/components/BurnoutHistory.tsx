@@ -199,15 +199,25 @@ export function BurnoutHistory({ memberUserIds }: BurnoutHistoryProps) {
 
   const scoreDiff = monthData && prevMonthData ? monthData.avgScore - prevMonthData.avgScore : null;
 
-  // Compute trend data for all available months
+  // Compute trend data for the last 12 months (fill empty months with null)
   const trendData = useMemo(() => {
-    return availableMonths.map((m) => {
-      const [y, mo] = m.split("-");
-      const monthDate = new Date(parseInt(y), parseInt(mo) - 1, 1);
+    const now = new Date();
+    const months: { month: string; label: string; avgScore: number | null; employees: number }[] = [];
+
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const label = d.toLocaleDateString(undefined, { year: "2-digit", month: "short" });
+
       const monthResults = allResults.filter((r) => {
-        const d = new Date(r.completed_at);
-        return d.getFullYear() === monthDate.getFullYear() && d.getMonth() === monthDate.getMonth();
+        const rd = new Date(r.completed_at);
+        return rd.getFullYear() === d.getFullYear() && rd.getMonth() === d.getMonth();
       });
+
+      if (monthResults.length === 0) {
+        months.push({ month: key, label, avgScore: null, employees: 0 });
+        continue;
+      }
 
       const latestPerUser: Record<string, any> = {};
       monthResults.forEach((r) => {
@@ -223,15 +233,16 @@ export function BurnoutHistory({ memberUserIds }: BurnoutHistoryProps) {
         totalScore += (scores?.emotionalExhaustion || 0) + (scores?.depersonalization || 0) + (scores?.personalAccomplishment || 0);
       });
 
-      const label = monthDate.toLocaleDateString(undefined, { year: "2-digit", month: "short" });
-      return {
-        month: m,
+      months.push({
+        month: key,
         label,
-        avgScore: entries.length > 0 ? Math.round(totalScore / entries.length) : 0,
+        avgScore: Math.round(totalScore / entries.length),
         employees: entries.length,
-      };
-    });
-  }, [allResults, availableMonths]);
+      });
+    }
+
+    return months;
+  }, [allResults]);
 
   const trendChartConfig: ChartConfig = {
     avgScore: {
