@@ -62,7 +62,7 @@ const EmployeeDashboard = () => {
   });
   const [showPreviousResults, setShowPreviousResults] = useState(false);
   const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>([]);
-  const { items: cartItems, isLoading: cartLoading, periodStart, removeFromCart } = useCart();
+  const { items: cartItems, isLoading: cartLoading, periodLabel, removeFromCart } = useCart();
 
   // Check authentication on mount
   useEffect(() => {
