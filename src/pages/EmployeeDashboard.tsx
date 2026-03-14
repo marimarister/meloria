@@ -57,8 +57,8 @@ const EmployeeDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [testStatus, setTestStatus] = useState({
     burnout: { completed: false, expired: false, lastTaken: null as string | null, score: null as number | null, previousScore: null as number | null },
-    perception: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false },
-    preference: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false }
+    perception: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false, scores: null as Record<string, number> | null },
+    preference: { completed: false, expired: false, lastTaken: null as string | null, hasResults: false, scores: null as Record<string, number> | null }
   });
   const [showPreviousResults, setShowPreviousResults] = useState(false);
   const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>([]);
