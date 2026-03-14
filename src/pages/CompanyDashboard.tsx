@@ -441,6 +441,9 @@ const CompanyDashboard = () => {
             </p>
           )}
         </Card>
+
+        {/* Burnout History by Month */}
+        <BurnoutHistory memberUserIds={memberUserIds} />
       </div>
     </div>
   );
