@@ -221,9 +221,12 @@ const ChannelPerceptionTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "burnout")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (!burnoutData) {
+        // Burnout must be current (not overdue) to unlock this test
+        if (!burnoutData || isBefore(addMonths(new Date(burnoutData.completed_at), 1), new Date())) {
           localStorage.removeItem('burnoutTest');
           navigate('/employee');
           return;
@@ -234,9 +237,12 @@ const ChannelPerceptionTest = () => {
           .select("*")
           .eq("user_id", user.id)
           .eq("test_type", "perception")
-          .single();
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         
-        if (perceptionData) {
+        // Only show results if current (not overdue)
+        if (perceptionData && !isBefore(addMonths(new Date(perceptionData.completed_at), 1), new Date())) {
           setSavedResults({
             scores: perceptionData.scores,
             completedAt: perceptionData.completed_at,
