@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { 
-  ClipboardCheck, 
+  ClipboardCheck,
+  RefreshCw,
   Brain, 
   Heart, 
   ArrowRight,
@@ -51,9 +52,9 @@ const EmployeeDashboard = () => {
   const { t, language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [testStatus, setTestStatus] = useState({
-    burnout: { completed: false, lastTaken: null as string | null, score: null as number | null },
-    perception: { completed: false, lastTaken: null as string | null },
-    preference: { completed: false, lastTaken: null as string | null }
+    burnout: { completed: false, expired: false, lastTaken: null as string | null, score: null as number | null },
+    perception: { completed: false, expired: false, lastTaken: null as string | null },
+    preference: { completed: false, expired: false, lastTaken: null as string | null }
   });
   const [eventInvitations, setEventInvitations] = useState<EventInvitation[]>([]);
   const { items: cartItems, isLoading: cartLoading, periodStart, removeFromCart } = useCart();
@@ -180,15 +181,18 @@ const EmployeeDashboard = () => {
         setTestStatus({
           burnout: {
             completed: !!isCurrentBurnout,
+            expired: !!latestBurnout && !isCurrentBurnout,
             lastTaken: latestBurnout ? latestBurnout.completed_at : null,
             score: isCurrentBurnout ? (latestBurnout.scores as any).total : null
           },
           perception: {
             completed: !!isCurrentPerception,
+            expired: !!latestPerception && !isCurrentPerception,
             lastTaken: latestPerception ? latestPerception.completed_at : null
           },
           preference: {
             completed: !!isCurrentPreference,
+            expired: !!latestPreference && !isCurrentPreference,
             lastTaken: latestPreference ? latestPreference.completed_at : null
           }
         });
@@ -201,15 +205,18 @@ const EmployeeDashboard = () => {
         setTestStatus({
           burnout: {
             completed: !!localBurnout,
+            expired: false,
             lastTaken: localBurnout ? JSON.parse(localBurnout).completedAt : null,
             score: localBurnout ? JSON.parse(localBurnout).scores.total : null
           },
           perception: {
             completed: !!localPerception,
+            expired: false,
             lastTaken: localPerception ? JSON.parse(localPerception).completedAt : null
           },
           preference: {
             completed: !!localPreference,
+            expired: false,
             lastTaken: localPreference ? JSON.parse(localPreference).completedAt : null
           }
         });
@@ -539,6 +546,23 @@ const EmployeeDashboard = () => {
                   {t('employee.viewResults')}
                 </Button>
               </div>
+            ) : testStatus.burnout.expired ? (
+              <div className="space-y-3">
+                <Badge variant="destructive" className="w-full justify-center py-1">
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  {t('employee.testExpired')}
+                </Badge>
+                {testStatus.burnout.lastTaken && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    {t('employee.lastCompleted')} {format(new Date(testStatus.burnout.lastTaken), 'PPP')}
+                  </p>
+                )}
+                <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
+                <Button className="w-full" variant="destructive" onClick={() => navigate("/test/burnout")}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  {t('employee.retakeTest')}
+                </Button>
+              </div>
             ) : (
               <Button className="w-full" onClick={() => navigate("/test/burnout")}>
                 {t('employee.takeTest')}
@@ -590,7 +614,24 @@ const EmployeeDashboard = () => {
                   {t('employee.viewResults')}
                 </Button>
               </div>
-            ) : !testStatus.burnout.completed ? (
+            ) : testStatus.perception.expired ? (
+              <div className="space-y-3">
+                <Badge variant="destructive" className="w-full justify-center py-1">
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  {t('employee.testExpired')}
+                </Badge>
+                {testStatus.perception.lastTaken && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    {t('employee.lastCompleted')} {format(new Date(testStatus.perception.lastTaken), 'PPP')}
+                  </p>
+                )}
+                <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
+                <Button className="w-full" variant="destructive" onClick={() => navigate("/test/perception")}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  {t('employee.retakeTest')}
+                </Button>
+              </div>
+            ) : !testStatus.burnout.completed && !testStatus.burnout.expired ? (
               <div className="space-y-3">
                 <Badge variant="outline" className="w-full justify-center py-1">
                   <Clock className="h-3 w-3 mr-1" />
@@ -658,7 +699,24 @@ const EmployeeDashboard = () => {
                   {t('employee.viewResults')}
                 </Button>
               </div>
-            ) : !testStatus.burnout.completed ? (
+            ) : testStatus.preference.expired ? (
+              <div className="space-y-3">
+                <Badge variant="destructive" className="w-full justify-center py-1">
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  {t('employee.testExpired')}
+                </Badge>
+                {testStatus.preference.lastTaken && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    {t('employee.lastCompleted')} {format(new Date(testStatus.preference.lastTaken), 'PPP')}
+                  </p>
+                )}
+                <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
+                <Button className="w-full" variant="destructive" onClick={() => navigate("/test/preference")}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  {t('employee.retakeTest')}
+                </Button>
+              </div>
+            ) : !testStatus.burnout.completed && !testStatus.burnout.expired ? (
               <div className="space-y-3">
                 <Badge variant="outline" className="w-full justify-center py-1">
                   <Clock className="h-3 w-3 mr-1" />
