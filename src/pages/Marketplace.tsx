@@ -142,6 +142,63 @@ const Marketplace = () => {
         {/* Filters */}
         <MarketplaceFilters filters={filters} onChange={setFilters} />
 
+        {/* Chosen practices summary */}
+        {items.length > 0 && (
+          <Card className="p-4 mb-6 animate-fade-in border-primary/20 bg-primary/5">
+            <div className="flex items-center gap-2 mb-3">
+              <CheckCircle2 className="h-4 w-4 text-primary" />
+              <h3 className="font-semibold text-sm">{t('marketplace.myPlan')}</h3>
+              <Badge variant="outline" className="text-[10px] ml-auto">
+                {items.length}/3
+              </Badge>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-3">
+              {(['core', 'support', 'optional'] as const).map((slot) => {
+                const item = items.find(i => i.cart_role === slot);
+                const SlotIcon = slot === 'core' ? Star : slot === 'support' ? Shield : Sparkles;
+                const practiceTitle = item?.practice
+                  ? (language === 'lv' && item.practice.title_lv) ? item.practice.title_lv
+                    : (language === 'ru' && item.practice.title_ru) ? item.practice.title_ru
+                    : item.practice.title
+                  : null;
+
+                return (
+                  <div
+                    key={slot}
+                    className={`flex items-center gap-2 rounded-lg border p-2.5 text-sm ${
+                      item
+                        ? 'bg-background border-primary/30'
+                        : 'bg-muted/30 border-dashed border-border'
+                    }`}
+                  >
+                    <SlotIcon className={`h-3.5 w-3.5 shrink-0 ${item ? 'text-primary' : 'text-muted-foreground'}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
+                        {t(`marketplace.slot.${slot}`)}
+                      </p>
+                      {item && practiceTitle ? (
+                        <p className="text-xs font-medium truncate">{practiceTitle}</p>
+                      ) : (
+                        <p className="text-xs text-muted-foreground italic">{t('marketplace.emptySlot')}</p>
+                      )}
+                    </div>
+                    {item && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 shrink-0 text-muted-foreground hover:text-destructive"
+                        onClick={() => removeFromCart(item.id)}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+        )}
+
         {/* Empty state */}
         {filteredSections.length === 0 && (
           <Card className="p-12 text-center">
