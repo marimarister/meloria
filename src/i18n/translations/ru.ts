@@ -353,6 +353,7 @@ export const ru = {
       good: "Хороший",
       strong: "Надёжный",
     },
+    suggestPassword: "Предложить надёжный пароль",
   },
 
   // Employee Dashboard

@@ -356,6 +356,7 @@ export const en = {
       good: "Good",
       strong: "Strong",
     },
+    suggestPassword: "Suggest strong password",
   },
 
   // Employee Dashboard
