@@ -5,6 +5,7 @@ import { useMarketplace } from "@/hooks/useMarketplace";
 import { useCart } from "@/hooks/useCart";
 import { MarketplaceSectionComponent } from "@/components/marketplace/MarketplaceSection";
 import { MarketplaceFilters, defaultFilters, type MarketplaceFilterState } from "@/components/marketplace/MarketplaceFilters";
+import { getCategoryTags } from "@/components/marketplace/PracticeCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
