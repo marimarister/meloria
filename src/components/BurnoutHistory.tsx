@@ -11,6 +11,7 @@ import {
   TrendingUp,
   Activity,
   Minus,
+  BarChart3,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -21,6 +22,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ReferenceLine,
+} from "recharts";
 
 interface MonthlyBurnoutData {
   month: string; // YYYY-MM
@@ -183,6 +198,47 @@ export function BurnoutHistory({ memberUserIds }: BurnoutHistoryProps) {
   });
 
   const scoreDiff = monthData && prevMonthData ? monthData.avgScore - prevMonthData.avgScore : null;
+
+  // Compute trend data for all available months
+  const trendData = useMemo(() => {
+    return availableMonths.map((m) => {
+      const [y, mo] = m.split("-");
+      const monthDate = new Date(parseInt(y), parseInt(mo) - 1, 1);
+      const monthResults = allResults.filter((r) => {
+        const d = new Date(r.completed_at);
+        return d.getFullYear() === monthDate.getFullYear() && d.getMonth() === monthDate.getMonth();
+      });
+
+      const latestPerUser: Record<string, any> = {};
+      monthResults.forEach((r) => {
+        if (!latestPerUser[r.user_id] || new Date(r.completed_at) > new Date(latestPerUser[r.user_id].completed_at)) {
+          latestPerUser[r.user_id] = r;
+        }
+      });
+
+      const entries = Object.values(latestPerUser);
+      let totalScore = 0;
+      entries.forEach((r: any) => {
+        const scores = r.scores;
+        totalScore += (scores?.emotionalExhaustion || 0) + (scores?.depersonalization || 0) + (scores?.personalAccomplishment || 0);
+      });
+
+      const label = monthDate.toLocaleDateString(undefined, { year: "2-digit", month: "short" });
+      return {
+        month: m,
+        label,
+        avgScore: entries.length > 0 ? Math.round(totalScore / entries.length) : 0,
+        employees: entries.length,
+      };
+    });
+  }, [allResults, availableMonths]);
+
+  const trendChartConfig: ChartConfig = {
+    avgScore: {
+      label: t("company.averageBurnoutScore"),
+      color: "hsl(var(--primary))",
+    },
+  };
 
   if (isLoading) return null;
 
@@ -348,6 +404,48 @@ export function BurnoutHistory({ memberUserIds }: BurnoutHistoryProps) {
               );
             })}
           </div>
+        </div>
+      )}
+
+      {/* Trend Chart */}
+      {trendData.length >= 2 && (
+        <div className="mt-6 pt-6 border-t border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart3 className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold">{t("company.burnoutTrend")}</h3>
+          </div>
+          <ChartContainer config={trendChartConfig} className="h-[250px] w-full">
+            <LineChart data={trendData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
+              <XAxis dataKey="label" className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+              <YAxis domain={[0, 132]} tick={{ fill: "hsl(var(--muted-foreground))" }} />
+              <ReferenceLine y={44} stroke="hsl(142, 71%, 45%)" strokeDasharray="4 4" label={{ value: t("company.lowRisk"), position: "right", fill: "hsl(142, 71%, 45%)", fontSize: 10 }} />
+              <ReferenceLine y={88} stroke="hsl(38, 92%, 50%)" strokeDasharray="4 4" label={{ value: t("company.moderateRisk"), position: "right", fill: "hsl(38, 92%, 50%)", fontSize: 10 }} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(_, payload) => {
+                      if (payload?.[0]?.payload) {
+                        const p = payload[0].payload;
+                        const [y, mo] = p.month.split("-");
+                        const d = new Date(parseInt(y), parseInt(mo) - 1, 1);
+                        return `${d.toLocaleDateString(undefined, { year: "numeric", month: "long" })} · ${p.employees} ${t("company.employeesAssessed")}`;
+                      }
+                      return "";
+                    }}
+                  />
+                }
+              />
+              <Line
+                type="monotone"
+                dataKey="avgScore"
+                stroke="hsl(var(--primary))"
+                strokeWidth={2.5}
+                dot={{ fill: "hsl(var(--primary))", r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ChartContainer>
         </div>
       )}
     </Card>

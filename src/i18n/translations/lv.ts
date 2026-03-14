@@ -515,6 +515,7 @@ export const lv = {
     noChangeFromPrev: "Nav izmaiņu salīdzinot ar iepriekšējo mēnesi",
     testsThisMonth: "Testi šomēnes",
     employeesAssessed: "novērtēti darbinieki",
+    burnoutTrend: "Izdegšanas rādītāju tendence",
   },
 
   // Tests
