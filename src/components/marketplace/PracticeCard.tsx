@@ -164,7 +164,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
 
             {/* Sample date/time slots */}
             {!inCart && (
-              <div className="space-y-1.5" onClick={(e) => e.stopPropagation()}>
+            <div className="space-y-1.5 mt-auto" onClick={(e) => e.stopPropagation()}>
                 <p className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
                   <CalendarPlus className="h-3 w-3" />
                   {t('marketplace.availableTimes')}
