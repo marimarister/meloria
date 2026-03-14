@@ -21,6 +21,7 @@ export type Database = {
           id: string
           period_start: string
           practice_id: string
+          scheduled_at: string | null
           user_id: string
         }
         Insert: {
@@ -29,6 +30,7 @@ export type Database = {
           id?: string
           period_start: string
           practice_id: string
+          scheduled_at?: string | null
           user_id: string
         }
         Update: {
@@ -37,6 +39,7 @@ export type Database = {
           id?: string
           period_start?: string
           practice_id?: string
+          scheduled_at?: string | null
           user_id?: string
         }
         Relationships: [

@@ -9,7 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PracticeCardProps {
   practice: ScoredPractice;
-  onAdd: (practiceId: string, role: string) => void;
+  onAdd: (practiceId: string, role: string, scheduledAt: string) => void;
   disabledSlots: string[];
   inCart: boolean;
 }
@@ -157,9 +157,19 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
           <Badge className="w-full justify-center py-1.5 bg-primary/10 text-primary border-primary/20" variant="outline">
             {t('marketplace.inCart')}
           </Badge>
+        ) : selectedSlot === null ? (
+          <p className="w-full text-center text-[11px] text-amber-600 font-medium py-1.5">
+            {t('marketplace.selectTimeFirst')}
+          </p>
         ) : (
           ['core', 'support', 'optional'].map((role) => {
             const disabled = disabledSlots.includes(role);
+            const slot = sampleSlots[selectedSlot];
+            // Build actual Date from slot
+            const scheduledDate = new Date();
+            scheduledDate.setDate(scheduledDate.getDate() + slot.dayOffset);
+            scheduledDate.setHours(slot.hour, 0, 0, 0);
+
             return (
               <Tooltip key={role}>
                 <TooltipTrigger asChild>
@@ -169,7 +179,7 @@ export function PracticeCard({ practice, onAdd, disabledSlots, inCart }: Practic
                       variant={role === 'core' ? 'default' : 'outline'}
                       className="w-full text-[11px] px-2 truncate"
                       disabled={disabled}
-                      onClick={() => onAdd(practice.id, role)}
+                      onClick={() => onAdd(practice.id, role, scheduledDate.toISOString())}
                     >
                       <Plus className="h-3 w-3 mr-0.5 shrink-0" />
                       <span className="truncate">{t(`marketplace.slot.${role}`)}</span>

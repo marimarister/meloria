@@ -941,5 +941,6 @@ export const ru = {
       featured: "Рекомендовано",
     },
     availableTimes: "Доступное время",
+    selectTimeFirst: "Сначала выберите дату/время выше",
   },
 };

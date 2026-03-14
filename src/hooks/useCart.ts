@@ -10,6 +10,7 @@ export interface CartItem {
   cart_role: string;
   period_start: string;
   added_at: string;
+  scheduled_at: string | null;
   practice?: {
     id: string;
     title: string;
@@ -64,7 +65,7 @@ export function useCart() {
 
   const isSlotFull = (role: string) => (slotCounts[role] || 0) >= (SLOT_LIMITS[role] || 1);
 
-  const addToCart = async (practiceId: string, role: string): Promise<boolean> => {
+  const addToCart = async (practiceId: string, role: string, scheduledAt?: string): Promise<boolean> => {
     if (isSlotFull(role)) {
       toast.error(`The ${role} slot is already filled for this period.`);
       return false;
@@ -80,6 +81,7 @@ export function useCart() {
         practice_id: practiceId,
         cart_role: role,
         period_start: periodStart,
+        scheduled_at: scheduledAt || null,
       } as any);
 
     if (error) {

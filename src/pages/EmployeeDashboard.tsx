@@ -866,6 +866,14 @@ const EmployeeDashboard = () => {
                             <span>{item.practice.duration_minutes} {t('marketplace.min')}</span>
                           )}
                         </div>
+                        {item.scheduled_at && (
+                          <div className="flex items-center gap-1 text-xs text-primary font-medium mt-1.5">
+                            <Clock className="h-3 w-3" />
+                            {new Date(item.scheduled_at).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                            {' · '}
+                            {new Date(item.scheduled_at).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                        )}
                         <Button
                           variant="ghost"
                           size="sm"

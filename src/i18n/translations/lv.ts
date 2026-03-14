@@ -966,5 +966,6 @@ export const lv = {
       featured: "Ieteicams",
     },
     availableTimes: "Pieejamie laiki",
+    selectTimeFirst: "Lūdzu, vispirms izvēlieties datumu/laiku augstāk",
   },
 };
