@@ -753,19 +753,19 @@ const EmployeeDashboard = () => {
               </div>
             ) : testStatus.preference.expired ? (
               <div className="space-y-3">
-                <Badge variant="destructive" className="w-full justify-center py-1">
-                  <AlertTriangle className="h-3 w-3 mr-1" />
-                  {t('employee.testExpired')}
+                <Badge variant="outline" className="w-full justify-center py-1 text-amber-600 border-amber-300">
+                  <Clock className="h-3 w-3 mr-1" />
+                  {t('employee.optionalUpdate')}
                 </Badge>
                 {testStatus.preference.lastTaken && (
                   <p className="text-xs text-muted-foreground text-center">
                     {t('employee.lastCompleted')} {format(new Date(testStatus.preference.lastTaken), 'PPP')}
                   </p>
                 )}
-                <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
-                <Button className="w-full" variant="destructive" onClick={() => navigate("/test/preference")}>
+                <p className="text-xs text-muted-foreground text-center">{t('employee.optionalRetakeDescription')}</p>
+                <Button className="w-full" variant="outline" onClick={() => navigate("/test/preference")}>
                   <RefreshCw className="mr-2 h-4 w-4" />
-                  {t('employee.retakeTest')}
+                  {t('employee.updateResults')}
                 </Button>
               </div>
             ) : !testStatus.burnout.completed && !testStatus.burnout.expired ? (
