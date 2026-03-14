@@ -28,7 +28,7 @@ const Login = () => {
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
+      if (session && session.user?.email_confirmed_at) {
         const { data: roleData } = await supabase
           .from('user_roles')
           .select('role')
@@ -40,6 +40,8 @@ const Login = () => {
         } else {
           navigate("/employee");
         }
+      } else if (session && !session.user?.email_confirmed_at) {
+        await supabase.auth.signOut();
       }
     };
     
