@@ -602,6 +602,14 @@ const EmployeeDashboard = () => {
                   </p>
                 )}
                 <p className="text-xs text-destructive text-center">{t('employee.testExpiredDescription')}</p>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowPreviousResults(!showPreviousResults)}
+                >
+                  <History className="mr-2 h-4 w-4" />
+                  {showPreviousResults ? t('employee.hidePreviousResults') : t('employee.viewPreviousResults')}
+                </Button>
                 <Button className="w-full" variant="destructive" onClick={() => navigate("/test/burnout")}>
                   <RefreshCw className="mr-2 h-4 w-4" />
                   {t('employee.retakeTest')}
