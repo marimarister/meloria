@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { getCurrentPeriodStart, SLOT_LIMITS } from "@/lib/marketplace";
+import { getCurrentPeriodStart, getPeriodLabel, SLOT_LIMITS } from "@/lib/marketplace";
 import { toast } from "sonner";
 
 export interface CartItem {
