@@ -42,6 +42,7 @@ const CompanyDashboard = () => {
   const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState<CompanyStats | null>(null);
+  const [memberUserIds, setMemberUserIds] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const getRiskLabel = (averageScore: number): string => {
