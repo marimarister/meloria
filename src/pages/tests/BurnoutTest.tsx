@@ -9,6 +9,7 @@ import { Heart, CheckCircle } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { addMonths, isBefore } from "date-fns";
 
 const BurnoutTest = () => {
   const navigate = useNavigate();
