@@ -105,31 +105,24 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Companies Section */}
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl font-bold text-foreground mb-6">
-            {t('index.ctaTitle')}
-          </h2>
-          <p className="text-xl text-muted-foreground mb-10">
-            {t('index.ctaDescription')}
-          </p>
-          <div className="flex flex-col gap-4 sm:flex-row justify-center">
-            <Button 
-              size="lg" 
-              className="text-lg font-semibold"
-              onClick={() => navigate('/employee')}
-            >
-              {t('index.startAssessment')}
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="text-lg font-semibold"
-              onClick={() => navigate('/company')}
-            >
-              {t('index.exploreCompanyFeatures')}
-            </Button>
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Companies who select us
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
+            {[aeronesLogo, mogotelLogo, crassulaLogo, accentureLogo, grindeksLogo].map((logo, i) => (
+              <div key={i} className="flex items-center justify-center h-24 px-4">
+                <img
+                  src={logo.url}
+                  alt="Company logo"
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
