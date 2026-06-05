@@ -3,6 +3,11 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight, Users, Heart, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-wellness.jpg";
+import aeronesLogo from "@/assets/logos/aerones.png.asset.json";
+import mogotelLogo from "@/assets/logos/mogotel.png.asset.json";
+import crassulaLogo from "@/assets/logos/crassula.png.asset.json";
+import accentureLogo from "@/assets/logos/accenture.png.asset.json";
+import grindeksLogo from "@/assets/logos/grindeks.svg.asset.json";
 import NavBar from "@/components/NavBar";
 import { useLanguage } from "@/contexts/LanguageContext";
 
